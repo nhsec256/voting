@@ -40,10 +40,10 @@
         .btn-logout { background-color: #ef4444; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; }
         .btn-settings { background-color: var(--secondary); color: var(--dark); padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; display: none; }
         
-        .quick-stats-bar { display: none; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .quick-stats-bar { display: none; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
         .stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-card p { font-size: 22px; font-weight: 700; color: var(--primary); }
+        .stat-card p { font-size: 20px; font-weight: 700; color: var(--primary); }
         
         .auth-card { background: white; padding: 35px 30px; border-radius: 16px; max-width: 420px; margin: 40px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid var(--border); text-align: center; }
         .dashboard { display: none; grid-template-columns: 1fr; gap: 25px; }
@@ -57,7 +57,7 @@
         input, select { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background-color: #fff; color: var(--dark); font-weight: 500; }
         input:focus, select:focus { border-color: var(--primary); }
         
-        .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px; margin-bottom: 15px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
         .center-input-box { text-align: center; }
         .center-input-box h5 { font-size: 12px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
         .center-input-box input { text-align: center; padding: 8px; font-size: 15px; font-weight: 700; border: 2px solid #cbd5e1; }
@@ -90,7 +90,6 @@
         
         .app-footer { margin-top: 30px; background: linear-gradient(135deg, #002b5c, #004699); color: #fff; text-align: center; padding: 15px; border-radius: 16px; border: 3px solid #ffc107; }
         .footer-title { font-size: 13px; font-weight: 700; text-transform: uppercase; }
-        .footer-subtext { font-size: 11px; color: #ffc107; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -109,7 +108,7 @@
 
     <div id="quickStats" class="quick-stats-bar">
         <div class="stat-card">
-            <h4>Total Valid Votes Recorded</h4>
+            <h4>Total Valid Votes</h4>
             <p id="statValid">0</p>
         </div>
         <div class="stat-card">
@@ -117,7 +116,11 @@
             <p id="statInvalid" style="color: #ef4444;">0</p>
         </div>
         <div class="stat-card">
-            <h4>Active Center Sheets Loaded</h4>
+            <h4>Voter Turnout Metric</h4>
+            <p id="statTurnout" style="color: #8b5cf6;">0</p>
+        </div>
+        <div class="stat-card">
+            <h4>Sheets Uploaded</h4>
             <p id="statEntries" style="color: var(--accent);">0</p>
         </div>
     </div>
@@ -154,7 +157,7 @@
                     </div>
                 </div>
 
-                <label style="margin-bottom: 2px; color: var(--primary);">Valid Votes Per Polling Station</label>
+                <label style="color: var(--primary);">Valid Votes Per Polling Station</label>
                 <div class="centers-grid">
                     <div class="center-input-box">
                         <h5>Center A</h5>
@@ -170,9 +173,26 @@
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-top: 15px;">
-                    <label for="invalidvoteCount" style="color: #ef4444;">Total Combined Invalid Votes across all centers</label>
-                    <input type="number" id="invalidvoteCount" min="0" placeholder="0" required onkeydown="if(event.key === 'Enter') submitResult()">
+                <div class="form-group">
+                    <label for="invalidvoteCount" style="color: #ef4444;">Total Combined Invalid Votes (All Centers)</label>
+                    <input type="number" id="invalidvoteCount" min="0" placeholder="0" required>
+                </div>
+
+                <h3 style="margin-top: 25px; border-bottom: 3px solid #8b5cf6;">Total Turnout Tracker (Voters Present)</h3>
+                <label style="color: #8b5cf6;">Total Voters Logged on Signature Sheets</label>
+                <div class="centers-grid" style="border-color: #c084fc;">
+                    <div class="center-input-box">
+                        <h5>Voters A</h5>
+                        <input type="number" id="turnoutA" min="0" placeholder="0" style="border-color: #e9d5ff;">
+                    </div>
+                    <div class="center-input-box">
+                        <h5>Voters B</h5>
+                        <input type="number" id="turnoutB" min="0" placeholder="0" style="border-color: #e9d5ff;">
+                    </div>
+                    <div class="center-input-box">
+                        <h5>Voters C</h5>
+                        <input type="number" id="turnoutC" min="0" placeholder="0" style="border-color: #e9d5ff;">
+                    </div>
                 </div>
 
                 <button onclick="submitResult()" style="background-color: var(--success); margin-top: 5px;">Commit All Centers Instantly</button>
@@ -188,9 +208,9 @@
                             <tr>
                                 <th>Contestant Name</th>
                                 <th>Post Category</th>
-                                <th>Body</th>
-                                <th>Valid Votes</th>
-                                <th>Invalid Votes</th>
+                                <th>Valid (A+B+C)</th>
+                                <th>Invalid</th>
+                                <th>Calculated Total</th>
                             </tr>
                         </thead>
                         <tbody id="overallStandingsBody"></tbody>
@@ -240,13 +260,12 @@
             </select>
         </div>
         <button style="background-color: var(--accent);" onclick="registerCandidate()">Save Candidate</button>
-        <button class="modal-close" onclick="closeSettings()">Close Dashboard</button>
+        <button class="modal-close" onclick="closeSettings()">Close Control Board</button>
     </div>
 </div>
 
 <footer class="app-footer">
     <p class="footer-title">© 2026 NHS Electoral Commission. All Rights Reserved.</p>
-    <p class="footer-subtext">Secured Multi-Device Live Synchronized Grid Panel</p>
 </footer>
 
 <script>
@@ -257,7 +276,6 @@
     const officialSystemUsers = { "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY" };
     const adminSystemUsers = { "oscar123": "KAMYA OSCAR (Admin)", "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)" };
 
-    // --- PRE-LOADED INJECTION OF THE UNSA BODY CATEGORIES AND CANDIDATES ---
     const presetCandidates = [
         { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT", class: "UNSA Body" },
         { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT", class: "UNSA Body" },
@@ -290,19 +308,8 @@
     ];
 
     if (!localStorage.getItem("nhs_offline_db")) {
-        localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, candidates: presetCandidates, results: [] }));
-    } else {
-        let currentDb = JSON.parse(localStorage.getItem("nhs_offline_db"));
-        if (!currentDb.candidates || currentDb.candidates.length === 0) {
-            currentDb.candidates = presetCandidates;
-            localStorage.setItem("nhs_offline_db", JSON.stringify(currentDb));
-        }
+        localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, candidates: presetCandidates, results: [], turnout: [] }));
     }
-
-    let dbInit = JSON.parse(localStorage.getItem("nhs_offline_db"));
-    let updated = false;
-    Object.keys(officialSystemUsers).forEach(key => { if(!dbInit.users[key]) { dbInit.users[key] = officialSystemUsers[key]; updated = true; } });
-    if(updated) localStorage.setItem("nhs_offline_db", JSON.stringify(dbInit));
 
     let currentUser = "";
     let isAdmin = false;
@@ -369,7 +376,7 @@
         const select = document.getElementById("candidateSelect");
         select.innerHTML = '<option value="">-- Choose Candidate --</option>';
         const db = getDB();
-        const sorted = [...(db.candidates || [])].sort((a,b) => a.post.localeCompare(b.post) || a.name.localeCompare(b.name));
+        const sorted = [...(db.candidates || [])];
         sorted.forEach(c => {
             const opt = document.createElement("option");
             opt.value = c.id; opt.innerText = `[${c.class}] ${c.post} : ${c.name}`;
@@ -398,9 +405,13 @@
         const valB = document.getElementById("votesB").value.trim();
         const valC = document.getElementById("votesC").value.trim();
         const invalidVotes = document.getElementById("invalidvoteCount").value.trim();
+        
+        const tA = document.getElementById("turnoutA").value.trim();
+        const tB = document.getElementById("turnoutB").value.trim();
+        const tC = document.getElementById("turnoutC").value.trim();
 
-        if(!candidateId || valA === "" || valB === "" || valC === "" || invalidVotes === "") {
-            return alert("Verification Error: Fill counts for Center A, B, C and combined invalid totals.");
+        if(!candidateId || valA === "" || valB === "" || valC === "" || invalidVotes === "" || tA === "" || tB === "" || tC === "") {
+            return alert("Verification Error: Complete entry inputs for all centers, invalid counts, and total voters parameters.");
         }
 
         const db = getDB();
@@ -413,9 +424,9 @@
         }
 
         const centersData = [
-            { center: "Center A", votes: parseInt(valA) },
-            { center: "Center B", votes: parseInt(valB) },
-            { center: "Center C", votes: parseInt(valC) }
+            { center: "Center A", votes: parseInt(valA), turnout: parseInt(tA) },
+            { center: "Center B", votes: parseInt(valB), turnout: parseInt(tB) },
+            { center: "Center C", votes: parseInt(valC), turnout: parseInt(tC) }
         ];
 
         for(let i=0; i<centersData.length; i++) {
@@ -428,25 +439,27 @@
                 class: candidate.class, 
                 votes: item.votes,
                 invalidVotes: i === 0 ? parseInt(invalidVotes) : 0, 
+                turnout: item.turnout,
                 status: isAdmin ? "Approved" : "Pending",
                 submittedBy: currentUser
             };
 
             try {
                 await _supabase.from('voting_results').insert([newResult]);
-            } catch (err) {
-                console.error("Local backup cache link engaged:", err);
-            }
+            } catch (err) {}
             db.results.push(newResult);
         }
 
         saveDB(db);
-        alert(`Successfully saved Centers A, B, and C scores for ${candidate.name}!`);
+        alert(`Successfully saved Centers A, B, and C parameters for ${candidate.name}!`);
         
         document.getElementById("votesA").value = "";
         document.getElementById("votesB").value = "";
         document.getElementById("votesC").value = "";
         document.getElementById("invalidvoteCount").value = "";
+        document.getElementById("turnoutA").value = "";
+        document.getElementById("turnoutB").value = "";
+        document.getElementById("turnoutC").value = "";
         
         fetchData();
     }
@@ -473,14 +486,25 @@
     }
 
     function calculateSystemStats(data) {
-        let totalValid = 0; let totalInvalid = 0;
+        let totalValid = 0; let totalInvalid = 0; let totalTurnout = 0;
+        let turnoutTrackingMap = {};
+
         data.forEach(r => {
             if (r.status === "Approved") {
-                totalValid += parseInt(r.votes || 0); totalInvalid += parseInt(r.invalidVotes || 0);
+                totalValid += parseInt(r.votes || 0); 
+                totalInvalid += parseInt(r.invalidVotes || 0);
+                
+                // Track total voters dynamically by checking specific unique entry instances
+                let uniqueKey = `${r.name}-${r.center}`;
+                if (!turnoutTrackingMap[uniqueKey]) {
+                    turnoutTrackingMap[uniqueKey] = true;
+                    totalTurnout += parseInt(r.turnout || 0);
+                }
             }
         });
         document.getElementById("statValid").innerText = totalValid.toLocaleString();
         document.getElementById("statInvalid").innerText = totalInvalid.toLocaleString();
+        document.getElementById("statTurnout").innerText = totalTurnout.toLocaleString();
         document.getElementById("statEntries").innerText = data.length;
     }
 
@@ -489,7 +513,7 @@
         tbody.innerHTML = "";
 
         if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" style="text-align:center; color:#94a3b8; padding:20px;">No operational logs loaded.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" style="text-align:center; color:#94a3b8; padding:20px;">No records loaded yet.</td></tr>`;
             return;
         }
 
@@ -501,11 +525,8 @@
             
             let actionControls = "";
             if (isAdmin) {
-                actionControls = `<td>`;
-                if (r.status === "Pending") {
-                    actionControls += `<button class="btn-approve" onclick="approveRecord('${r.id}')">Verify</button>`;
-                }
-                actionControls += `
+                actionControls = `<td>
+                    <button class="btn-approve" style="${r.status === 'Approved' ? 'display:none;' : ''}" onclick="approveRecord('${r.id}')">Verify</button>
                     <button class="btn-edit" onclick="toggleInlineEdit(this, '${r.id}')">Adjust</button>
                     <button onclick="deleteTallyRecord('${r.id}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:6px; font-size:11px; margin-left:4px; width:auto; cursor:pointer;">Drop</button>
                 </td>`;
@@ -555,19 +576,20 @@
         });
 
         if (finalRenderList.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">Awaiting verification checks.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">Awaiting approved records to display total matrix standings.</td></tr>`;
             return;
         }
 
         finalRenderList.forEach(c => {
             const row = document.createElement("tr");
             if (c.isLeader) row.className = "winner-row";
+            let totalCombinedField = c.valid + c.invalid;
             row.innerHTML = `
                 <td>${c.isLeader ? '👑 ' : ''}<strong>${c.name}</strong></td>
                 <td><span style="font-size:12px; font-weight:600; color:var(--primary);">${c.post}</span></td>
-                <td>${c.class}</td>
                 <td style="color:var(--success); font-weight:700;">${c.valid}</td>
                 <td style="color:#ef4444;">${c.invalid}</td>
+                <td style="font-weight:700; color:var(--dark);">${totalCombinedField}</td>
             `;
             tbody.appendChild(row);
         });
