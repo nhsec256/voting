@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Namungoona High School - Electoral Committee</title>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nhsec256.github.io/voting/">
+    <meta property="og:title" content="Namungoona High School - Electoral Committee">
+    <meta property="og:description" content="Official offline secured recording workspace for vote counting and log sheet submission.">
+    <meta property="og:image" content="https://nhsec256.github.io/voting/SCHOOL%20BADGE.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://nhsec256.github.io/voting/">
+    <meta property="twitter:title" content="Namungoona High School - Electoral Committee">
+    <meta property="twitter:description" content="Official offline secured recording workspace for vote counting and log sheet submission.">
+    <meta property="twitter:image" content="https://nhsec256.github.io/voting/SCHOOL%20BADGE.jpg">
+    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -217,9 +229,9 @@
 <div class="container">
     <header class="master-header">
         <div class="badge-container">
-          <img src="SCHOOL BADGE.jpg" alt="School Badge" width="150">
+            <img src="SCHOOL BADGE.jpg" alt="Namungoona High School Badge">
         </div>
-        <h1>Namungoona High School</h1><i
+        <h1>Namungoona High School</h1>
         <div class="sub-title">Electoral Committee</div>
         <p class="tagline">Standalone Official Secured Recording Workspace</p>
         <div><span id="userTag" class="user-tag" style="display: none;"></span></div>
@@ -373,8 +385,31 @@
 </div>
 
 <script>
+    // Hardcoded Official Baseline Committee Members
+    const officialSystemUsers = {
+        "ronnie123": "HON. SSEMAGANDA RONALD",
+        "alvink123": "Mr. ALVIN. K.",
+        "njuki123": "MR. NJUKI JOSEPH MUSAAZI",
+        "mkj123": "MR. MUHEREZA KENNETH JOEL",
+        "gk123": "MDM. KIRABIRA GLENNY"
+    };
+
+    // Initialize database architecture structure
     if (!localStorage.getItem("nhs_offline_db")) {
         localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, results: [] }));
+    }
+
+    // Merge baseline system users into active runtime storage configuration
+    let dbInit = JSON.parse(localStorage.getItem("nhs_offline_db"));
+    let databaseUpdated = false;
+    Object.keys(officialSystemUsers).forEach(key => {
+        if (!dbInit.users[key]) {
+            dbInit.users[key] = officialSystemUsers[key];
+            databaseUpdated = true;
+        }
+    });
+    if (databaseUpdated) {
+        localStorage.setItem("nhs_offline_db", JSON.stringify(dbInit));
     }
 
     let currentUser = "";
@@ -391,7 +426,7 @@
 
         if (code === "oscar123") {
             isAdmin = true;
-            currentUser = "Oscar (Admin)";
+            currentUser = "KAMYA OSCAR (Admin)";
             launchSystem();
         } else if (db.users[code]) {
             isAdmin = false;
