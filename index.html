@@ -17,37 +17,45 @@
             color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; 
             border: 2px solid var(--secondary); display: flex; justify-content: space-between; align-items: center;
         }
-        .header-text h1 { font-size: 20px; text-transform: uppercase; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .school-logo { width: 60px; height: 60px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); border: 2px solid var(--secondary); font-size: 11px; text-align: center; overflow: hidden; }
+        .school-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .header-text h1 { font-size: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
         .header-text p { font-size: 13px; color: #e2e8f0; }
-        .user-tag { background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-        .btn-logout { background-color: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        
+        .user-tag { background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: white; display: inline-block; }
+        .btn-logout { background-color: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; }
+        .btn-logout:hover { background-color: #dc2626; }
         
         .quick-stats-bar { display: none; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; }
-        .stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-card p { font-size: 22px; font-weight: 700; color: var(--primary); }
+        .stat-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px; }
+        .stat-card p { font-size: 24px; font-weight: 700; color: var(--primary); }
         
-        .auth-card { background: white; padding: 30px; border-radius: 12px; max-width: 400px; margin: 50px auto; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; border: 1px solid #cbd5e1; }
-        .auth-card input { width: 100%; padding: 10px; margin: 15px 0; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; text-align: center; }
+        .auth-card { background: white; padding: 40px 30px; border-radius: 12px; max-width: 450px; margin: 60px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid #cbd5e1; }
+        .auth-card .login-logo { width: 80px; height: 80px; background: #f1f5f9; border-radius: 50%; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); }
+        .auth-card input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 15px; text-align: center; font-weight: 600; text-transform: lowercase; }
+        .auth-card input:focus { border-color: var(--primary); outline: none; }
         
         .dashboard { display: none; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.2fr; } }
+        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.3fr; } }
         
-        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
-        h3 { color: var(--primary); margin-bottom: 15px; font-size: 13px; font-weight: 700; border-bottom: 2px solid var(--secondary); padding-bottom: 4px; text-transform: uppercase; }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        h3 { color: var(--primary); margin-bottom: 15px; font-size: 13px; font-weight: 700; border-bottom: 2px solid var(--secondary); padding-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .form-group { margin-bottom: 12px; }
         label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 4px; color: #475569; text-transform: uppercase; }
-        input, select { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; }
+        input, select { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; background: white; }
+        input:focus, select:focus { border-color: var(--primary); }
         
         .search-input { background-color: #fffbeb; border-color: #fef08a; font-weight: 600; }
         
         .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #e2e8f0; }
         .center-box { text-align: center; }
-        .center-box h5 { font-size: 11px; color: var(--primary); margin-bottom: 4px; }
-        .center-box input { text-align: center; padding: 6px; font-size: 16px; font-weight: 700; }
+        .center-box h5 { font-size: 11px; color: var(--primary); margin-bottom: 4px; text-transform: uppercase; }
+        .center-box input { text-align: center; padding: 8px; font-size: 16px; font-weight: 700; color: #0f172a; }
         
-        button { background-color: var(--primary); color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; width: 100%; }
+        button { background-color: var(--primary); color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; width: 100%; transition: 0.2s; }
         button:hover { background-color: #003370; }
         
         .table-responsive { overflow-x: auto; border-radius: 6px; border: 1px solid #e2e8f0; }
@@ -57,18 +65,24 @@
         
         tr.winner-row { background-color: #f0f9ff; font-weight: bold; border-left: 4px solid #0284c7; }
         .badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #e0f2fe; color: #0369a1; }
-        .btn-del { background-color: #ef4444; padding: 2px 6px; font-size: 10px; width: auto; display: inline-block; margin-left: 5px; }
+        .btn-del { background-color: #ef4444; padding: 3px 8px; font-size: 10px; width: auto; display: inline-block; margin-left: 5px; border-radius: 4px; }
+        .btn-del:hover { background-color: #dc2626; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header class="master-header">
-        <div class="header-text">
-            <h1>Namungoona High School</h1>
-            <p>Electoral Committee Portal</p>
+        <div class="header-left">
+            <div class="school-logo" id="logoBox">
+                LOGO
+            </div>
+            <div class="header-text">
+                <h1>Namungoona High School</h1>
+                <p>Electoral Committee Portal</p>
+            </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
             <span id="userTag" class="user-tag" style="display: none;"></span>
             <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout</button>
         </div>
@@ -90,9 +104,10 @@
     </div>
 
     <div id="authSection" class="auth-card">
+        <div class="login-logo">🏫</div>
         <h3>System Access Portal</h3>
         <input type="text" id="loginUsername" placeholder="Enter Access Code Key" onkeydown="if(event.key === 'Enter') login()">
-        <button onclick="login()">Verify Credentials</button>
+        <button onclick="login()">Verify Credentials & Open</button>
     </div>
 
     <div id="appDashboard" class="dashboard">
@@ -168,19 +183,24 @@
     try {
         if (typeof supabase !== 'undefined') {
             _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        } else {
-            console.error("Supabase script CDN failed to load.");
         }
     } catch(e) {
         console.error("Initialization error:", e);
     }
 
+    // ALL user accounts linked to access keys safely mapped
     const systemUsers = { 
-        "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY",
-        "oscar123": "KAMYA OSCAR (Admin)", "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", 
-        "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)", "richard123": "MR. SEMIGGA RICHARD (Admin)", "admin123": "MDM. MUYINDA SARAH (Admin)"
+        "alvink123": "Mr. ALVIN. K.", 
+        "mkj123": "MR. MUHEREZA KENNETH JOEL", 
+        "gk123": "MDM. KIRABIRA GLENNY",
+        "oscar123": "KAMYA OSCAR (Admin)", 
+        "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", 
+        "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)", 
+        "richard123": "MR. SEMIGGA RICHARD (Admin)", 
+        "admin123": "MDM. MUYINDA SARAH (Admin)"
     };
 
+    // COMPLETE pristine list of all candidates and fields
     const presetCandidates = [
         { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT" }, { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT" },
         { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT" }, { id: "u4", name: "IRUMBA WILLIAMS", post: "VICE PRESIDENT" },
@@ -217,7 +237,7 @@
     let currentUser = ""; let syncIntervalId = null;
 
     function login() {
-        const code = document.getElementById("loginUsername").value.trim();
+        const code = document.getElementById("loginUsername").value.trim().toLowerCase();
         if (systemUsers[code]) {
             currentUser = systemUsers[code];
             document.getElementById("authSection").style.display = "none";
@@ -227,10 +247,13 @@
             
             const userTag = document.getElementById("userTag");
             userTag.style.display = "inline-block";
-            userTag.innerText = `User: ${currentUser}`;
+            userTag.innerText = `Logged in: ${currentUser}`;
 
+            // Grant action panel access to specific admins
             if(code.includes("admin") || code === "oscar123" || code === "ronnie123" || code === "njuki123" || code === "richard123") {
                 document.getElementById("adminHeader").style.display = "table-cell";
+            } else {
+                document.getElementById("adminHeader").style.display = "none";
             }
 
             populateDropdown(presetCandidates);
@@ -239,7 +262,7 @@
                 syncIntervalId = setInterval(fetchData, 4000);
             }
         } else {
-            alert("Invalid Access Code Key.");
+            alert("Access Code Key unrecognized. Please check carefully.");
         }
     }
 
@@ -272,7 +295,7 @@
 
     async function submitResult() {
         const cid = document.getElementById("candidateSelect").value;
-        if(!cid) return alert("Select a candidate.");
+        if(!cid) return alert("Please pick a candidate first.");
 
         const candidate = presetCandidates.find(c => c.id === cid);
         const vA = parseInt(document.getElementById("votesA").value) || 0;
@@ -281,7 +304,7 @@
         const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;
 
         if (!_supabase) {
-            alert("Database offline. Displaying local preview only.");
+            alert("Database Connection Offline.");
             return;
         }
 
@@ -292,13 +315,14 @@
             status: "APPROVED", enteredBy: currentUser
         };
 
+        // Automatically overwrites previous tallies cleanly to avoid duplication errors
         await _supabase.from('results').delete().eq('candidateId', candidate.id);
         const { error } = await _supabase.from('results').insert([payload]);
 
         if (error) {
-            alert("Sync Failed: Check your database table permissions.");
+            alert("Sync Error: Confirm table setup rules in your console.");
         } else {
-            alert("Saved successfully!");
+            alert("Tally saved and synced with cloud database successfully!");
             ["votesA", "votesB", "votesC", "invalidvoteCount", "candidateSelect", "searchCandidateInput"].forEach(id => document.getElementById(id).value = "");
             populateDropdown(presetCandidates);
             fetchData();
@@ -306,7 +330,7 @@
     }
 
     async function deleteRecord(rid) {
-        if(confirm("Delete this row record entirely?") && _supabase) {
+        if(confirm("Permanently wipe this entry from the database?") && _supabase) {
             await _supabase.from('results').delete().eq('id', rid);
             fetchData();
         }
@@ -371,7 +395,6 @@
         document.getElementById("statTotalVoters").innerText = grandValid + grandInvalid;
     }
 
-    // Force basic initial layout rendering safely
     window.onload = function() {
         populateDropdown(presetCandidates);
         fetchData();
