@@ -3,7 +3,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <title>Namungoona High School - Simplified Election Portal</title>    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>    
     <style>        
         :root { --primary: #004699; --secondary: #ffc107; --dark: #0f172a; --light: #ffffff; --success: #10b981; }        
         * { box-sizing: border-box; font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; }        
@@ -192,7 +191,7 @@
                     <input type="number" id="invalidvoteCount" min="0" placeholder="0">
                 </div>                
                 
-                <button class="btn-action" onclick="submitResult()" style="background-color: var(--success);">Save & Sync Tally</button>            
+                <button class="btn-action" onclick="submitResult()" style="background-color: var(--success);">Save Tally</button>            
             </div>        
         </div>        
         
@@ -224,17 +223,7 @@
 </div>
 
 <script>    
-    const SUPABASE_URL = "https://wexbtyfwwfctolunwkyu.supabase.co";    
-    const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";        
-    
-    let _supabase = null;    
-    try {        
-        if (typeof supabase !== 'undefined') {            
-            _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);        
-        }    
-    } catch(e) {        
-        console.error("Initialization error:", e);    
-    }    
+    const LOCAL_STORAGE_KEY = "nhs_election_results";
 
     const systemUsers = {         
         "alvink123": "Mr. ALVIN. K.",         
@@ -280,7 +269,17 @@
         { id: "p31", name: "NANKINDU JALIA", post: "DORM CAPT. GIRLS O'LEVEL" }, { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL" }    
     ];    
 
-    let currentUser = ""; let syncIntervalId = null;    
+    let currentUser = ""; 
+
+    // Helper functions to manage localStorage data array
+    function getStoredRecords() {
+        const rawData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        return rawData ? JSON.parse(rawData) : [];
+    }
+
+    function saveStoredRecords(recordsArray) {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(recordsArray));
+    }
 
     function login() {        
         const code = document.getElementById("loginUsername").value;        
@@ -305,14 +304,10 @@
             }            
             populateDropdown(presetCandidates);            
             fetchData();            
-            if (_supabase) {                
-                syncIntervalId = setInterval(fetchData, 4000);            
-            }        
         }    
     }    
 
     function logout() {        
-        if(syncIntervalId) clearInterval(syncIntervalId);        
         currentUser = "";        
         document.getElementById("authSection").style.display = "block";        
         document.getElementById("appDashboard").style.display = "none";        
@@ -340,7 +335,7 @@
         });
     }    
 
-    async function submitResult() {        
+    function submitResult() {        
         const cid = document.getElementById("candidateSelect").value;        
         if(!cid) return alert("Please click and select a candidate first.");        
         
@@ -350,47 +345,41 @@
         const vC = parseInt(document.getElementById("votesC").value) || 0;        
         const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;        
         
-        if (!_supabase) {            
-            alert("Database Connection Offline.");            
-            return;        
-        }        
-        
         const payload = {            
+            id: new Date().getTime().toString(), // local identifier payload key
             candidateId: candidate.id, candidateName: candidate.name, post: candidate.post,            
             votesA: vA, votesB: vB, votesC: vC, invalid: inv,            
-            turnoutA: vA, turnoutB: vB, turnoutC: vC,            
-            status: "APPROVED", enteredBy: currentUser        
+            enteredBy: currentUser        
         };        
         
-        await _supabase.from('results').delete().eq('candidateId', candidate.id);        
-        const { error } = await _supabase.from('results').insert([payload]);        
+        // Remove existing local storage entry for this candidate before updating
+        let currentRecords = getStoredRecords();
+        currentRecords = currentRecords.filter(r => r.candidateId !== candidate.id);
         
-        if (error) {            
-            alert("Sync Error: Confirm table setup rules in your console.");        
-        } else {            
-            alert("Tally saved and synced with cloud database successfully!");            
-            document.getElementById("votesA").value = "";
-            document.getElementById("votesB").value = "";
-            document.getElementById("votesC").value = "";
-            document.getElementById("invalidvoteCount").value = "";
-            document.getElementById("candidateSelect").value = "";            
+        // Push newly entered result
+        currentRecords.push(payload);
+        saveStoredRecords(currentRecords);
+        
+        alert("Tally saved directly to local storage successfully!");            
+        document.getElementById("votesA").value = "";
+        document.getElementById("votesB").value = "";
+        document.getElementById("votesC").value = "";
+        document.getElementById("invalidvoteCount").value = "";
+        document.getElementById("candidateSelect").value = "";            
+        fetchData();        
+    }    
+
+    function deleteRecord(rid) {        
+        if(confirm("Permanently wipe this entry from the local memory?")) {            
+            let currentRecords = getStoredRecords();
+            currentRecords = currentRecords.filter(r => r.id !== rid);
+            saveStoredRecords(currentRecords);
             fetchData();        
         }    
     }    
 
-    async function deleteRecord(rid) {        
-        if(confirm("Permanently wipe this entry from the database?") && _supabase) {            
-            await _supabase.from('results').delete().eq('id', rid);            
-            fetchData();        
-        }    
-    }    
-
-    async function fetchData() {        
-        let records = [];        
-        if (_supabase) {            
-            const { data, error } = await _supabase.from('results').select('*');            
-            if (!error && data) records = data;        
-        }        
+    function fetchData() {        
+        let records = getStoredRecords();        
         
         let grandValid = 0; let grandInvalid = 0;        
         let aggregates = {};        
