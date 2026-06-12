@@ -57,7 +57,6 @@
         input, select { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background-color: #fff; color: var(--dark); font-weight: 500; }
         input:focus, select:focus { border-color: var(--primary); }
         
-        /* 3 Centers Quick Layout Style Grid */
         .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
         .center-input-box { text-align: center; }
         .center-input-box h5 { font-size: 12px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
@@ -150,7 +149,7 @@
                         <input type="text" id="postSelect" readonly style="background: #f1f5f9; cursor: not-allowed;">
                     </div>
                     <div>
-                        <label>Class Standing</label>
+                        <label>Organizing Body</label>
                         <input type="text" id="classSelect" readonly style="background: #f1f5f9; cursor: not-allowed;">
                     </div>
                 </div>
@@ -189,7 +188,7 @@
                             <tr>
                                 <th>Contestant Name</th>
                                 <th>Post Category</th>
-                                <th>Class</th>
+                                <th>Body</th>
                                 <th>Valid Votes</th>
                                 <th>Invalid Votes</th>
                             </tr>
@@ -234,11 +233,10 @@
             <input type="text" id="newCandidatePost" placeholder="e.g., HEAD PREFECT">
         </div>
         <div class="form-group">
-            <label>Class Standing</label>
+            <label>Electoral Body</label>
             <select id="newCandidateClass">
-                <option value="S.1">S.1</option><option value="S.2">S.2</option>
-                <option value="S.3">S.3</option><option value="S.4">S.4</option>
-                <option value="S.5">S.5</option><option value="S.6">S.6</option>
+                <option value="UNSA Body">UNSA Body</option>
+                <option value="Prefects Body">Prefects Body</option>
             </select>
         </div>
         <button style="background-color: var(--accent);" onclick="registerCandidate()">Save Candidate</button>
@@ -259,12 +257,49 @@
     const officialSystemUsers = { "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY" };
     const adminSystemUsers = { "oscar123": "KAMYA OSCAR (Admin)", "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)" };
 
+    // --- PRE-LOADED INJECTION OF THE UNSA BODY CATEGORIES AND CANDIDATES ---
+    const presetCandidates = [
+        { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT", class: "UNSA Body" },
+        { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT", class: "UNSA Body" },
+        { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT", class: "UNSA Body" },
+        { id: "u4", name: "IRUMBA WILLIAMS", post: "VICE PRESIDENT", class: "UNSA Body" },
+        { id: "u5", name: "NANYANZI DESIRE", post: "CHIEF JUDGE", class: "UNSA Body" },
+        { id: "u6", name: "SSENTEZA WILLIAM KEVIN", post: "CHIEF JUDGE", class: "UNSA Body" },
+        { id: "u7", name: "BBALE ALEX", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
+        { id: "u8", name: "BABIRYE ABIGAIL NICOLE", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
+        { id: "u9", name: "SSEKABIRA JOVA JONATHAN", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
+        { id: "u10", name: "NAMUBIRU HANIFAH", post: "GENERAL SECRETARY", class: "UNSA Body" },
+        { id: "u11", name: "NABULIME JUDITH TENDO", post: "GENERAL SECRETARY", class: "UNSA Body" },
+        { id: "u12", name: "KYOBUTUNGI PROMISE", post: "DEPUTY GENERAL SECRETARY", class: "UNSA Body" },
+        { id: "u13", name: "MUSOKI LINIAH", post: "DEPUTY GENERAL SECRETARY", class: "UNSA Body" },
+        { id: "u14", name: "NAYEBALE PATRICIA", post: "DEPUTY GENERAL SECRETARY", class: "UNSA Body" },
+        { id: "u15", name: "NANYANZI CHRISTINE NIEL", post: "SECRETARY FEMALE AFFAIRS", class: "UNSA Body" },
+        { id: "u16", name: "NAKABUGO PROSSY", post: "SECRETARY FEMALE AFFAIRS", class: "UNSA Body" },
+        { id: "u17", name: "NAKATO IMELDAH", post: "SECRETARY FINANCE", class: "UNSA Body" },
+        { id: "u18", name: "NAKIGOZI ESTHER", post: "SECRETARY FINANCE", class: "UNSA Body" },
+        { id: "u19", name: "NABUUFU HARRIET", post: "SECRETARY STUDENTS AFFAIRS", class: "UNSA Body" },
+        { id: "u20", name: "NAKALANZI NASHIBAH", post: "SECRETARY STUDENTS AFFAIRS", class: "UNSA Body" },
+        { id: "u21", name: "KASSITA SHARITAH", post: "SECRETARY INTERNAL AFFAIRS", class: "UNSA Body" },
+        { id: "u22", name: "KOMUJUNI LETICIA", post: "SECRETARY INTERNAL AFFAIRS", class: "UNSA Body" },
+        { id: "u23", name: "NTEGE PETER", post: "SECRETARY INTERNAL AFFAIRS", class: "UNSA Body" },
+        { id: "u24", name: "MUSIIME LINDAH", post: "LANGUAGE PREFECT", class: "UNSA Body" },
+        { id: "u25", name: "LUBEGA EDWARD", post: "LANGUAGE PREFECT", class: "UNSA Body" },
+        { id: "u26", name: "ALI MAXWELL", post: "LANGUAGE PREFECT", class: "UNSA Body" },
+        { id: "u27", name: "NAKABIITO ESTHER EMILY", post: "INFORMATION AND PUBLICITY", class: "UNSA Body" },
+        { id: "u28", name: "KALULE KENNETH", post: "INFORMATION AND PUBLICITY", class: "UNSA Body" }
+    ];
+
     if (!localStorage.getItem("nhs_offline_db")) {
-        localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, candidates: [], results: [] }));
+        localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, candidates: presetCandidates, results: [] }));
+    } else {
+        let currentDb = JSON.parse(localStorage.getItem("nhs_offline_db"));
+        if (!currentDb.candidates || currentDb.candidates.length === 0) {
+            currentDb.candidates = presetCandidates;
+            localStorage.setItem("nhs_offline_db", JSON.stringify(currentDb));
+        }
     }
 
     let dbInit = JSON.parse(localStorage.getItem("nhs_offline_db"));
-    if (!dbInit.candidates) dbInit.candidates = [];
     let updated = false;
     Object.keys(officialSystemUsers).forEach(key => { if(!dbInit.users[key]) { dbInit.users[key] = officialSystemUsers[key]; updated = true; } });
     if(updated) localStorage.setItem("nhs_offline_db", JSON.stringify(dbInit));
@@ -309,7 +344,7 @@
         
         populateCandidateDropdown();
         fetchData();
-        syncIntervalId = setInterval(fetchData, 4000); // 4 Seconds Device Cross-Sync
+        syncIntervalId = setInterval(fetchData, 4000);
     }
 
     function openSettings() { if(isAdmin) document.getElementById("settingsModal").style.display = "flex"; }
@@ -324,7 +359,7 @@
         let db = getDB();
         db.candidates.push({ id: Date.now().toString(), name, post, class: cls });
         saveDB(db);
-        alert("Candidate pre-registered.");
+        alert("Candidate profile pre-registered successfully.");
         document.getElementById("newCandidateName").value = "";
         document.getElementById("newCandidatePost").value = "";
         populateCandidateDropdown();
@@ -334,10 +369,10 @@
         const select = document.getElementById("candidateSelect");
         select.innerHTML = '<option value="">-- Choose Candidate --</option>';
         const db = getDB();
-        const sorted = [...(db.candidates || [])].sort((a,b) => a.name.localeCompare(b.name));
+        const sorted = [...(db.candidates || [])].sort((a,b) => a.post.localeCompare(b.post) || a.name.localeCompare(b.name));
         sorted.forEach(c => {
             const opt = document.createElement("option");
-            opt.value = c.id; opt.innerText = `${c.name} [${c.post}]`;
+            opt.value = c.id; opt.innerText = `[${c.class}] ${c.post} : ${c.name}`;
             select.appendChild(opt);
         });
     }
@@ -357,7 +392,6 @@
         }
     }
 
-    // --- SECURED UNIQUE BULK 3-CENTER INPUT PROCESSOR ---
     async function submitResult() {
         const candidateId = document.getElementById("candidateSelect").value;
         const valA = document.getElementById("votesA").value.trim();
@@ -366,17 +400,16 @@
         const invalidVotes = document.getElementById("invalidvoteCount").value.trim();
 
         if(!candidateId || valA === "" || valB === "" || valC === "" || invalidVotes === "") {
-            return alert("Verification Error: Complete entry inputs for all 3 centers and invalid total field.");
+            return alert("Verification Error: Fill counts for Center A, B, C and combined invalid totals.");
         }
 
         const db = getDB();
         const candidate = db.candidates.find(c => c.id === candidateId);
         if(!candidate) return alert("Candidate record missing.");
 
-        // ANTI-REPETITION LOCKOUT RULE: Block if any center data already has a sheet for this candidate
         const isDuplicate = db.results.some(r => r.name === candidate.name && (r.center === "Center A" || r.center === "Center B" || r.center === "Center C"));
         if (isDuplicate) {
-            return alert(`Security Rejection: Data has ALREADY been submitted for ${candidate.name}.\nRepeated logs for this candidate are blocked.`);
+            return alert(`Security Rejection: Results have ALREADY been loaded for ${candidate.name}. Repeated logs blocked.`);
         }
 
         const centersData = [
@@ -385,7 +418,6 @@
             { center: "Center C", votes: parseInt(valC) }
         ];
 
-        // Process insertion packet
         for(let i=0; i<centersData.length; i++) {
             const item = centersData[i];
             const newResult = {
@@ -395,7 +427,6 @@
                 post: candidate.post, 
                 class: candidate.class, 
                 votes: item.votes,
-                // Apportion the invalid total directly into the logs safely
                 invalidVotes: i === 0 ? parseInt(invalidVotes) : 0, 
                 status: isAdmin ? "Approved" : "Pending",
                 submittedBy: currentUser
@@ -404,21 +435,19 @@
             try {
                 await _supabase.from('voting_results').insert([newResult]);
             } catch (err) {
-                console.error("Local buffer cache backup fallback triggered:", err);
+                console.error("Local backup cache link engaged:", err);
             }
             db.results.push(newResult);
         }
 
         saveDB(db);
-        alert(`Successfully saved Centers A, B, and C results for ${candidate.name}!`);
+        alert(`Successfully saved Centers A, B, and C scores for ${candidate.name}!`);
         
-        // SMOOTH ENGINE RESET: Clears values to stop fast clicking errors
         document.getElementById("votesA").value = "";
         document.getElementById("votesB").value = "";
         document.getElementById("votesC").value = "";
         document.getElementById("invalidvoteCount").value = "";
         
-        // Notice: Candidate select layout parameter remains saved to speed up consecutive operations!
         fetchData();
     }
 
