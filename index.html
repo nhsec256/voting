@@ -40,6 +40,17 @@
             padding: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
+        .login-logo {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            margin: 0 auto 15px auto;
+            display: block;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            border: 2px solid var(--primary);
+        }
         .master-header h1 { font-size: 24px; font-weight: 700; text-transform: uppercase; color: #ffffff; }
         .master-header .sub-title { font-size: 13px; color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
         
@@ -67,6 +78,12 @@
         input, select { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background-color: #fff; color: var(--dark); font-weight: 500; }
         input:focus, select:focus { border-color: var(--primary); }
         
+        /* SEARCH BAR STYLING */
+        .search-wrapper { position: relative; margin-bottom: 15px; }
+        .search-input { background-color: #fffbeb; border: 2px solid #fef08a; padding-left: 35px; font-weight: 600; color: #1e293b; }
+        .search-input:focus { border-color: var(--secondary); background-color: #fff; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #a1a1aa; pointer-events: none; }
+
         .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px; margin-bottom: 15px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
         .center-input-box { text-align: center; }
         .center-input-box h5 { font-size: 12px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
@@ -137,10 +154,11 @@
     </div>
 
     <div id="authSection" class="auth-card">
+        <img src="SCHOOL BADGE.jpg" alt="NHS Badge" class="login-logo" onerror="this.style.display='none';">
         <h3>System Access Portal</h3>
         <div class="form-group" style="margin-top: 15px;">
             <label>Agent / Admin Login ID</label>
-            <input type="text" id="loginUsername" placeholder="Type Access Code">
+            <input type="text" id="loginUsername" placeholder="Type Access Code" onkeydown="if(event.key === 'Enter') login()">
         </div>
         <button onclick="login()">Verify Credentials</button>
     </div>
@@ -150,6 +168,14 @@
             <div class="card">
                 <h3>Bulk Enter Center Results</h3>
                 
+                <div class="form-group">
+                    <label for="searchCandidateInput" style="color: var(--accent);">🔍 Quick Search Box</label>
+                    <div class="search-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchCandidateInput" class="search-input" placeholder="Type candidate name or position to filter..." oninput="filterCandidateDropdown()">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="candidateSelect">Select Target Candidate</label>
                     <select id="candidateSelect" onchange="autoFillCandidateDetails()" required>
@@ -288,6 +314,7 @@
     const adminSystemUsers = { "oscar123": "KAMYA OSCAR (Admin)", "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)" };
 
     const presetCandidates = [
+        // --- UNSA BODY CANDIDATES ---
         { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT", class: "UNSA Body" },
         { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT", class: "UNSA Body" },
         { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT", class: "UNSA Body" },
@@ -315,7 +342,41 @@
         { id: "u25", name: "LUBEGA EDWARD", post: "LANGUAGE PREFECT", class: "UNSA Body" },
         { id: "u26", name: "ALI MAXWELL", post: "LANGUAGE PREFECT", class: "UNSA Body" },
         { id: "u27", name: "NAKABIITO ESTHER EMILY", post: "INFORMATION AND PUBLICITY", class: "UNSA Body" },
-        { id: "u28", name: "KALULE KENNETH", post: "INFORMATION AND PUBLICITY", class: "UNSA Body" }
+        { id: "u28", name: "KALULE KENNETH", post: "INFORMATION AND PUBLICITY", class: "UNSA Body" },
+
+        // --- STUDENTS PREFECTORIAL BODY CANDIDATES ---
+        { id: "p1", name: "KITAGANA AKSAM", post: "HEADBOY A'LEVEL", class: "Prefects Body" },
+        { id: "p2", name: "ALINAFE STEVEN", post: "HEADBOY A'LEVEL", class: "Prefects Body" },
+        { id: "p3", name: "NANKANJA WINFRED", post: "HEADGIRL A'LEVEL", class: "Prefects Body" },
+        { id: "p4", name: "NAMAZZI MARIAM", post: "HEADGIRL A'LEVEL", class: "Prefects Body" },
+        { id: "p5", name: "NAMUDDU SHEEBAH", post: "HEADGIRL A'LEVEL", class: "Prefects Body" },
+        { id: "p6", name: "SSENFUMA MARVIN", post: "HEADBOY O'LEVEL", class: "Prefects Body" },
+        { id: "p7", name: "KYAGULANYI PIUS", post: "HEADBOY O'LEVEL", class: "Prefects Body" },
+        { id: "p8", name: "NABAKOOZA STELLA", post: "HEADGIRL O'LEVEL", class: "Prefects Body" },
+        { id: "p9", name: "NABAGEREKA PRETTY PATRICIA", post: "HEADGIRL O'LEVEL", class: "Prefects Body" },
+        { id: "p10", name: "MAYANJA SHAFIQUE", post: "ACADEMIC PREFECT", class: "Prefects Body" },
+        { id: "p11", name: "NANTONGO BETTY MICHELLE", post: "ACADEMIC PREFECT", class: "Prefects Body" },
+        { id: "p12", name: "TUGUME GRACIOUS MARTHA", post: "HEADMONITOR", class: "Prefects Body" },
+        { id: "p13", name: "NAKAJJA SHANITAH", post: "HEADMONITOR", class: "Prefects Body" },
+        { id: "p14", name: "NAMUBIRU PRISCA", post: "HEADMONITOR", class: "Prefects Body" },
+        { id: "p15", name: "GYAGENDA PHOEBE", post: "ENTERTAINMENT PREFECT", class: "Prefects Body" },
+        { id: "p16", name: "KASIRYE SHAFIK LEBRON", post: "ENTERTAINMENT PREFECT", class: "Prefects Body" },
+        { id: "p17", name: "NASEJJE HAIRAH", post: "ENTERTAINMENT PREFECT", class: "Prefects Body" },
+        { id: "p18", name: "KEI EMMANUEL JAMES", post: "HEALTH MINISTER BOYS", class: "Prefects Body" },
+        { id: "p19", name: "ISHAKA TREVIS", post: "HEALTH MINISTER BOYS", class: "Prefects Body" },
+        { id: "p20", name: "SSEBALAMU JORAM", post: "HEALTH MINISTER BOYS", class: "Prefects Body" },
+        { id: "p21", name: "NAMUKAYA JOVIA", post: "HEALTH MINISTER GIRLS", class: "Prefects Body" },
+        { id: "p22", name: "NANNUNGI BENITAH", post: "HEALTH MINISTER GIRLS", class: "Prefects Body" },
+        { id: "p23", name: "NAGGAYI LOURYN BEATRICE", post: "HEALTH MINISTER GIRLS", class: "Prefects Body" },
+        { id: "p24", name: "NAMUBIRU RAHMAH", post: "LITURGY MUSLIMS", class: "Prefects Body" },
+        { id: "p25", name: "MULIIKA SHARIF", post: "LITURGY MUSLIMS", class: "Prefects Body" },
+        { id: "p26", name: "NANTEZA MARIA VANNEL", post: "LITURGY CHRISTIANS", class: "Prefects Body" },
+        { id: "p27", name: "MULLO MELLISA ROWEN", post: "LITURGY CHRISTIANS", class: "Prefects Body" },
+        { id: "p28", name: "KALYESUBULA LINCOS", post: "HEAD SECURITY", class: "Prefects Body" },
+        { id: "p29", name: "WASSWA MUNIB", post: "HEAD SECURITY", class: "Prefects Body" },
+        { id: "p30", name: "BBOSA TRINITY", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" },
+        { id: "p31", name: "NANKINDU JALIA", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" },
+        { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" }
     ];
 
     if (!localStorage.getItem("nhs_offline_db")) {
@@ -360,7 +421,7 @@
             document.getElementById("feedTitle").innerText = "Master Audit Pipeline";
         }
         
-        populateCandidateDropdown();
+        populateCandidateDropdown(getDB().candidates);
         fetchData();
         syncIntervalId = setInterval(fetchData, 4000);
     }
@@ -380,19 +441,42 @@
         alert("Candidate profile pre-registered successfully.");
         document.getElementById("newCandidateName").value = "";
         document.getElementById("newCandidatePost").value = "";
-        populateCandidateDropdown();
+        populateCandidateDropdown(db.candidates);
     }
 
-    function populateCandidateDropdown() {
+    function populateCandidateDropdown(candidatesList) {
         const select = document.getElementById("candidateSelect");
         select.innerHTML = '<option value="">-- Choose Candidate --</option>';
-        const db = getDB();
-        const sorted = [...(db.candidates || [])];
+        
+        // Sort items logically by structural group, post category, then alphabet name
+        const sorted = [...(candidatesList || [])].sort((a, b) => {
+            if (a.class !== b.class) return a.class.localeCompare(b.class);
+            if (a.post !== b.post) return a.post.localeCompare(b.post);
+            return a.name.localeCompare(b.name);
+        });
+
         sorted.forEach(c => {
             const opt = document.createElement("option");
             opt.value = c.id; opt.innerText = `[${c.class}] ${c.post} : ${c.name}`;
             select.appendChild(opt);
         });
+    }
+
+    // NEW DROPDOWN ADVANCED PATTERN FILTER SEARCH ALGORITHM
+    function filterCandidateDropdown() {
+        const query = document.getElementById("searchCandidateInput").value.trim().toUpperCase();
+        const db = getDB();
+        
+        if (!query) {
+            populateCandidateDropdown(db.candidates);
+            return;
+        }
+
+        const filtered = db.candidates.filter(c => {
+            return c.name.includes(query) || c.post.includes(query) || c.class.includes(query);
+        });
+
+        populateCandidateDropdown(filtered);
     }
 
     function autoFillCandidateDetails() {
@@ -471,7 +555,9 @@
         document.getElementById("turnoutA").value = "";
         document.getElementById("turnoutB").value = "";
         document.getElementById("turnoutC").value = "";
+        document.getElementById("searchCandidateInput").value = "";
         
+        populateCandidateDropdown(db.candidates);
         fetchData();
     }
 
@@ -666,6 +752,7 @@
         document.getElementById("overallLeaderboardCard").style.display = "none";
         document.getElementById("adminActionHeader").style.display = "none";
         document.getElementById("loginUsername").value = "";
+        document.getElementById("searchCandidateInput").value = "";
     }
 </script>
 </body>
