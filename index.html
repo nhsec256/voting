@@ -18,7 +18,7 @@
             border: 2px solid var(--secondary); display: flex; justify-content: space-between; align-items: center;
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .school-logo { width: 60px; height: 60px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); border: 2px solid var(--secondary); font-size: 11px; text-align: center; overflow: hidden; }
+        .school-logo { width: 65px; height: 65px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--secondary); overflow: hidden; }
         .school-logo img { width: 100%; height: 100%; object-fit: cover; }
         .header-text h1 { font-size: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
         .header-text p { font-size: 13px; color: #e2e8f0; }
@@ -26,6 +26,8 @@
         .user-tag { background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: white; display: inline-block; }
         .btn-logout { background-color: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; }
         .btn-logout:hover { background-color: #dc2626; }
+        .btn-print { background-color: var(--accent); color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; background-color: #0284c7; margin-right: 5px; }
+        .btn-print:hover { background-color: #0369a1; }
         
         .quick-stats-bar { display: none; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
@@ -33,8 +35,9 @@
         .stat-card p { font-size: 24px; font-weight: 700; color: var(--primary); }
         
         .auth-card { background: white; padding: 40px 30px; border-radius: 12px; max-width: 450px; margin: 60px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid #cbd5e1; }
-        .auth-card .login-logo { width: 80px; height: 80px; background: #f1f5f9; border-radius: 50%; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); }
-        .auth-card input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 15px; text-align: center; font-weight: 600; text-transform: lowercase; }
+        .auth-card .login-logo { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); overflow: hidden; }
+        .auth-card .login-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .auth-card input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 15px; text-align: center; font-weight: 600; }
         .auth-card input:focus { border-color: var(--primary); outline: none; }
         
         .dashboard { display: none; grid-template-columns: 1fr; gap: 20px; }
@@ -67,6 +70,67 @@
         .badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #e0f2fe; color: #0369a1; }
         .btn-del { background-color: #ef4444; padding: 3px 8px; font-size: 10px; width: auto; display: inline-block; margin-left: 5px; border-radius: 4px; }
         .btn-del:hover { background-color: #dc2626; }
+
+        /* PRINT OVERRIDES: Hardcoded for elegant corporate documentation exports */
+        @media print {
+            * { font-family: "Times New Roman", Times, serif !important; color: #000000 !important; }
+            body { background-color: #ffffff !important; padding: 0 !important; }
+            
+            /* Custom styled high school print header layout setup */
+            .master-header { 
+                background: none !important; 
+                border: none !important; 
+                border-bottom: 3px double #000000 !important; 
+                border-radius: 0 !important; 
+                padding: 10px 0 20px 0 !important; 
+                margin-bottom: 25px !important;
+                display: flex !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+                gap: 25px !important;
+            }
+            .school-logo { 
+                width: 90px !important; 
+                height: 90px !important; 
+                border: 1px solid #000000 !important; 
+                box-shadow: none !important; 
+                display: block !important;
+            }
+            .header-text h1 { font-size: 26px !important; font-weight: bold !important; line-height: 1.2 !important; }
+            .header-text p { font-size: 14px !important; font-weight: bold !important; color: #000000 !important; margin-top: 3px !important; }
+            
+            /* Clean structural letterhead blocks template creation */
+            .header-text::after {
+                content: "P.O Box 26935 Kampala\A Tel: +256 700 627 960 / +256 788 772 660";
+                white-space: pre-wrap;
+                display: block;
+                font-size: 13px !important;
+                font-weight: 500 !important;
+                margin-top: 4px;
+            }
+
+            /* Purging non-printable frontend control panels */
+            #authSection, .dashboard > div:first-child, .btn-logout, .btn-print, .user-tag, #quickStats { display: none !important; }
+            
+            /* Expand live standings sheet full width */
+            .dashboard { display: block !important; width: 100% !important; }
+            .dashboard > div:last-child { width: 100% !important; }
+            .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
+            
+            h3 { 
+                font-size: 16px !important; 
+                border-bottom: 2px solid #000000 !important; 
+                margin-bottom: 15px !important; 
+                font-weight: bold !important; 
+                padding-bottom: 5px !important;
+            }
+            table { width: 100% !important; border: 1.5px solid #000000 !important; border-collapse: collapse !important; }
+            th, td { border: 1px solid #000000 !important; padding: 10px 8px !important; font-size: 13px !important; background: none !important; }
+            th { font-weight: bold !important; text-transform: uppercase !important; background-color: #f2f2f2 !important; }
+            tr.winner-row { background-color: transparent !important; border-left: none !important; }
+            .badge { background: none !important; border: none !important; padding: 0 !important; font-weight: normal !important; font-size: 13px !important; }
+            .btn-del { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -74,16 +138,17 @@
 <div class="container">
     <header class="master-header">
         <div class="header-left">
-            <div class="school-logo" id="logoBox">
-                LOGO
+            <div class="school-logo">
+                <img src="SCHOOL BADGE.jpg" alt="NHS Badge" id="headerLogoImg" onerror="this.parentNode.innerText='NHS LOGO';">
             </div>
             <div class="header-text">
                 <h1>Namungoona High School</h1>
-                <p>Electoral Committee Portal</p>
+                <p>Electoral Committee</p>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
             <span id="userTag" class="user-tag" style="display: none;"></span>
+            <button id="printBtn" class="btn-print" onclick="window.print()" style="display:none;">🖨️ Export Standings Sheet</button>
             <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout</button>
         </div>
     </header>
@@ -104,7 +169,9 @@
     </div>
 
     <div id="authSection" class="auth-card">
-        <div class="login-logo">🏫</div>
+        <div class="login-logo">
+            <img src="SCHOOL BADGE.jpg" alt="NHS Badge" id="loginLogoImg" onerror="this.parentNode.innerText='🏫';">
+        </div>
         <h3>System Access Portal</h3>
         <input type="text" id="loginUsername" placeholder="Enter Access Code Key" onkeydown="if(event.key === 'Enter') login()">
         <button onclick="login()">Verify Credentials & Open</button>
@@ -188,7 +255,6 @@
         console.error("Initialization error:", e);
     }
 
-    // ALL user accounts linked to access keys safely mapped
     const systemUsers = { 
         "alvink123": "Mr. ALVIN. K.", 
         "mkj123": "MR. MUHEREZA KENNETH JOEL", 
@@ -200,7 +266,6 @@
         "admin123": "MDM. MUYINDA SARAH (Admin)"
     };
 
-    // COMPLETE pristine list of all candidates and fields
     const presetCandidates = [
         { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT" }, { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT" },
         { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT" }, { id: "u4", name: "IRUMBA WILLIAMS", post: "VICE PRESIDENT" },
@@ -244,12 +309,12 @@
             document.getElementById("appDashboard").style.display = "grid";
             document.getElementById("quickStats").style.display = "grid";
             document.getElementById("logoutBtn").style.display = "block";
+            document.getElementById("printBtn").style.display = "block";
             
             const userTag = document.getElementById("userTag");
             userTag.style.display = "inline-block";
             userTag.innerText = `Logged in: ${currentUser}`;
 
-            // Grant action panel access to specific admins
             if(code.includes("admin") || code === "oscar123" || code === "ronnie123" || code === "njuki123" || code === "richard123") {
                 document.getElementById("adminHeader").style.display = "table-cell";
             } else {
@@ -273,6 +338,7 @@
         document.getElementById("appDashboard").style.display = "none";
         document.getElementById("quickStats").style.display = "none";
         document.getElementById("logoutBtn").style.display = "none";
+        document.getElementById("printBtn").style.display = "none";
         document.getElementById("userTag").style.display = "none";
         document.getElementById("loginUsername").value = "";
     }
@@ -315,7 +381,6 @@
             status: "APPROVED", enteredBy: currentUser
         };
 
-        // Automatically overwrites previous tallies cleanly to avoid duplication errors
         await _supabase.from('results').delete().eq('candidateId', candidate.id);
         const { error } = await _supabase.from('results').insert([payload]);
 
