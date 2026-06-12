@@ -24,108 +24,87 @@
             text-align: center; 
             background: linear-gradient(135deg, #002b5c, var(--primary)); 
             color: white; 
-            padding: 30px 20px; 
+            padding: 25px 20px; 
             border-radius: 16px; 
             margin-bottom: 25px; 
-            box-shadow: 0 10px 25px rgba(0, 70, 153, 0.15); 
             position: relative;
             border: 3px solid var(--secondary);
         }
-        .master-header .badge-container {
-            background: white;
-            width: 105px;
-            height: 105px;
-            margin: 0 auto 15px auto;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border: 4px solid var(--secondary);
-            overflow: hidden;
-        }
-        .master-header img { width: 85%; height: auto; object-fit: contain; }
-        .master-header h1 { font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .master-header .sub-title { font-size: 14px; color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
-        .master-header p.tagline { font-size: 13px; margin-top: 8px; opacity: 0.9; font-weight: 500; }
+        .master-header h1 { font-size: 24px; font-weight: 700; text-transform: uppercase; color: #ffffff; }
+        .master-header .sub-title { font-size: 13px; color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
         
-        .header-actions { position: absolute; right: 20px; bottom: 20px; display: flex; gap: 10px; }
+        .header-actions { position: absolute; right: 20px; bottom: 15px; display: flex; gap: 10px; }
         @media (max-width: 768px) { .header-actions { position: static; margin-top: 15px; justify-content: center; width: 100%; } }
         
-        .user-tag { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; margin-top: 12px; }
-        .btn-logout { background-color: #ef4444; color: white; padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s; }
-        .btn-logout:hover { background-color: #dc2626; transform: translateY(-1px); }
-        .btn-settings { background-color: var(--secondary); color: var(--dark); padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s; display: none; }
-        .btn-settings:hover { background-color: #e0a800; transform: translateY(-1px); }
+        .user-tag { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 8px; }
+        .btn-logout { background-color: #ef4444; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; }
+        .btn-settings { background-color: var(--secondary); color: var(--dark); padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; display: none; }
         
         .quick-stats-bar { display: none; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .stat-card { background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
         .stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
         .stat-card p { font-size: 22px; font-weight: 700; color: var(--primary); }
         
         .auth-card { background: white; padding: 35px 30px; border-radius: 16px; max-width: 420px; margin: 40px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid var(--border); text-align: center; }
         .dashboard { display: none; grid-template-columns: 1fr; gap: 25px; }
-        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.4fr; } }
+        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.3fr; } }
         
-        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 25px; border: 1px solid #e2e8f0; }
-        h3 { color: var(--primary); margin-bottom: 20px; font-weight: 700; border-bottom: 3px solid var(--secondary); padding-bottom: 8px; text-transform: uppercase; font-size: 15px; letter-spacing: 0.5px; }
+        .card { background: white; padding: 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        h3 { color: var(--primary); margin-bottom: 15px; font-weight: 700; border-bottom: 3px solid var(--secondary); padding-bottom: 6px; text-transform: uppercase; font-size: 14px; }
         
-        .form-group { margin-bottom: 18px; text-align: left; }
-        label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; color: #475569; letter-spacing: 0.5px; }
-        input, select { width: 100%; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; transition: all 0.2s; background-color: #fff; color: var(--dark); font-weight: 500; }
-        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 70, 153, 0.15); }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 5px; text-transform: uppercase; color: #475569; }
+        input, select { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background-color: #fff; color: var(--dark); font-weight: 500; }
+        input:focus, select:focus { border-color: var(--primary); }
         
-        button { background-color: var(--primary); color: white; padding: 14px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; transition: all 0.2s; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(0, 70, 153, 0.1); }
-        button:hover { background-color: #003370; transform: translateY(-1px); }
-        .btn-secondary { background-color: #f1f5f9; color: var(--primary); border: 2px solid var(--primary); box-shadow: none; }
-        .btn-secondary:hover { background-color: #e2e8f0; }
+        /* 3 Centers Quick Layout Style Grid */
+        .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .center-input-box { text-align: center; }
+        .center-input-box h5 { font-size: 12px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
+        .center-input-box input { text-align: center; padding: 8px; font-size: 15px; font-weight: 700; border: 2px solid #cbd5e1; }
         
-        .btn-approve { background-color: var(--success); font-size: 11px; padding: 6px 12px; width: auto; border-radius: 6px; box-shadow: none; color: white; border: none; cursor: pointer; }
-        .btn-approve:hover { background-color: #059669; }
-        .btn-edit { background-color: #f59e0b; font-size: 11px; padding: 6px 12px; width: auto; border-radius: 6px; box-shadow: none; margin-left: 4px; color: white; border: none; cursor: pointer; }
-        .btn-edit:hover { background-color: #d97706; }
+        button { background-color: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; text-transform: uppercase; font-size: 13px; }
+        button:hover { background-color: #003370; }
+        .btn-secondary { background-color: #f1f5f9; color: var(--primary); border: 2px solid var(--primary); }
+        
+        .btn-approve { background-color: var(--success); font-size: 11px; padding: 4px 10px; width: auto; border-radius: 6px; color: white; border: none; cursor: pointer; }
+        .btn-edit { background-color: #f59e0b; font-size: 11px; padding: 4px 10px; width: auto; border-radius: 6px; margin-left: 4px; color: white; border: none; cursor: pointer; }
         
         .table-responsive { overflow-x: auto; margin-top: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; white-space: nowrap; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
-        th { background-color: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
+        th { background-color: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #e2e8f0; }
         
         tr.pending { background-color: #fffbeb; }
         tr.approved { background-color: #f0fdf4; }
         tr.winner-row { background-color: #f0f9ff; font-weight: bold; border-left: 5px solid var(--accent); }
         
-        .badge { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-block; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; display: inline-block; }
         .badge-pending { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
         .badge-approved { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 30px; border-radius: 16px; max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 2px solid var(--secondary); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
+        .modal-content { background: white; padding: 25px; border-radius: 16px; max-width: 500px; width: 100%; }
         .modal-close { background: #64748b; margin-top: 15px; }
         
-        .inline-edit-input { width: 70px; padding: 5px; font-size: 13px; font-weight: bold; text-align: center; border: 2px solid #f59e0b; border-radius: 4px; margin: 2px; }
+        .inline-edit-input { width: 60px; padding: 4px; font-size: 12px; font-weight: bold; text-align: center; border: 2px solid #f59e0b; border-radius: 4px; }
         
-        .app-footer { margin-top: 30px; background: linear-gradient(135deg, #002b5c, #004699); color: #fff; text-align: center; padding: 20px; border-radius: 16px; border: 3px solid #ffc107; box-shadow: 0 8px 20px rgba(0,70,153,0.15); }
-        .footer-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .footer-subtext { font-size: 12px; color: #ffc107; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .footer-credit { font-size: 12px; opacity: 0.95; }
-        .footer-credit strong { color: #ffc107; letter-spacing: 1px; }
+        .app-footer { margin-top: 30px; background: linear-gradient(135deg, #002b5c, #004699); color: #fff; text-align: center; padding: 15px; border-radius: 16px; border: 3px solid #ffc107; }
+        .footer-title { font-size: 13px; font-weight: 700; text-transform: uppercase; }
+        .footer-subtext { font-size: 11px; color: #ffc107; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header class="master-header">
-        <div class="badge-container">
-            <img src="SCHOOL BADGE.jpg" alt="School Badge Fallback">
-        </div>
         <h1>Namungoona High School</h1>
-        <div class="sub-title">Electoral Committee</div>
-        <p class="tagline">Official Shared Network Data-Entry Workspace</p>
+        <div class="sub-title">Electoral Committee Panel</div>
         <div><span id="userTag" class="user-tag" style="display: none;"></span></div>
         
         <div class="header-actions">
-            <button id="settingsBtn" class="btn-settings" onclick="openSettings()">⚙️ Admin Dashboard</button>
-            <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout System</button>
+            <button id="settingsBtn" class="btn-settings" onclick="openSettings()">⚙️ Admin Controls</button>
+            <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout</button>
         </div>
     </header>
 
@@ -139,7 +118,7 @@
             <p id="statInvalid" style="color: #ef4444;">0</p>
         </div>
         <div class="stat-card">
-            <h4>Active Log Entries</h4>
+            <h4>Active Center Sheets Loaded</h4>
             <p id="statEntries" style="color: var(--accent);">0</p>
         </div>
     </div>
@@ -148,7 +127,7 @@
         <h3>System Access Portal</h3>
         <div class="form-group" style="margin-top: 15px;">
             <label>Agent / Admin Login ID</label>
-            <input type="text" id="loginUsername" placeholder="Type assigned Access Code">
+            <input type="text" id="loginUsername" placeholder="Type Access Code">
         </div>
         <button onclick="login()">Verify Credentials</button>
     </div>
@@ -156,46 +135,48 @@
     <div id="appDashboard" class="dashboard">
         <div>
             <div class="card">
-                <h3>Submit Polling Station Log Sheet</h3>
+                <h3>Bulk Enter Center Results</h3>
+                
                 <div class="form-group">
-                    <label for="centerSelect">Polling Center Selection</label>
-                    <select id="centerSelect" required>
-                        <option value="">-- Choose Center Line --</option>
-                        <option value="Center A">Center A</option>
-                        <option value="Center B">Center B</option>
-                        <option value="Center C">Center C</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="candidateSelect">Select Registered Candidate</label>
+                    <label for="candidateSelect">Select Target Candidate</label>
                     <select id="candidateSelect" onchange="autoFillCandidateDetails()" required>
                         <option value="">-- Choose Candidate --</option>
                     </select>
-                    <p id="candidateDetailsHint" style="font-size: 11px; margin-top: 4px; color: var(--accent); font-weight: 600;"></p>
                 </div>
 
-                <div class="form-group" style="opacity: 0.85;">
-                    <label>Contesting Executive Post</label>
-                    <input type="text" id="postSelect" readonly style="background: #f1f5f9; cursor: not-allowed;" placeholder="Auto-populated post profile">
+                <div class="form-group" style="opacity: 0.85; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Contesting Post</label>
+                        <input type="text" id="postSelect" readonly style="background: #f1f5f9; cursor: not-allowed;">
+                    </div>
+                    <div>
+                        <label>Class Standing</label>
+                        <input type="text" id="classSelect" readonly style="background: #f1f5f9; cursor: not-allowed;">
+                    </div>
                 </div>
 
-                <div class="form-group" style="opacity: 0.85;">
-                    <label>Class Standing</label>
-                    <input type="text" id="classSelect" readonly style="background: #f1f5f9; cursor: not-allowed;" placeholder="Auto-populated class profile">
+                <label style="margin-bottom: 2px; color: var(--primary);">Valid Votes Per Polling Station</label>
+                <div class="centers-grid">
+                    <div class="center-input-box">
+                        <h5>Center A</h5>
+                        <input type="number" id="votesA" min="0" placeholder="0">
+                    </div>
+                    <div class="center-input-box">
+                        <h5>Center B</h5>
+                        <input type="number" id="votesB" min="0" placeholder="0">
+                    </div>
+                    <div class="center-input-box">
+                        <h5>Center C</h5>
+                        <input type="number" id="votesC" min="0" placeholder="0">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="voteCount">Total Valid Votes Counted</label>
-                    <input type="number" id="voteCount" min="0" placeholder="0" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="invalidvoteCount">Total Invalid Votes Counted</label>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="invalidvoteCount" style="color: #ef4444;">Total Combined Invalid Votes across all centers</label>
                     <input type="number" id="invalidvoteCount" min="0" placeholder="0" required onkeydown="if(event.key === 'Enter') submitResult()">
                 </div>
 
-                <button onclick="submitResult()" style="background-color: var(--success);">Commit Data Row to Database</button>
+                <button onclick="submitResult()" style="background-color: var(--success); margin-top: 5px;">Commit All Centers Instantly</button>
             </div>
         </div>
 
@@ -230,7 +211,7 @@
                                 <th>Valid</th>
                                 <th>Invalid</th>
                                 <th>Status</th>
-                                <th id="adminActionHeader" style="display:none;">Action Controls</th>
+                                <th id="adminActionHeader" style="display:none;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="resultsTableBody"></tbody>
@@ -243,49 +224,31 @@
 
 <div id="settingsModal" class="modal">
     <div class="modal-content">
-        <h3>System Admin Control Panel</h3>
-        <div style="background: #f0f9ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #bae6fd;">
-            <h4 style="font-size: 12px; text-transform: uppercase; margin-bottom: 10px; color: var(--primary);">📋 Step 1: Pre-Register Master Candidate Profile</h4>
-            <div class="form-group">
-                <label>Candidate Full Name</label>
-                <input type="text" id="newCandidateName" placeholder="e.g., KATO JOHN">
-            </div>
-            <div class="form-group">
-                <label>Contesting Post Category</label>
-                <input type="text" id="newCandidatePost" placeholder="e.g., HEAD PREFECT">
-            </div>
-            <div class="form-group">
-                <label>Class Standing</label>
-                <select id="newCandidateClass">
-                    <option value="S.1">S.1</option><option value="S.2">S.2</option>
-                    <option value="S.3">S.3</option><option value="S.4">S.4</option>
-                    <option value="S.5">S.5</option><option value="S.6">S.6</option>
-                </select>
-            </div>
-            <button style="padding: 10px; font-size: 11px; background-color: var(--accent);" onclick="registerCandidate()">Save Candidate</button>
+        <h3>Pre-Register Candidate</h3>
+        <div class="form-group" style="margin-top: 10px;">
+            <label>Candidate Name</label>
+            <input type="text" id="newCandidateName" placeholder="e.g., KATO JOHN">
         </div>
-
-        <div style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px dashed var(--border);">
-            <h4 style="font-size: 12px; text-transform: uppercase; margin-bottom: 10px; color: #475569;">🔑 Step 2: Register New Agent Profile</h4>
-            <div class="form-group">
-                <label>Agent Name</label>
-                <input type="text" id="agentName" placeholder="e.g., Mukasa Ronald">
-            </div>
-            <div class="form-group">
-                <label>Assigned Login ID Code</label>
-                <input type="text" id="agentCode" placeholder="e.g., agentA">
-            </div>
-            <button class="btn-secondary" style="padding: 10px; font-size: 11px;" onclick="registerAgent()">Save Agent Credentials</button>
+        <div class="form-group">
+            <label>Post Category</label>
+            <input type="text" id="newCandidatePost" placeholder="e.g., HEAD PREFECT">
         </div>
-
+        <div class="form-group">
+            <label>Class Standing</label>
+            <select id="newCandidateClass">
+                <option value="S.1">S.1</option><option value="S.2">S.2</option>
+                <option value="S.3">S.3</option><option value="S.4">S.4</option>
+                <option value="S.5">S.5</option><option value="S.6">S.6</option>
+            </select>
+        </div>
+        <button style="background-color: var(--accent);" onclick="registerCandidate()">Save Candidate</button>
         <button class="modal-close" onclick="closeSettings()">Close Dashboard</button>
     </div>
 </div>
 
 <footer class="app-footer">
     <p class="footer-title">© 2026 NHS Electoral Commission. All Rights Reserved.</p>
-    <p class="footer-subtext">Secured Multi-Device Live Synchronized Reporting Panel</p>
-    <p class="footer-credit">System Powered by <strong>OSCTOK TECHNOLOGIES</strong></p>
+    <p class="footer-subtext">Secured Multi-Device Live Synchronized Grid Panel</p>
 </footer>
 
 <script>
@@ -323,7 +286,7 @@
         } else if (db.users[code]) {
             isAdmin = false; currentUser = db.users[code]; launchSystem();
         } else {
-            alert("Security Verification Failed: Active Login ID record matching that key string was not located.");
+            alert("Login ID match not located.");
         }
     }
 
@@ -335,18 +298,18 @@
         
         const userTag = document.getElementById("userTag");
         userTag.style.display = "inline-block";
-        userTag.innerText = `Session user: ${currentUser}`;
+        userTag.innerText = `Session: ${currentUser}`;
 
         if (isAdmin) {
             document.getElementById("settingsBtn").style.display = "block";
             document.getElementById("overallLeaderboardCard").style.display = "block";
             document.getElementById("adminActionHeader").style.display = "table-cell";
-            document.getElementById("feedTitle").innerText = "Master Audit Data Pipeline";
+            document.getElementById("feedTitle").innerText = "Master Audit Pipeline";
         }
         
         populateCandidateDropdown();
         fetchData();
-        syncIntervalId = setInterval(fetchData, 4000);
+        syncIntervalId = setInterval(fetchData, 4000); // 4 Seconds Device Cross-Sync
     }
 
     function openSettings() { if(isAdmin) document.getElementById("settingsModal").style.display = "flex"; }
@@ -356,26 +319,15 @@
         const name = document.getElementById("newCandidateName").value.trim().toUpperCase();
         const post = document.getElementById("newCandidatePost").value.trim().toUpperCase();
         const cls = document.getElementById("newCandidateClass").value;
-        if(!name || !post) return alert("All fields are mandatory.");
+        if(!name || !post) return alert("Fields are mandatory.");
 
         let db = getDB();
         db.candidates.push({ id: Date.now().toString(), name, post, class: cls });
         saveDB(db);
-        alert("Candidate profile pre-registered locally.");
+        alert("Candidate pre-registered.");
         document.getElementById("newCandidateName").value = "";
         document.getElementById("newCandidatePost").value = "";
         populateCandidateDropdown();
-    }
-
-    function registerAgent() {
-        const name = document.getElementById("agentName").value.trim();
-        const code = document.getElementById("agentCode").value.trim();
-        if(!name || !code) return alert("All configurations are mandatory.");
-
-        let db = getDB(); db.users[code] = name; saveDB(db);
-        alert("Agent key parameters linked successfully.");
-        document.getElementById("agentName").value = "";
-        document.getElementById("agentCode").value = "";
     }
 
     function populateCandidateDropdown() {
@@ -395,7 +347,6 @@
         if(!id) {
             document.getElementById("postSelect").value = "";
             document.getElementById("classSelect").value = "";
-            document.getElementById("candidateDetailsHint").innerText = "";
             return;
         }
         const db = getDB();
@@ -403,50 +354,74 @@
         if(candidate) {
             document.getElementById("postSelect").value = candidate.post;
             document.getElementById("classSelect").value = candidate.class;
-            document.getElementById("candidateDetailsHint").innerText = `Target Account profile matched: Class ${candidate.class} - Category ${candidate.post}`;
         }
     }
 
+    // --- SECURED UNIQUE BULK 3-CENTER INPUT PROCESSOR ---
     async function submitResult() {
-        const center = document.getElementById("centerSelect").value;
         const candidateId = document.getElementById("candidateSelect").value;
-        const votes = document.getElementById("voteCount").value;
-        const invalidVotes = document.getElementById("invalidvoteCount").value;
+        const valA = document.getElementById("votesA").value.trim();
+        const valB = document.getElementById("votesB").value.trim();
+        const valC = document.getElementById("votesC").value.trim();
+        const invalidVotes = document.getElementById("invalidvoteCount").value.trim();
 
-        if(!center || !candidateId || !votes || !invalidVotes) return alert("Verification Error: Empty fields detected.");
+        if(!candidateId || valA === "" || valB === "" || valC === "" || invalidVotes === "") {
+            return alert("Verification Error: Complete entry inputs for all 3 centers and invalid total field.");
+        }
 
         const db = getDB();
         const candidate = db.candidates.find(c => c.id === candidateId);
         if(!candidate) return alert("Candidate record missing.");
 
-        const isDuplicate = db.results.some(r => r.name === candidate.name && r.center === center);
+        // ANTI-REPETITION LOCKOUT RULE: Block if any center data already has a sheet for this candidate
+        const isDuplicate = db.results.some(r => r.name === candidate.name && (r.center === "Center A" || r.center === "Center B" || r.center === "Center C"));
         if (isDuplicate) {
-            return alert(`Security Alert: A log sheet has already been submitted for ${candidate.name} at ${center}.\nRepeated entries blocked.`);
+            return alert(`Security Rejection: Data has ALREADY been submitted for ${candidate.name}.\nRepeated logs for this candidate are blocked.`);
         }
 
-        const newResult = {
-            id: Date.now().toString(), name: candidate.name, center: center,
-            post: candidate.post, class: candidate.class, votes: parseInt(votes),
-            invalidVotes: parseInt(invalidVotes), status: isAdmin ? "Approved" : "Pending",
-            submittedBy: currentUser
-        };
+        const centersData = [
+            { center: "Center A", votes: parseInt(valA) },
+            { center: "Center B", votes: parseInt(valB) },
+            { center: "Center C", votes: parseInt(valC) }
+        ];
 
-        try {
-            const { error } = await _supabase.from('voting_results').insert([newResult]);
-            if (error) throw error;
-        } catch (err) {
-            console.error("Supabase cluster link interrupted, row saved locally:", err);
+        // Process insertion packet
+        for(let i=0; i<centersData.length; i++) {
+            const item = centersData[i];
+            const newResult = {
+                id: (Date.now() + i).toString(), 
+                name: candidate.name, 
+                center: item.center,
+                post: candidate.post, 
+                class: candidate.class, 
+                votes: item.votes,
+                // Apportion the invalid total directly into the logs safely
+                invalidVotes: i === 0 ? parseInt(invalidVotes) : 0, 
+                status: isAdmin ? "Approved" : "Pending",
+                submittedBy: currentUser
+            };
+
+            try {
+                await _supabase.from('voting_results').insert([newResult]);
+            } catch (err) {
+                console.error("Local buffer cache backup fallback triggered:", err);
+            }
+            db.results.push(newResult);
         }
 
-        db.results.push(newResult); saveDB(db);
-        alert(`Tally logged successfully for ${candidate.name} at ${center}!`);
+        saveDB(db);
+        alert(`Successfully saved Centers A, B, and C results for ${candidate.name}!`);
         
-        document.getElementById("voteCount").value = "";
+        // SMOOTH ENGINE RESET: Clears values to stop fast clicking errors
+        document.getElementById("votesA").value = "";
+        document.getElementById("votesB").value = "";
+        document.getElementById("votesC").value = "";
         document.getElementById("invalidvoteCount").value = "";
+        
+        // Notice: Candidate select layout parameter remains saved to speed up consecutive operations!
         fetchData();
     }
 
-    // --- CONTINUATION AND COMPLETION OF THE REPLICATION ENGINE ---
     async function fetchData() {
         let resultsData = [];
         try {
@@ -459,7 +434,6 @@
                 resultsData = getDB().results || [];
             }
         } catch (err) {
-            console.warn("Supabase network request bypassed. Fetching offline local records instead.", err);
             resultsData = getDB().results || [];
         }
 
@@ -469,7 +443,6 @@
         if (isAdmin) { calculateLiveLeaderboard(resultsData); }
     }
 
-    // --- QUANTITATIVE INTELLIGENCE COMPUTATION LAYER ---
     function calculateSystemStats(data) {
         let totalValid = 0; let totalInvalid = 0;
         data.forEach(r => {
@@ -482,13 +455,12 @@
         document.getElementById("statEntries").innerText = data.length;
     }
 
-    // --- SYSTEM AUDIT PIPELINE LOGGER RENDERING ---
     function renderAuditFeedTable(data) {
         const tbody = document.getElementById("resultsTableBody");
         tbody.innerHTML = "";
 
         if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" style="text-align:center; color:#94a3b8; padding:20px;">No operational logs submitted yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" style="text-align:center; color:#94a3b8; padding:20px;">No operational logs loaded.</td></tr>`;
             return;
         }
 
@@ -506,15 +478,15 @@
                 }
                 actionControls += `
                     <button class="btn-edit" onclick="toggleInlineEdit(this, '${r.id}')">Adjust</button>
-                    <button onclick="deleteTallyRecord('${r.id}')" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; margin-left:4px; width:auto; cursor:pointer;">Drop</button>
+                    <button onclick="deleteTallyRecord('${r.id}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:6px; font-size:11px; margin-left:4px; width:auto; cursor:pointer;">Drop</button>
                 </td>`;
             }
 
             row.innerHTML = `
                 <td><strong>${r.name}</strong> <span style="font-size:11px; color:#64748b;">(${r.class})</span></td>
                 <td><span style="font-size:12px; font-weight:600;">${r.post}</span></td>
-                <td><span style="font-size:12px; font-weight:500;">${r.center}</span></td>
-                <td class="valid-cell">${r.votes}</td>
+                <td><span style="font-size:12px; font-weight:500; color:var(--accent);">${r.center}</span></td>
+                <td class="valid-cell" style="font-weight:700;">${r.votes}</td>
                 <td class="invalid-cell">${r.invalidVotes}</td>
                 <td>${statusBadge}</td>
                 ${actionControls}
@@ -523,7 +495,6 @@
         });
     }
 
-    // --- REAL-TIME LIVE LEADERBOARD (GRAND TOTAL CALCULATIONS) ---
     function calculateLiveLeaderboard(data) {
         const tbody = document.getElementById("overallStandingsBody");
         tbody.innerHTML = "";
@@ -555,7 +526,7 @@
         });
 
         if (finalRenderList.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">Awaiting verification checks on inbound entries.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">Awaiting verification checks.</td></tr>`;
             return;
         }
 
@@ -573,21 +544,13 @@
         });
     }
 
-    // --- ADMINISTRATIVE STATE MUTATION INTERFACES ---
     async function approveRecord(id) {
         if (!isAdmin) return;
         let db = getDB();
         let targetIndex = db.results.findIndex(r => r.id === id);
         if(targetIndex === -1) return;
-
         db.results[targetIndex].status = "Approved"; saveDB(db);
-
-        try {
-            const { error } = await _supabase.from('voting_results').update({ status: "Approved" }).eq('id', id);
-            if (error) throw error;
-        } catch (err) {
-            console.error("Supabase persistent syncing fault:", err);
-        }
+        try { await _supabase.from('voting_results').update({ status: "Approved" }).eq('id', id); } catch (err) {}
         fetchData();
     }
 
@@ -615,32 +578,18 @@
         let db = getDB();
         let targetIndex = db.results.findIndex(r => r.id === id);
         if(targetIndex === -1) return;
-
         db.results[targetIndex].votes = updatedValid;
         db.results[targetIndex].invalidVotes = updatedInvalid;
         saveDB(db);
-
-        try {
-            const { error } = await _supabase.from('voting_results').update({ votes: updatedValid, invalidVotes: updatedInvalid }).eq('id', id);
-            if (error) throw error;
-        } catch (err) {
-            console.error("Database connection exception during adjust mutation:", err);
-        }
+        try { await _supabase.from('voting_results').update({ votes: updatedValid, invalidVotes: updatedInvalid }).eq('id', id); } catch (err) {}
         fetchData();
     }
 
     async function deleteTallyRecord(id) {
         if (!isAdmin) return;
-        if (!confirm("CRITICAL: Drop this record sheet entry node explicitly from active database systems?")) return;
-
+        if (!confirm("Drop this record row?")) return;
         let db = getDB(); db.results = db.results.filter(r => r.id !== id); saveDB(db);
-
-        try {
-            const { error } = await _supabase.from('voting_results').delete().eq('id', id);
-            if (error) throw error;
-        } catch (err) {
-            console.error("Database delete rejection error state logged:", err);
-        }
+        try { await _supabase.from('voting_results').delete().eq('id', id); } catch (err) {}
         fetchData();
     }
 
