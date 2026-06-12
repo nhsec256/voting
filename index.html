@@ -50,19 +50,14 @@
         
         .form-group { margin-bottom: 15px; }        
         label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 6px; color: #475569; text-transform: uppercase; }        
-        select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; background: white; -webkit-appearance: none; }        
-        
-        /* Tally counter design for touch screens - no manual typing */
+        select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; background: white; -webkit-appearance: auto; }        
+        input[type="number"] { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: 700; text-align: center; outline: none; }
+        input[type="number"]:focus { border-color: var(--primary); }
+
         .centers-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0; }        
         @media (min-width: 480px) { .centers-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
-        .center-box { text-align: center; background: white; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0; }        
+        .center-box { text-align: center; }        
         .center-box h5 { font-size: 11px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }        
-        .counter-controls { display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-counter { width: 32px; height: 32px; font-size: 16px; font-weight: bold; border-radius: 50%; border: none; background: #e2e8f0; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .btn-counter:active { background: #cbd5e1; }
-        .counter-val { font-size: 18px; font-weight: 700; min-width: 35px; text-align: center; }
-        
-        .invalid-wrapper { background: #fff5f5; border: 1px solid #fed7d7; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
         
         button.btn-action { background-color: var(--primary); color: white; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; width: 100%; }        
         button.btn-action:hover { background-color: #003370; }        
@@ -171,45 +166,30 @@
                 
                 <div class="form-group">                    
                     <label>Select Target Candidate</label>                    
-                    <select id="candidateSelect" required style="-webkit-appearance: auto;">                        
+                    <select id="candidateSelect" required>                        
                         <option value="">-- Click to Select Candidate --</option>                    
-                    </select>                </div>                
+                    </select>                
+                </div>                
                 
                 <label style="color: var(--primary);">Valid Votes per Station</label>                
                 <div class="centers-grid">                    
                     <div class="center-box">                        
                         <h5>Center A</h5>                        
-                        <div class="counter-controls">
-                            <button type="button" class="btn-counter" onclick="changeVote('votesA', -1)">-</button>
-                            <span id="votesA" class="counter-val">0</span>
-                            <button type="button" class="btn-counter" onclick="changeVote('votesA', 1)">+</button>
-                        </div>
+                        <input type="number" id="votesA" min="0" placeholder="0">
                     </div>                    
                     <div class="center-box">                        
                         <h5>Center B</h5>                        
-                        <div class="counter-controls">
-                            <button type="button" class="btn-counter" onclick="changeVote('votesB', -1)">-</button>
-                            <span id="votesB" class="counter-val">0</span>
-                            <button type="button" class="btn-counter" onclick="changeVote('votesB', 1)">+</button>
-                        </div>
+                        <input type="number" id="votesB" min="0" placeholder="0">
                     </div>                    
                     <div class="center-box">                        
                         <h5>Center C</h5>                        
-                        <div class="counter-controls">
-                            <button type="button" class="btn-counter" onclick="changeVote('votesC', -1)">-</button>
-                            <span id="votesC" class="counter-val">0</span>
-                            <button type="button" class="btn-counter" onclick="changeVote('votesC', 1)">+</button>
-                        </div>
+                        <input type="number" id="votesC" min="0" placeholder="0">
                     </div>                
                 </div>                
                 
-                <div class="invalid-wrapper">                    
-                    <label style="color: #ef4444; margin-bottom:8px;">Invalid Votes (Combined)</label>                    
-                    <div class="counter-controls">
-                        <button type="button" class="btn-counter" style="background:#fee2e2" onclick="changeVote('invalidvoteCount', -1)">-</button>
-                        <span id="invalidvoteCount" class="counter-val" style="color:#ef4444">0</span>
-                        <button type="button" class="btn-counter" style="background:#fee2e2" onclick="changeVote('invalidvoteCount', 1)">+</button>
-                    </div>
+                <div class="form-group">                    
+                    <label style="color: #ef4444;">Invalid Votes (Combined)</label>                    
+                    <input type="number" id="invalidvoteCount" min="0" placeholder="0">
                 </div>                
                 
                 <button class="btn-action" onclick="submitResult()" style="background-color: var(--success);">Save & Sync Tally</button>            
@@ -302,15 +282,6 @@
 
     let currentUser = ""; let syncIntervalId = null;    
 
-    // Touch counter change function
-    function changeVote(elementId, amount) {
-        const el = document.getElementById(elementId);
-        let currentVal = parseInt(el.innerText) || 0;
-        currentVal += amount;
-        if(currentVal < 0) currentVal = 0;
-        el.innerText = currentVal;
-    }
-
     function login() {        
         const code = document.getElementById("loginUsername").value;        
         if (!code) return;
@@ -356,7 +327,6 @@
         const select = document.getElementById("candidateSelect");        
         select.innerHTML = '<option value="">-- Click to Choose Candidate --</option>';        
         
-        // Group candidate options clean by elective post fields
         let posts = [...new Set(list.map(item => item.post))];
         posts.forEach(post => {
             let group = document.createElement("optgroup");
@@ -375,10 +345,10 @@
         if(!cid) return alert("Please click and select a candidate first.");        
         
         const candidate = presetCandidates.find(c => c.id === cid);        
-        const vA = parseInt(document.getElementById("votesA").innerText) || 0;        
-        const vB = parseInt(document.getElementById("votesB").innerText) || 0;        
-        const vC = parseInt(document.getElementById("votesC").innerText) || 0;        
-        const inv = parseInt(document.getElementById("invalidvoteCount").innerText) || 0;        
+        const vA = parseInt(document.getElementById("votesA").value) || 0;        
+        const vB = parseInt(document.getElementById("votesB").value) || 0;        
+        const vC = parseInt(document.getElementById("votesC").value) || 0;        
+        const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;        
         
         if (!_supabase) {            
             alert("Database Connection Offline.");            
@@ -399,10 +369,10 @@
             alert("Sync Error: Confirm table setup rules in your console.");        
         } else {            
             alert("Tally saved and synced with cloud database successfully!");            
-            document.getElementById("votesA").innerText = "0";
-            document.getElementById("votesB").innerText = "0";
-            document.getElementById("votesC").innerText = "0";
-            document.getElementById("invalidvoteCount").innerText = "0";
+            document.getElementById("votesA").value = "";
+            document.getElementById("votesB").value = "";
+            document.getElementById("votesC").value = "";
+            document.getElementById("invalidvoteCount").value = "";
             document.getElementById("candidateSelect").value = "";            
             fetchData();        
         }    
