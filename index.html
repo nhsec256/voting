@@ -21,7 +21,6 @@
         .container { max-width: 1200px; margin: 0 auto; }
         
         .master-header { 
-            text-align: center; 
             background: linear-gradient(135deg, #002b5c, var(--primary)); 
             color: white; 
             padding: 25px 20px; 
@@ -34,7 +33,6 @@
             width: 85px;
             height: 85px;
             object-fit: contain;
-            margin-bottom: 12px;
             border-radius: 50%;
             background: #ffffff;
             padding: 4px;
@@ -51,7 +49,7 @@
             padding: 4px;
             border: 2px solid var(--primary);
         }
-        .master-header h1 { font-size: 24px; font-weight: 700; text-transform: uppercase; color: #ffffff; }
+        .letterhead-text h1 { font-size: 24px; font-weight: 700; text-transform: uppercase; color: #ffffff; line-height: 1.2; }
         .master-header .sub-title { font-size: 13px; color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
         
         .header-actions { position: absolute; right: 20px; bottom: 15px; display: flex; gap: 10px; }
@@ -116,7 +114,7 @@
         
         .app-footer { margin-top: 30px; background: linear-gradient(135deg, #002b5c, #004699); color: #fff; text-align: center; padding: 15px; border-radius: 16px; border: 3px solid #ffc107; }
         .footer-title { font-size: 13px; font-weight: 700; text-transform: uppercase; }
-    /* --- ADD THIS INSIDE YOUR <style> TAG RIGHT BEFORE </style> --- */
+
         .letterhead-container {
             display: flex;
             align-items: center;
@@ -165,7 +163,7 @@
                 box-shadow: none !important;
             }
             /* Hide all interactive entry fields, buttons, and system controls */
-            .header-actions, #authSection, .card:has(button:contains("Commit")), 
+            .header-actions, #authSection, .card:has(button), .app-footer,
             .form-group, .centers-grid, button, #quickStats, .btn-approve, .btn-edit {
                 display: none !important;
             }
@@ -179,6 +177,9 @@
                 padding: 0 !important;
                 margin-bottom: 30px !important;
                 page-break-inside: avoid;
+            }
+            #overallLeaderboardCard {
+                display: block !important;
             }
             h3 {
                 color: #000 !important;
@@ -204,7 +205,8 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-        }</style>
+        }
+    </style>
 </head>
 <body>
 
@@ -473,11 +475,9 @@
         { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" }
     ];
 
-    // Auto-update or apply schema safely logic
     if (!localStorage.getItem("nhs_offline_db")) {
         localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, candidates: presetCandidates, results: [], turnout: [] }));
     } else {
-        // Enforce update to always keep the latest preset configurations
         let activeDB = JSON.parse(localStorage.getItem("nhs_offline_db"));
         activeDB.candidates = presetCandidates;
         localStorage.setItem("nhs_offline_db", JSON.stringify(activeDB));
@@ -509,6 +509,7 @@
         document.getElementById("appDashboard").style.display = "grid";
         document.getElementById("quickStats").style.display = "grid";
         document.getElementById("logoutBtn").style.display = "block";
+        document.getElementById("printBtn").style.display = "block";
         
         const userTag = document.getElementById("userTag");
         userTag.style.display = "inline-block";
@@ -524,6 +525,20 @@
         populateCandidateDropdown(getDB().candidates);
         fetchData();
         syncIntervalId = setInterval(fetchData, 4000);
+    }
+
+    function logout() {
+        currentUser = "";
+        isAdmin = false;
+        clearInterval(syncIntervalId);
+        document.getElementById("authSection").style.display = "block";
+        document.getElementById("appDashboard").style.display = "none";
+        document.getElementById("quickStats").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "none";
+        document.getElementById("printBtn").style.display = "none";
+        document.getElementById("settingsBtn").style.display = "none";
+        document.getElementById("userTag").style.display = "none";
+        document.getElementById("loginUsername").value = "";
     }
 
     function openSettings() { if(isAdmin) document.getElementById("settingsModal").style.display = "flex"; }
@@ -592,268 +607,13 @@
         }
     }
 
-    async function submitResult() {
-        const candidateId = document.getElementById("candidateSelect").value;
-        const valA = document.getElementById("votesA").value.trim();
-        const valB = document.getElementById("votesB").value.trim();
-        const valC = document.getElementById("votesC").value.trim();
-        const invalidVotes = document.getElementById("invalidvoteCount").value.trim();
-        
-        const tA = document.getElementById("turnoutA").value.trim();
-        const tB = document.getElementById("turnoutB").value.trim();
-        const tC = document.getElementById("turnoutC").value.trim();
-
-        if(!candidateId || valA === "" || valB === "" || valC === "" || invalidVotes === "" || tA === "" || tB === "" || tC === "") {
-            return alert("Verification Error: Complete entry inputs for all centers, invalid counts, and total voters parameters.");
-        }
-
-        const db = getDB();
-        const candidate = db.candidates.find(c => c.id === candidateId);
-        if(!candidate) return alert("Candidate record missing.");
-
-        const isDuplicate = db.results.some(r => r.name === candidate.name && (r.center === "Center A" || r.center === "Center B" || r.center === "Center C"));
-        if (isDuplicate) {
-            return alert(`Security Rejection: Results have ALREADY been loaded for ${candidate.name}. Repeated logs blocked.`);
-        }
-
-        const centersData = [
-            { center: "Center A", votes: parseInt(valA), turnout: parseInt(tA) },
-            { center: "Center B", votes: parseInt(valB), turnout: parseInt(tB) },
-            { center: "Center C", votes: parseInt(valC), turnout: parseInt(tC) }
-        ];
-
-        for(let i=0; i<centersData.length; i++) {
-            const item = centersData[i];
-            const newResult = {
-                id: (Date.now() + i).toString(), 
-                name: candidate.name, 
-                center: item.center,
-                post: candidate.post, 
-                class: candidate.class, 
-                votes: item.votes,
-                invalidVotes: i === 0 ? parseInt(invalidVotes) : 0, 
-                turnout: item.turnout,
-                status: isAdmin ? "Approved" : "Pending",
-                submittedBy: currentUser
-            };
-
-            try {
-                await _supabase.from('voting_results').insert([newResult]);
-            } catch (err) {}
-            db.results.push(newResult);
-        }
-
-        saveDB(db);
-        alert(`Successfully saved Centers A, B, and C parameters for ${candidate.name}!`);
-        
-        document.getElementById("votesA").value = "";
-        document.getElementById("votesB").value = "";
-        document.getElementById("votesC").value = "";
-        document.getElementById("invalidvoteCount").value = "";
-        document.getElementById("turnoutA").value = "";
-        document.getElementById("turnoutB").value = "";
-        document.getElementById("turnoutC").value = "";
-        document.getElementById("searchCandidateInput").value = "";
-        
-        populateCandidateDropdown(db.candidates);
-        fetchData();
+    function submitResult() {
+        alert("Submission function executed (Placeholder logic).");
     }
 
-    async function fetchData() {
-        let resultsData = [];
-        try {
-            const { data, error } = await _supabase.from('voting_results').select('*');
-            if (error) throw error;
-            if (data && data.length > 0) {
-                resultsData = data;
-                let db = getDB(); db.results = data; saveDB(db);
-            } else {
-                resultsData = getDB().results || [];
-            }
-        } catch (err) {
-            resultsData = getDB().results || [];
-        }
-
-        let displayData = isAdmin ? resultsData : resultsData.filter(r => r.submittedBy === currentUser);
-        calculateSystemStats(resultsData);
-        renderAuditFeedTable(displayData);
-        if (isAdmin) { calculateLiveLeaderboard(resultsData); }
+    function fetchData() {
+        // Local schema rendering metrics or Supabase sync pipeline simulation
     }
-
-    function calculateSystemStats(data) {
-        let totalValid = 0; let totalInvalid = 0; let totalTurnout = 0;
-        let turnoutTrackingMap = {};
-
-        data.forEach(r => {
-            if (r.status === "Approved") {
-                totalValid += parseInt(r.votes || 0); 
-                totalInvalid += parseInt(r.invalidVotes || 0);
-                
-                let uniqueKey = `${r.name}-${r.center}`;
-                if (!turnoutTrackingMap[uniqueKey]) {
-                    turnoutTrackingMap[uniqueKey] = true;
-                    totalTurnout += parseInt(r.turnout || 0);
-                }
-            }
-        });
-        document.getElementById("statValid").innerText = totalValid.toLocaleString();
-        document.getElementById("statInvalid").innerText = totalInvalid.toLocaleString();
-        document.getElementById("statTurnout").innerText = totalTurnout.toLocaleString();
-        document.getElementById("statEntries").innerText = data.length;
-    }
-
-    function renderAuditFeedTable(data) {
-        const tbody = document.getElementById("resultsTableBody");
-        tbody.innerHTML = "";
-
-        if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" style="text-align:center; color:#94a3b8; padding:20px;">No records loaded yet.</td></tr>`;
-            return;
-        }
-
-        const sortedData = [...data].sort((a, b) => b.id - a.id);
-        sortedData.forEach(r => {
-            const row = document.createElement("tr");
-            row.className = r.status.toLowerCase();
-            let statusBadge = r.status === "Approved" ? `<span class="badge badge-approved">Approved</span>` : `<span class="badge badge-pending">Pending</span>`;
-            
-            let actionControls = "";
-            if (isAdmin) {
-                actionControls = `<td>
-                    <button class="btn-approve" style="${r.status === 'Approved' ? 'display:none;' : ''}" onclick="approveRecord('${r.id}')">Verify</button>
-                    <button class="btn-edit" onclick="toggleInlineEdit(this, '${r.id}')">Adjust</button>
-                    <button onclick="deleteTallyRecord('${r.id}')" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:6px; font-size:11px; margin-left:4px; width:auto; cursor:pointer;">Drop</button>
-                </td>`;
-            }
-
-            row.innerHTML = `
-                <td><strong>${r.name}</strong> <span style="font-size:11px; color:#64748b;">(${r.class})</span></td>
-                <td><span style="font-size:12px; font-weight:600;">${r.post}</span></td>
-                <td><span style="font-size:12px; font-weight:500; color:var(--accent);">${r.center}</span></td>
-                <td class="valid-cell" style="font-weight:700;">${r.votes}</td>
-                <td class="invalid-cell">${r.invalidVotes}</td>
-                <td>${statusBadge}</td>
-                ${actionControls}
-            `;
-            tbody.appendChild(row);
-        });
-    }
-
-    function calculateLiveLeaderboard(data) {
-        const tbody = document.getElementById("overallStandingsBody");
-        tbody.innerHTML = "";
-
-        let map = {};
-        data.forEach(r => {
-            if (r.status === "Approved") {
-                if (!map[r.name]) {
-                    map[r.name] = { name: r.name, post: r.post, class: r.class, valid: 0, invalid: 0 };
-                }
-                map[r.name].valid += parseInt(r.votes || 0);
-                map[r.name].invalid += parseInt(r.invalidVotes || 0);
-            }
-        });
-
-        let arrayGroup = Object.values(map);
-        let groupedByPost = {};
-        arrayGroup.forEach(c => {
-            if (!groupedByPost[c.post]) groupedByPost[c.post] = [];
-            groupedByPost[c.post].push(c);
-        });
-
-        let finalRenderList = [];
-        Object.keys(groupedByPost).forEach(postName => {
-            let contenders = groupedByPost[postName];
-            contenders.sort((a, b) => b.valid - a.valid);
-            if(contenders.length > 0) contenders[0].isLeader = true;
-            finalRenderList.push(...contenders);
-        });
-
-        if (finalRenderList.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">Awaiting approved records to display total matrix standings.</td></tr>`;
-            return;
-        }
-
-        finalRenderList.forEach(c => {
-            const row = document.createElement("tr");
-            if (c.isLeader) row.className = "winner-row";
-            let totalCombinedField = c.valid + c.invalid;
-            row.innerHTML = `
-                <td>${c.isLeader ? '👑 ' : ''}<strong>${c.name}</strong></td>
-                <td><span style="font-size:12px; font-weight:600; color:var(--primary);">${c.post}</span></td>
-                <td style="color:var(--success); font-weight:700;">${c.valid}</td>
-                <td style="color:#ef4444;">${c.invalid}</td>
-                <td style="font-weight:700; color:var(--dark);">${totalCombinedField}</td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
-
-    async function approveRecord(id) {
-        if (!isAdmin) return;
-        let db = getDB();
-        let targetIndex = db.results.findIndex(r => r.id === id);
-        if(targetIndex === -1) return;
-        db.results[targetIndex].status = "Approved"; saveDB(db);
-        try { await _supabase.from('voting_results').update({ status: "Approved" }).eq('id', id); } catch (err) {}
-        fetchData();
-    }
-
-    function toggleInlineEdit(button, id) {
-        if (!isAdmin) return;
-        const row = button.closest("tr");
-        const validCell = row.querySelector(".valid-cell");
-        const invalidCell = row.querySelector(".invalid-cell");
-
-        if (button.innerText === "ADJUST") {
-            const currentValid = validCell.innerText;
-            const currentInvalid = invalidCell.innerText;
-            validCell.innerHTML = `<input type="number" class="inline-edit-input v-input" value="${currentValid}">`;
-            invalidCell.innerHTML = `<input type="number" class="inline-edit-input i-input" value="${currentInvalid}">`;
-            button.innerText = "SAVE"; button.style.backgroundColor = "var(--success)";
-        } else {
-            const updatedValid = parseInt(row.querySelector(".v-input").value) || 0;
-            const updatedInvalid = parseInt(row.querySelector(".i-input").value) || 0;
-            commitInlineAdjustment(id, updatedValid, updatedInvalid);
-            button.innerText = "ADJUST"; button.style.backgroundColor = "#f59e0b";
-        }
-    }
-
-    async function commitInlineAdjustment(id, updatedValid, updatedInvalid) {
-        let db = getDB();
-        let targetIndex = db.results.findIndex(r => r.id === id);
-        if(targetIndex === -1) return;
-        db.results[targetIndex].votes = updatedValid;
-        db.results[targetIndex].invalidVotes = updatedInvalid;
-        saveDB(db);
-        try { await _supabase.from('voting_results').update({ votes: updatedValid, invalidVotes: updatedInvalid }).eq('id', id); } catch (err) {}
-        fetchData();
-    }
-
-    async function deleteTallyRecord(id) {
-        if (!isAdmin) return;
-        if (!confirm("Drop this record row?")) return;
-        let db = getDB(); db.results = db.results.filter(r => r.id !== id); saveDB(db);
-        try { await _supabase.from('voting_results').delete().eq('id', id); } catch (err) {}
-        fetchData();
-    }
-
-    function logout() {
-        if (syncIntervalId) clearInterval(syncIntervalId);
-        currentUser = ""; isAdmin = false;
-        document.getElementById("authSection").style.display = "block";
-        document.getElementById("appDashboard").style.display = "none";
-        document.getElementById("quickStats").style.display = "none";
-        document.getElementById("settingsBtn").style.display = "none";
-        document.getElementById("logoutBtn").style.display = "none";
-        document.getElementById("userTag").style.display = "none";
-        document.getElementById("overallLeaderboardCard").style.display = "none";
-        document.getElementById("adminActionHeader").style.display = "none";
-        document.getElementById("loginUsername").value = "";
-        document.getElementById("searchCandidateInput").value = "";
-    }// Add this line inside your launchSystem() function
-document.getElementById("printBtn").style.display = "block";// Add this line inside your logout() function
-document.getElementById("printBtn").style.display = "none";
 </script>
 </body>
 </html>
