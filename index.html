@@ -78,7 +78,6 @@
         input, select { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background-color: #fff; color: var(--dark); font-weight: 500; }
         input:focus, select:focus { border-color: var(--primary); }
         
-        /* SEARCH BAR STYLING */
         .search-wrapper { position: relative; margin-bottom: 15px; }
         .search-input { background-color: #fffbeb; border: 2px solid #fef08a; padding-left: 35px; font-weight: 600; color: #1e293b; }
         .search-input:focus { border-color: var(--secondary); background-color: #fff; }
@@ -169,10 +168,10 @@
                 <h3>Bulk Enter Center Results</h3>
                 
                 <div class="form-group">
-                    <label for="searchCandidateInput" style="color: var(--accent);">🔍 Quick Search Box</label>
+                    <label for="searchCandidateInput" style="color: var(--accent);">🔍 Search & Filter Board Members</label>
                     <div class="search-wrapper">
                         <span class="search-icon">🔍</span>
-                        <input type="text" id="searchCandidateInput" class="search-input" placeholder="Type candidate name or position to filter..." oninput="filterCandidateDropdown()">
+                        <input type="text" id="searchCandidateInput" class="search-input" placeholder="Type name or post (e.g., 'Headboy', 'Stella')..." oninput="filterCandidateDropdown()">
                     </div>
                 </div>
 
@@ -379,8 +378,14 @@
         { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" }
     ];
 
+    // Auto-update or apply schema safely logic
     if (!localStorage.getItem("nhs_offline_db")) {
         localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, candidates: presetCandidates, results: [], turnout: [] }));
+    } else {
+        // Enforce update to always keep the latest preset configurations
+        let activeDB = JSON.parse(localStorage.getItem("nhs_offline_db"));
+        activeDB.candidates = presetCandidates;
+        localStorage.setItem("nhs_offline_db", JSON.stringify(activeDB));
     }
 
     let currentUser = "";
@@ -448,7 +453,6 @@
         const select = document.getElementById("candidateSelect");
         select.innerHTML = '<option value="">-- Choose Candidate --</option>';
         
-        // Sort items logically by structural group, post category, then alphabet name
         const sorted = [...(candidatesList || [])].sort((a, b) => {
             if (a.class !== b.class) return a.class.localeCompare(b.class);
             if (a.post !== b.post) return a.post.localeCompare(b.post);
@@ -462,7 +466,6 @@
         });
     }
 
-    // NEW DROPDOWN ADVANCED PATTERN FILTER SEARCH ALGORITHM
     function filterCandidateDropdown() {
         const query = document.getElementById("searchCandidateInput").value.trim().toUpperCase();
         const db = getDB();
