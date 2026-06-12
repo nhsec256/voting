@@ -7,17 +7,19 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nhsec256.github.io/voting/">
     <meta property="og:title" content="Namungoona High School - Electoral Committee">
-    <meta property="og:description" content="Official offline secured recording workspace for vote counting and log sheet submission.">
+    <meta property="og:description" content="Official real-time secured recording workspace for vote counting and log sheet submission.">
     <meta property="og:image" content="https://nhsec256.github.io/voting/SCHOOL%20BADGE.jpg">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://nhsec256.github.io/voting/">
     <meta property="twitter:title" content="Namungoona High School - Electoral Committee">
-    <meta property="twitter:description" content="Official offline secured recording workspace for vote counting and log sheet submission.">
+    <meta property="twitter:description" content="Official real-time secured recording workspace for vote counting and log sheet submission.">
     <meta property="twitter:image" content="https://nhsec256.github.io/voting/SCHOOL%20BADGE.jpg">
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --primary: #004699;        /* Bright Premium Academy Blue */
@@ -354,7 +356,6 @@
         <div style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px dashed var(--border);">
             <h4 style="font-size: 12px; text-transform: uppercase; margin-bottom: 10px; color: var(--primary);">Register New Polling Agent Profile</h4>
             <div class="form-group">
-                <label>Agent Full Name</label>
                 <input type="text" id="agentName" placeholder="e.g., Mukasa Ronald">
             </div>
             <div class="form-group">
@@ -385,55 +386,43 @@
 </div>
 
 <script>
-    // Hardcoded Official Baseline Committee Members
-    const officialSystemUsers = {
-        "ronnie123": "HON. SSEMAGANDA RONALD",
-        "alvink123": "Mr. ALVIN. K.",
-        "njuki123": "MR. NJUKI JOSEPH MUSAAZI",
-        "mkj123": "MR. MUHEREZA KENNETH JOEL",
-        "gk123": "MDM. KIRABIRA GLENNY"
-    };
+    // =========================================================
+    // PRODUCTION SUPABASE ROUTING MIDDLEWARE
+    // =========================================================
+    const SUPABASE_URL = "https://wihgchfayfvhscxctbba.supabase.co"; 
+    const SUPABASE_ANON_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
 
-    // Initialize database architecture structure
-    if (!localStorage.getItem("nhs_offline_db")) {
-        localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, results: [] }));
-    }
-
-    // Merge baseline system users into active runtime storage configuration
-    let dbInit = JSON.parse(localStorage.getItem("nhs_offline_db"));
-    let databaseUpdated = false;
-    Object.keys(officialSystemUsers).forEach(key => {
-        if (!dbInit.users[key]) {
-            dbInit.users[key] = officialSystemUsers[key];
-            databaseUpdated = true;
-        }
-    });
-    if (databaseUpdated) {
-        localStorage.setItem("nhs_offline_db", JSON.stringify(dbInit));
-    }
+    // Initialize the absolute cloud pipeline connection API
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = "";
     let isAdmin = false;
 
-    function getDB() { return JSON.parse(localStorage.getItem("nhs_offline_db")); }
-    function saveDB(data) { localStorage.setItem("nhs_offline_db", JSON.stringify(data)); }
-
-    function login() {
+    // 1. SYSTEM SECURITY ACCESS & ROUTING CONTROLLER
+    async function login() {
         const code = document.getElementById("loginUsername").value.trim();
         if(!code) return alert("Access Key required.");
 
-        const db = getDB();
+        try {
+            // Check cloud directory engine database for matching validation string
+            const { data: userRecord, error } = await _supabase
+                .from('system_users')
+                .select('*')
+                .eq('code', code)
+                .maybeSingle();
 
-        if (code === "oscar123") {
-            isAdmin = true;
-            currentUser = "KAMYA OSCAR (Admin)";
-            launchSystem();
-        } else if (db.users[code]) {
-            isAdmin = false;
-            currentUser = db.users[code];
-            launchSystem();
-        } else {
-            alert("Security Verification Failed: Active Login ID record matching that key string was not located.");
+            if (error) throw error;
+
+            if (userRecord) {
+                isAdmin = userRecord.is_admin;
+                currentUser = userRecord.name;
+                launchSystem();
+            } else {
+                alert("Security Verification Failed: Active Login ID record matching that key string was not located.");
+            }
+        } catch (err) {
+            console.error("Login Engine Failure:", err);
+            alert("Database Gateway Error: Failed to resolve verification pipeline requests.");
         }
     }
 
@@ -467,55 +456,82 @@
         document.getElementById("settingsModal").style.display = "none";
     }
 
-    function registerAgent() {
+    // 2. AGENT ACCOUNTS MANAGER OVERRIDES
+    async function registerAgent() {
         const name = document.getElementById("agentName").value.trim();
         const code = document.getElementById("agentCode").value.trim();
         if(!name || !code) return alert("Both properties are required parameters.");
 
-        let db = getDB();
-        db.users[code] = name;
-        saveDB(db);
+        try {
+            const { error } = await _supabase
+                .from('system_users')
+                .insert([{ code: code, name: name, is_admin: false }]);
 
-        alert(`Verification Record Initialized!\nAgent: ${name}\nLogin ID Key: ${code}`);
-        document.getElementById("agentName").value = "";
-        document.getElementById("agentCode").value = "";
-        renderAgentsList();
+            if (error) throw error;
+
+            alert(`Verification Record Initialized!\nAgent: ${name}\nLogin ID Key: ${code}`);
+            document.getElementById("agentName").value = "";
+            document.getElementById("agentCode").value = "";
+            renderAgentsList();
+        } catch (err) {
+            console.error(err);
+            alert("Storage Write Fault: Failed to push registration schema downstream.");
+        }
     }
 
-    function renderAgentsList() {
+    async function renderAgentsList() {
         const tbody = document.getElementById("agentsListTableBody");
-        tbody.innerHTML = "";
-        const db = getDB();
+        tbody.innerHTML = "<tr><td colspan='3'>Syncing directory...</td></tr>";
         
-        Object.keys(db.users).forEach(code => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td><strong>${db.users[code]}</strong></td>
-                <td><code>${code}</code></td>
-                <td>
-                    <button onclick="deleteAgent('${code}')" 
-                            style="background:#ef4444; color:white; border:none; padding:5px 8px; border-radius:5px; font-size:11px; cursor:pointer;">
-                        Delete
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
+        try {
+            const { data: users, error } = await _supabase
+                .from('system_users')
+                .select('*')
+                .order('name', { ascending: true });
+
+            if (error) throw error;
+
+            tbody.innerHTML = "";
+            users.forEach(user => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><strong>${user.name} ${user.is_admin ? '(Admin)' : ''}</strong></td>
+                    <td><code>${user.code}</code></td>
+                    <td>
+                        <button onclick="deleteAgent('${user.code}')" 
+                                ${user.code === 'oscar123' ? 'disabled style="background:#cbd5e1;cursor:not-allowed;"' : 'style="background:#ef4444;"'}
+                                style="color:white; border:none; padding:5px 8px; border-radius:5px; font-size:11px; cursor:pointer;">
+                            Delete
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        } catch (err) {
+            tbody.innerHTML = "<tr><td colspan='3'>Error downloading cloud roster logs.</td></tr>";
+        }
     }
 
-    function deleteAgent(code) {
+    async function deleteAgent(code) {
         if (!isAdmin) return;
         if (!confirm("Are you sure you want to delete this agent?")) return;
 
-        let db = getDB();
-        delete db.users[code];
-        saveDB(db);
+        try {
+            const { error } = await _supabase
+                .from('system_users')
+                .delete()
+                .eq('code', code);
 
-        renderAgentsList();
-        alert("Agent deleted successfully.");
+            if (error) throw error;
+            renderAgentsList();
+            alert("Agent deleted successfully.");
+        } catch (err) {
+            alert("Failed to delete database entry routing payload.");
+        }
     }
 
-    function submitResult() {
+    // 3. VOTING SYSTEM DATA MUTATION ACTIONS
+    async function submitResult() {
         const center = document.getElementById("centerSelect").value;
         const name = document.getElementById("candidateName").value.trim();
         const post = document.getElementById("postSelect").value;
@@ -527,42 +543,59 @@
             return alert("Verification Error: Empty data items detected. Form processing aborted.");
         }
 
-        let db = getDB();
-        db.results.push({
-            id: Date.now().toString(),
-            name: name,
-            center: center,
-            post: post,
-            class: cls,
-            votes: parseInt(votes),
-            invalidVotes: parseInt(invalidVotes),
-            status: isAdmin ? "Approved" : "Pending",
-            submittedBy: currentUser
-        });
-        saveDB(db);
+        try {
+            const { error } = await _supabase
+                .from('voting_results')
+                .insert([{
+                    id: Date.now().toString(),
+                    name: name,
+                    center: center,
+                    post: post,
+                    class: cls,
+                    votes: parseInt(votes),
+                    invalid_votes: parseInt(invalidVotes),
+                    status: isAdmin ? "Approved" : "Pending",
+                    submitted_by: currentUser
+                }]);
 
-        alert("Data transaction logged successfully.");
-        document.getElementById("candidateName").value = "";
-        document.getElementById("postSelect").value = "";
-        document.getElementById("classSelect").value = "";
-        document.getElementById("centerSelect").value = "";
-        document.getElementById("voteCount").value = "";
-        document.getElementById("invalidvoteCount").value = "";
-        fetchData();
+            if (error) throw error;
+
+            alert("Data transaction logged successfully to cloud server clusters.");
+            document.getElementById("candidateName").value = "";
+            document.getElementById("postSelect").value = "";
+            document.getElementById("classSelect").value = "";
+            document.getElementById("centerSelect").value = "";
+            document.getElementById("voteCount").value = "";
+            document.getElementById("invalidvoteCount").value = "";
+            fetchData();
+        } catch (err) {
+            console.error(err);
+            alert("Database Post Failed: Check cloud pipeline connection settings.");
+        }
     }
 
-    function fetchData() {
-        const db = getDB();
-        renderAuditFeed(db.results);
-        calculateGrandTotals(db.results);
+    async function fetchData() {
+        try {
+            const { data: results, error } = await _supabase
+                .from('voting_results')
+                .select('*');
+
+            if (error) throw error;
+
+            renderAuditFeed(results || []);
+            calculateGrandTotals(results || []);
+        } catch (err) {
+            console.error("Pipeline read execution tracking faulted:", err);
+        }
     }
 
     function renderAuditFeed(resultsArray) {
         const tbody = document.getElementById("resultsTableBody");
         tbody.innerHTML = "";
         
+        // Reverse array data sequence to position the newest updates first
         resultsArray.slice().reverse().forEach(r => {
-            if (!isAdmin && r.submittedBy !== currentUser && r.status === 'Pending') return;
+            if (!isAdmin && r.submitted_by !== currentUser && r.status === 'Pending') return;
 
             const row = document.createElement("tr");
             row.className = r.status === 'Approved' ? 'approved' : 'pending';
@@ -573,19 +606,18 @@
                     `<button class="btn-approve" onclick="approveEntry('${r.id}')">Approve</button>` : 
                     `<span style="color:#16a34a; font-weight:600; font-size:12px;">✓ Verified</span>`;
                 
-                let editBtn = `<button class="btn-edit" onclick="editVotePrompt('${r.id}', ${r.votes}, ${r.invalidVotes || 0})">Modify Tally</button>`;
-                
+                let editBtn = `<button class="btn-edit" onclick="editVotePrompt('${r.id}', ${r.votes}, ${r.invalid_votes || 0})">Modify Tally</button>`;
                 let deleteBtn = `<button onclick="deleteEntry('${r.id}')" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; cursor:pointer; margin-left:4px; font-weight:700; text-transform:uppercase;">Delete</button>`;
                 
                 actionTd = `<td>${approveBtn} ${editBtn} ${deleteBtn}</td>`;
             }
 
             row.innerHTML = `
-                <td><strong>${r.name}</strong> <br><small style="color:#64748b;">By: ${r.submittedBy}</small></td>
+                <td><strong>${r.name}</strong> <br><small style="color:#64748b;">By: ${r.submitted_by}</small></td>
                 <td>${r.post} <span style="font-size:11px; color:#64748b;">(${r.class})</span></td>
                 <td><small>${r.center}</small></td>
                 <td id="vote-display-${r.id}"><strong>${r.votes}</strong></td>
-                <td id="invalid-display-${r.id}"><strong>${r.invalidVotes || 0}</strong></td>
+                <td id="invalid-display-${r.id}"><strong>${r.invalid_votes || 0}</strong></td>
                 <td><span class="badge badge-${r.status.toLowerCase()}">${r.status}</span></td>
                 ${actionTd}
             `;
@@ -593,23 +625,29 @@
         });
     }
 
-    function deleteEntry(id) {
+    async function deleteEntry(id) {
         if (!isAdmin) return;
         if (!confirm("Are you completely sure you want to delete this log sheet row permanently from the system?")) return;
 
-        let db = getDB();
-        db.results = db.results.filter(r => r.id !== id);
-        saveDB(db);
-        
-        fetchData();
-        alert("Record permanently deleted from system storage.");
+        try {
+            const { error } = await _supabase
+                .from('voting_results')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+            fetchData();
+            alert("Record permanently deleted from system cloud layers.");
+        } catch (err) {
+            alert("Failed to destroy transactional table item.");
+        }
     }
 
     function editVotePrompt(id, currentVotes, currentInvalid) {
         if (!isAdmin) return;
         const validCell = document.getElementById(`vote-display-${id}`);
         const invalidCell = document.getElementById(`invalid-display-${id}`);
-                
+                        
         validCell.innerHTML = `<input type="number" id="inline-edit-valid-${id}" class="inline-edit-input" value="${currentVotes}" min="0">`;
         invalidCell.innerHTML = `
             <input type="number" id="inline-edit-invalid-${id}" class="inline-edit-input" value="${currentInvalid}" min="0">
@@ -617,26 +655,40 @@
         `;
     }
 
-    function saveInlineEdit(id) {
+    async function saveInlineEdit(id) {
         const newValid = document.getElementById(`inline-edit-valid-${id}`).value;
         const newInvalid = document.getElementById(`inline-edit-invalid-${id}`).value;
         
         if (newValid === "" || parseInt(newValid) < 0 || newInvalid === "" || parseInt(newInvalid) < 0) {
             return alert("Enter valid tally counts.");
         }
-                
-        let db = getDB();
-        db.results = db.results.map(r => r.id === id ? { ...r, votes: parseInt(newValid), invalidVotes: parseInt(newInvalid) } : r);
-        saveDB(db);
-        fetchData();
-        alert("Record adjusted successfully by administrator.");
+                        
+        try {
+            const { error } = await _supabase
+                .from('voting_results')
+                .update({ votes: parseInt(newValid), invalid_votes: parseInt(newInvalid) })
+                .eq('id', id);
+
+            if (error) throw error;
+            fetchData();
+            alert("Record adjusted successfully by administrator.");
+        } catch (err) {
+            alert("Cloud write configuration modification mutation aborted by server.");
+        }
     }
 
-    function approveEntry(id) {
-        let db = getDB();
-        db.results = db.results.map(r => r.id === id ? { ...r, status: "Approved" } : r);
-        saveDB(db);
-        fetchData();
+    async function approveEntry(id) {
+        try {
+            const { error } = await _supabase
+                .from('voting_results')
+                .update({ status: "Approved" })
+                .eq('id', id);
+
+            if (error) throw error;
+            fetchData();
+        } catch (err) {
+            alert("Could not process approval transaction sequence.");
+        }
     }
 
     function calculateGrandTotals(resultsArray) {
@@ -651,7 +703,7 @@
                 totals[key] = { name: r.name, post: r.post, class: r.class, totalVotes: 0, totalInvalid: 0 };
             }
             totals[key].totalVotes += r.votes;
-            totals[key].totalInvalid += (r.invalidVotes || 0);
+            totals[key].totalInvalid += (r.invalid_votes || 0);
         });
 
         let consolidatedList = Object.values(totals);
