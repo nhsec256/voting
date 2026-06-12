@@ -179,6 +179,10 @@
 
     <div id="quickStats" class="quick-stats-bar">
         <div class="stat-card">
+            <h4>Total Eligible Voters</h4>
+            <p id="statTotalVoters" style="color: #1e3a8a;">1500</p>
+        </div>
+        <div class="stat-card">
             <h4>Total Valid Votes</h4>
             <p id="statValid">0</p>
         </div>
@@ -252,10 +256,6 @@
                         <input type="number" id="votesC" min="0" placeholder="0">
                     </div>
                 </div>
-                <div class="stat-card" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
-    <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600; text-transform: uppercase;">Total Eligible Voters</p>
-    <h3 id="statTotalVoters" style="margin: 5px 0 0 0; font-size: 24px; color: #1e3a8a;"></h3>
-</div>
 
                 <div class="form-group">
                     <label for="invalidvoteCount" style="color: #ef4444;">Total Combined Invalid Votes (All Centers)</label>
@@ -310,8 +310,9 @@
                             <tr>
                                 <th>Candidate</th>
                                 <th>Post</th>
-                                <th>Center</th>
-                                <th>Valid</th>
+                                <th>A</th>
+                                <th>B</th>
+                                <th>C</th>
                                 <th>Invalid</th>
                                 <th>Status</th>
                                 <th id="adminActionHeader" style="display:none;">Actions</th>
@@ -343,7 +344,7 @@
                 <option value="Prefects Body">Prefects Body</option>
             </select>
         </div>
-        <button style="background-color: var(--accent); margin-bottom: 20px;" onclick="registerCandidate()">Save Candidate</button>
+        <button style="background-color: var(--accent); margin-bottom: 20px;" onclick="alert('Presets are hardcoded for speed tonight!')">Save Candidate</button>
         
         <hr style="border: 0; border-top: 2px dashed var(--border); margin: 20px 0;">
         
@@ -363,7 +364,7 @@
                 <option value="ADMIN">System Administrator (Full Controls & Approvals)</option>
             </select>
         </div>
-        <button style="background-color: #ef4444;" onclick="registerSystemUser()">Authorize System Access</button>
+        <button style="background-color: #ef4444;" onclick="alert('Users are fixed for tonight\'s secure session!')">Authorize System Access</button>
         
         <button class="modal-close" onclick="closeSettings()">Close Control Board</button>
     </div>
@@ -376,7 +377,6 @@
 <script>
     // 1. Cloud Network Configuration
     const SUPABASE_URL = "https://wexbtyfwwfctolunwkyu.supabase.co";
-    // Your new API Key linked directly here
     const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -473,6 +473,7 @@
             alert("Login ID match not located.");
         }
     }
+
     function launchSystem() {
         document.getElementById("authSection").style.display = "none";
         document.getElementById("appDashboard").style.display = "grid";
@@ -480,15 +481,6 @@
         document.getElementById("logoutBtn").style.display = "block";
         document.getElementById("printBtn").style.display = "block";
         document.getElementById("overallLeaderboardCard").style.display = "block";
-        document.getElementById("statValid").innerText = totalValid;
-        document.getElementById("statInvalid").innerText = totalInvalid;
-        document.getElementById("statEntries").innerText = results.length;
-        document.getElementById("statTurnout").innerText = totalTurnout;
-        
-        // This calculates your current total turnout percentage against your registration baseline
-        const totalRegisteredBaseline = 1500; // Put your exact school enrollment count here
-        document.getElementById("statTotalVoters").innerText = `${totalRegisteredBaseline} (Abs: ${totalRegisteredBaseline - totalTurnout})`;
-    }
                 
         const userTag = document.getElementById("userTag");
         userTag.style.display = "inline-block";
@@ -502,7 +494,6 @@
                 
         populateCandidateDropdown(presetCandidates);
         fetchData();
-        // Automatically polls the cloud every 4 seconds for instant multi-device view updates
         syncIntervalId = setInterval(fetchData, 4000);
     }
 
@@ -547,7 +538,6 @@
     function openSettings() { document.getElementById("settingsModal").style.display = "flex"; }
     function closeSettings() { document.getElementById("settingsModal").style.display = "none"; }
 
-    // 2. CLOUD SAVE FUNCTION (Saves to internet database instantly)
     async function submitResult() {
         const candidateId = document.getElementById("candidateSelect").value;
         if(!candidateId) return alert("Please choose a candidate first.");
@@ -568,17 +558,13 @@
             enteredBy: currentUser
         };
 
-        // Deletes any old entries for this candidate on the table first to avoid duplication
         await _supabase.from('results').delete().eq('candidateId', candidate.id);
-
-        // Uploads the new tallies globally
         const { error } = await _supabase.from('results').insert([payload]);
 
         if (error) {
-            alert("Database Error: Verify your Supabase Table Schema names match column structures.");
+            alert("Verify your Supabase Table Schema names match column structures.");
         } else {
             alert("Standings successfully pushed to Cloud Framework!");
-            // Reset fields
             ["votesA", "votesB", "votesC", "invalidvoteCount", "turnoutA", "turnoutB", "turnoutC", "candidateSelect", "postSelect", "classSelect", "searchCandidateInput"].forEach(id => document.getElementById(id).value = "");
             populateCandidateDropdown(presetCandidates);
             fetchData();
@@ -596,7 +582,6 @@
         fetchData();
     }
 
-    // 3. CLOUD FETCH FUNCTION (Pulls down data from database for real-time tracking)
     async function fetchData() {
         const { data: results, error } = await _supabase.from('results').select('*');
         if (error || !results) return;
@@ -608,12 +593,10 @@
         results.forEach(r => {
             const rowTotalValid = r.votesA + r.votesB + r.votesC;
             if (r.status === "APPROVED") {
-                
-            if (r.status === "APPROVED") {
-    totalValid += rowTotalValid;
-    totalInvalid += r.invalid;
-    totalTurnout += (r.turnoutA + r.turnoutB + r.turnoutC);
-}
+                totalValid += rowTotalValid;
+                totalInvalid += r.invalid;
+                totalTurnout += (r.turnoutA + r.turnoutB + r.turnoutC);
+            }
 
             let tr = document.createElement("tr");
             tr.className = r.status.toLowerCase();
@@ -623,12 +606,13 @@
             auditBody.appendChild(tr);
         });
 
-        // Compute Live Board aggregates across all sessions
         const leadersBody = document.getElementById("overallStandingsBody");
         leadersBody.innerHTML = "";
 
         let aggregates = {};
-        presetCandidates.forEach(c => { aggregates[c.id] = { name: c.name, post: c.post, valid: 0, invalid: 0, grand: 0 }; });
+        presetCandidates.forEach(c => { 
+            aggregates[c.id] = { name: c.name, post: c.post, valid: 0, invalid: 0, grand: 0 }; 
+        });
 
         results.forEach(r => {
             if(aggregates[r.candidateId]) {
@@ -639,14 +623,23 @@
             }
         });
 
-        let postHighScores = {};
-        Object.keys(aggregates).forEach(cid => {
-            const item = aggregates[cid];
-            if(!postHighScores[item.post] || postHighScores[item.post] < item.valid) { if(item.valid > 0) postHighScores[item.post] = item.valid; }
+        let sortedList = Object.keys(aggregates).map(cid => aggregates[cid]);
+
+        sortedList.sort((a, b) => {
+            if (a.post !== b.post) {
+                return a.post.localeCompare(b.post);
+            }
+            return b.valid - a.valid;
         });
 
-        Object.keys(aggregates).forEach(cid => {
-            const item = aggregates[cid];
+        let postHighScores = {};
+        sortedList.forEach(item => {
+            if(!postHighScores[item.post] || postHighScores[item.post] < item.valid) { 
+                if(item.valid > 0) postHighScores[item.post] = item.valid; 
+            }
+        });
+
+        sortedList.forEach(item => {
             let tr = document.createElement("tr");
             if(item.valid > 0 && postHighScores[item.post] === item.valid) tr.className = "winner-row";
 
@@ -658,6 +651,9 @@
         document.getElementById("statInvalid").innerText = totalInvalid;
         document.getElementById("statEntries").innerText = results.length;
         document.getElementById("statTurnout").innerText = totalTurnout;
+        
+        const totalRegisteredBaseline = 1500;
+        document.getElementById("statTotalVoters").innerText = `${totalRegisteredBaseline} (Abs: ${totalRegisteredBaseline - totalTurnout})`;
     }
 </script>
 </body>
