@@ -116,7 +116,95 @@
         
         .app-footer { margin-top: 30px; background: linear-gradient(135deg, #002b5c, #004699); color: #fff; text-align: center; padding: 15px; border-radius: 16px; border: 3px solid #ffc107; }
         .footer-title { font-size: 13px; font-weight: 700; text-transform: uppercase; }
-    </style>
+    /* --- ADD THIS INSIDE YOUR <style> TAG RIGHT BEFORE </style> --- */
+        .letterhead-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+            gap: 20px;
+        }
+        .letterhead-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .letterhead-text h2 {
+            font-size: 16px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+        }
+        .postal-info, .contact-info {
+            font-size: 12px;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        /* PRINT RENDERING ENGINE */
+        @media print {
+            body {
+                background-color: #fff !important;
+                color: #000 !important;
+                padding: 0 !important;
+            }
+            .master-header {
+                background: none !important;
+                color: #000 !important;
+                border: none !important;
+                border-bottom: 3px double #000 !important;
+                border-radius: 0 !important;
+                padding: 10px 0 !important;
+                margin-bottom: 20px !important;
+            }
+            .master-header h1 { color: #000 !important; }
+            .master-header h2 { color: #000 !important; }
+            .postal-info, .contact-info { color: #000 !important; }
+            .school-logo {
+                border: 1px solid #000 !important;
+                box-shadow: none !important;
+            }
+            /* Hide all interactive entry fields, buttons, and system controls */
+            .header-actions, #authSection, .card:has(button:contains("Commit")), 
+            .form-group, .centers-grid, button, #quickStats, .btn-approve, .btn-edit {
+                display: none !important;
+            }
+            /* Force the dashboard grid to expand cleanly onto a flat sheet page layout */
+            .dashboard {
+                display: block !important;
+            }
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin-bottom: 30px !important;
+                page-break-inside: avoid;
+            }
+            h3 {
+                color: #000 !important;
+                border-bottom: 2px solid #000 !important;
+            }
+            table {
+                width: 100% !important;
+                border: 1px solid #000 !important;
+            }
+            th, td {
+                border-bottom: 1px solid #000 !important;
+                color: #000 !important;
+                padding: 8px !important;
+            }
+            th {
+                background-color: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            tr.winner-row {
+                background-color: #f0f9ff !important;
+                border-left: 5px solid #0284c7 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }</style>
 </head>
 <body>
 
@@ -763,7 +851,9 @@
         document.getElementById("adminActionHeader").style.display = "none";
         document.getElementById("loginUsername").value = "";
         document.getElementById("searchCandidateInput").value = "";
-    }
+    }// Add this line inside your launchSystem() function
+document.getElementById("printBtn").style.display = "block";// Add this line inside your logout() function
+document.getElementById("printBtn").style.display = "none";
 </script>
 </body>
 </html>
