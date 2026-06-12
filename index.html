@@ -254,7 +254,7 @@
                 </div>
                 <div class="stat-card" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
     <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600; text-transform: uppercase;">Total Eligible Voters</p>
-    <h3 id="statTotalVoters" style="margin: 5px 0 0 0; font-size: 24px; color: #1e3a8a;">1500</h3>
+    <h3 id="statTotalVoters" style="margin: 5px 0 0 0; font-size: 24px; color: #1e3a8a;"></h3>
 </div>
 
                 <div class="form-group">
@@ -608,10 +608,12 @@
         results.forEach(r => {
             const rowTotalValid = r.votesA + r.votesB + r.votesC;
             if (r.status === "APPROVED") {
-                totalValid += rowTotalValid;
-                totalInvalid += r.invalid;
-                totalTurnout += (r.turnoutA + r.turnoutB + r.turnoutC);
-            }
+                
+            if (r.status === "APPROVED") {
+    totalValid += rowTotalValid;
+    totalInvalid += r.invalid;
+    totalTurnout += (r.turnoutA + r.turnoutB + r.turnoutC);
+}
 
             let tr = document.createElement("tr");
             tr.className = r.status.toLowerCase();
