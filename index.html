@@ -30,6 +30,16 @@
             position: relative;
             border: 3px solid var(--secondary);
         }
+        .school-logo {
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
         .master-header h1 { font-size: 24px; font-weight: 700; text-transform: uppercase; color: #ffffff; }
         .master-header .sub-title { font-size: 13px; color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
         
@@ -96,6 +106,7 @@
 
 <div class="container">
     <header class="master-header">
+        <img src="SCHOOL BADGE.jpg" alt="NHS Badge" class="school-logo" onerror="this.style.display='none';">
         <h1>Namungoona High School</h1>
         <div class="sub-title">Electoral Committee Panel</div>
         <div><span id="userTag" class="user-tag" style="display: none;"></span></div>
@@ -494,7 +505,6 @@
                 totalValid += parseInt(r.votes || 0); 
                 totalInvalid += parseInt(r.invalidVotes || 0);
                 
-                // Track total voters dynamically by checking specific unique entry instances
                 let uniqueKey = `${r.name}-${r.center}`;
                 if (!turnoutTrackingMap[uniqueKey]) {
                     turnoutTrackingMap[uniqueKey] = true;
