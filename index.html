@@ -473,7 +473,6 @@
             alert("Login ID match not located.");
         }
     }
-
     function launchSystem() {
         document.getElementById("authSection").style.display = "none";
         document.getElementById("appDashboard").style.display = "grid";
@@ -481,6 +480,15 @@
         document.getElementById("logoutBtn").style.display = "block";
         document.getElementById("printBtn").style.display = "block";
         document.getElementById("overallLeaderboardCard").style.display = "block";
+        document.getElementById("statValid").innerText = totalValid;
+        document.getElementById("statInvalid").innerText = totalInvalid;
+        document.getElementById("statEntries").innerText = results.length;
+        document.getElementById("statTurnout").innerText = totalTurnout;
+        
+        // This calculates your current total turnout percentage against your registration baseline
+        const totalRegisteredBaseline = 1500; // Put your exact school enrollment count here
+        document.getElementById("statTotalVoters").innerText = `${totalRegisteredBaseline} (Abs: ${totalRegisteredBaseline - totalTurnout})`;
+    }
                 
         const userTag = document.getElementById("userTag");
         userTag.style.display = "inline-block";
