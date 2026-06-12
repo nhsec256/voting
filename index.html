@@ -450,6 +450,11 @@
     const SUPABASE_URL = "https://wexbtyfwwfctolunwkyu.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndleGJ0eWZ3d2ZjdG9sdW53a3l1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA5ODcwMzMsImV4cCI6MjA1NjU2MzAzM30.b4b4mQ-XgXG9A99qg7o_Y_uN_36W7-eZq9M4W3w6M4g";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Ensure headers look like this if you're routing through your own server
+headers: {
+  'Authorization': `Bearer sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8`,
+  'Content-Type': 'application/json'
+}
 
     // Hardcoded System Fallbacks
     const officialSystemUsers = { "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY" };
