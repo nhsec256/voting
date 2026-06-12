@@ -370,20 +370,21 @@
 </footer>
 
 <script>
+    // 1. Cloud Network Configuration
     const SUPABASE_URL = "https://wexbtyfwwfctolunwkyu.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndleGJ0eWZ3d2ZjdG9sdW53a3l1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA5ODcwMzMsImV4cCI6MjA1NjU2MzAzM30.b4b4mQ-XgXG9A99qg7o_Y_uN_36W7-eZq9M4W3w6M4g";
+    // Your new API Key linked directly here
+    const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // Hardcoded System Users
     const officialSystemUsers = { 
-        "alvink123": "Mr. ALVIN. K.", 
-        "mkj123": "MR. MUHEREZA KENNETH JOEL", 
+        "alvink123": "Mr. ALVIN. K.",
+        "mkj123": "MR. MUHEREZA KENNETH JOEL",
         "gk123": "MDM. KIRABIRA GLENNY" 
     };
-    
     const adminSystemUsers = { 
-        "oscar123": "KAMYA OSCAR (Admin)", 
-        "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", 
+        "oscar123": "KAMYA OSCAR (Admin)",
+        "ronnie123": "HON. SSEMAGANDA RONALD (Admin)",
         "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)",
         "richard123": "MR. SEMIGGA RICHARD (Admin)",
         "admin123": "MDM. MUYINDA SARAH (Admin)"
@@ -398,7 +399,7 @@
         { id: "u6", name: "SSENTEZA WILLIAM KEVIN", post: "CHIEF JUDGE", class: "UNSA Body" },
         { id: "u7", name: "BBALE ALEX", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
         { id: "u8", name: "BABIRYE ABIGAIL NICOLE", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
-        { id: "u9", name: "SSEKABIRA JOVA JONATHAN", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
+        { id: "u9", name: "SSEKABIRA JOVAN JONATHAN", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
         { id: "u10", name: "NAMUBIRU HANIFAH", post: "GENERAL SECRETARY", class: "UNSA Body" },
         { id: "u11", name: "NABULIME JUDITH TENDO", post: "GENERAL SECRETARY", class: "UNSA Body" },
         { id: "u12", name: "KYOBUTUNGI PROMISE", post: "DEPUTY GENERAL SECRETARY", class: "UNSA Body" },
@@ -452,32 +453,18 @@
         { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" }
     ];
 
-    if (!localStorage.getItem("nhs_offline_db")) {
-        localStorage.setItem("nhs_offline_db", JSON.stringify({ users: {}, candidates: presetCandidates, results: [], turnout: [] }));
-    } else {
-        let activeDB = JSON.parse(localStorage.getItem("nhs_offline_db"));
-        activeDB.candidates = presetCandidates;
-        localStorage.setItem("nhs_offline_db", JSON.stringify(activeDB));
-    }
-
     let currentUser = "";
     let isAdmin = false;
     let syncIntervalId = null;
 
-    function getDB() { return JSON.parse(localStorage.getItem("nhs_offline_db")); }
-    function saveDB(data) { localStorage.setItem("nhs_offline_db", JSON.stringify(data)); }
-
     function login() {
         const code = document.getElementById("loginUsername").value.trim();
         if(!code) return alert("Access Key required.");
-        const db = getDB();
 
         if (adminSystemUsers[code]) {
             isAdmin = true; currentUser = adminSystemUsers[code]; launchSystem();
         } else if (officialSystemUsers[code]) {
             isAdmin = false; currentUser = officialSystemUsers[code]; launchSystem();
-        } else if (db.users[code]) {
-            isAdmin = false; currentUser = db.users[code]; launchSystem();
         } else {
             alert("Login ID match not located.");
         }
@@ -490,7 +477,7 @@
         document.getElementById("logoutBtn").style.display = "block";
         document.getElementById("printBtn").style.display = "block";
         document.getElementById("overallLeaderboardCard").style.display = "block";
-        
+                
         const userTag = document.getElementById("userTag");
         userTag.style.display = "inline-block";
         userTag.innerText = `Session: ${currentUser}`;
@@ -500,16 +487,15 @@
             document.getElementById("adminActionHeader").style.display = "table-cell";
             document.getElementById("feedTitle").innerText = "Master Audit Pipeline";
         }
-        
-        populateCandidateDropdown(getDB().candidates);
+                
+        populateCandidateDropdown(presetCandidates);
         fetchData();
+        // Automatically polls the cloud every 4 seconds for instant multi-device view updates
         syncIntervalId = setInterval(fetchData, 4000);
     }
 
     function logout() {
-        currentUser = "";
-        isAdmin = false;
-        clearInterval(syncIntervalId);
+        currentUser = ""; isAdmin = false; clearInterval(syncIntervalId);
         document.getElementById("authSection").style.display = "block";
         document.getElementById("appDashboard").style.display = "none";
         document.getElementById("quickStats").style.display = "none";
@@ -517,6 +503,7 @@
         document.getElementById("printBtn").style.display = "none";
         document.getElementById("settingsBtn").style.display = "none";
         document.getElementById("userTag").style.display = "none";
+        document.getElementById("loginUsername").value = "";
     }
 
     function populateCandidateDropdown(candidatesList) {
@@ -524,22 +511,21 @@
         select.innerHTML = '<option value="">-- Choose Candidate --</option>';
         candidatesList.forEach(c => {
             let opt = document.createElement("option");
-            opt.value = c.id;
-            opt.innerText = `${c.name} (${c.post})`;
+            opt.value = c.id; opt.innerText = `${c.name} (${c.post})`;
             select.appendChild(opt);
         });
     }
 
     function filterCandidateDropdown() {
         const val = document.getElementById("searchCandidateInput").value.toUpperCase();
-        const filtered = getDB().candidates.filter(c => c.name.includes(val) || c.post.includes(val));
+        const filtered = presetCandidates.filter(c => c.name.includes(val) || c.post.includes(val));
         populateCandidateDropdown(filtered);
     }
 
     function autoFillCandidateDetails() {
         const id = document.getElementById("candidateSelect").value;
         if(!id) return;
-        const match = getDB().candidates.find(c => c.id === id);
+        const match = presetCandidates.find(c => c.id === id);
         if(match) {
             document.getElementById("postSelect").value = match.post;
             document.getElementById("classSelect").value = match.class;
@@ -549,134 +535,115 @@
     function openSettings() { document.getElementById("settingsModal").style.display = "flex"; }
     function closeSettings() { document.getElementById("settingsModal").style.display = "none"; }
 
-    function registerCandidate() {
-        const name = document.getElementById("newCandidateName").value.trim().toUpperCase();
-        const post = document.getElementById("newCandidatePost").value.trim().toUpperCase();
-        const cls = document.getElementById("newCandidateClass").value;
-        if(!name || !post) return alert("Fill in candidate metrics completely.");
-        
-        let db = getDB();
-        db.candidates.push({ id: "custom_" + Date.now(), name: name, post: post, class: cls });
-        saveDB(db);
-        alert("Candidate added!");
-        populateCandidateDropdown(db.candidates);
-        closeSettings();
-    }
-
-    function registerSystemUser() {
-        const code = document.getElementById("newUserCode").value.trim();
-        const name = document.getElementById("newUserName").value.trim().toUpperCase();
-        if(!code || !name) return alert("Fill user details completely.");
-        
-        let db = getDB();
-        db.users[code] = name;
-        saveDB(db);
-        alert("System User Authorized.");
-        closeSettings();
-    }
-
-    // UPDATED FUNCTION: Allows you to commit even just 1 center!
-    function submitResult() {
+    // 2. CLOUD SAVE FUNCTION (Saves to internet database instantly)
+    async function submitResult() {
         const candidateId = document.getElementById("candidateSelect").value;
-        if(!candidateId) return alert("Please pick a candidate first.");
+        if(!candidateId) return alert("Please choose a candidate first.");
 
-        // Using || 0 transforms blank empty inputs automatically into 0 so it won't crash!
-        const vA = parseInt(document.getElementById("votesA").value) || 0;
-        const vB = parseInt(document.getElementById("votesB").value) || 0;
-        const vC = parseInt(document.getElementById("votesC").value) || 0;
-        const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;
-
-        const tA = parseInt(document.getElementById("turnoutA").value) || 0;
-        const tB = parseInt(document.getElementById("turnoutB").value) || 0;
-        const tC = parseInt(document.getElementById("turnoutC").value) || 0;
-
-        const candidate = getDB().candidates.find(c => c.id === candidateId);
-        let db = getDB();
-
-        // Remove old entry if updating
-        db.results = db.results.filter(r => r.candidateId !== candidateId);
-
-        // Push new values securely
-        db.results.push({
-            candidateId: candidateId,
-            name: candidate.name,
+        const candidate = presetCandidates.find(c => c.id === candidateId);
+        const payload = {
+            candidateId: candidate.id,
+            candidateName: candidate.name,
             post: candidate.post,
-            votesA: vA,
-            votesB: vB,
-            votesC: vC,
-            invalid: inv,
-            timestamp: new Date().toLocaleTimeString()
-        });
+            votesA: parseInt(document.getElementById("votesA").value) || 0,
+            votesB: parseInt(document.getElementById("votesB").value) || 0,
+            votesC: parseInt(document.getElementById("votesC").value) || 0,
+            invalid: parseInt(document.getElementById("invalidvoteCount").value) || 0,
+            turnoutA: parseInt(document.getElementById("turnoutA").value) || 0,
+            turnoutB: parseInt(document.getElementById("turnoutB").value) || 0,
+            turnoutC: parseInt(document.getElementById("turnoutC").value) || 0,
+            status: isAdmin ? "APPROVED" : "PENDING",
+            enteredBy: currentUser
+        };
 
-        saveDB(db);
-        alert(`Standings successfully processed for ${candidate.name}!`);
-        
-        // Reset inputs
-        document.getElementById("votesA").value = "";
-        document.getElementById("votesB").value = "";
-        document.getElementById("votesC").value = "";
-        document.getElementById("invalidvoteCount").value = "";
-        document.getElementById("turnoutA").value = "";
-        document.getElementById("turnoutB").value = "";
-        document.getElementById("turnoutC").value = "";
-        
+        // Deletes any old entries for this candidate on the table first to avoid duplication
+        await _supabase.from('results').delete().eq('candidateId', candidate.id);
+
+        // Uploads the new tallies globally
+        const { error } = await _supabase.from('results').insert([payload]);
+
+        if (error) {
+            alert("Database Error: Verify your Supabase Table Schema names match column structures.");
+        } else {
+            alert("Standings successfully pushed to Cloud Framework!");
+            // Reset fields
+            ["votesA", "votesB", "votesC", "invalidvoteCount", "turnoutA", "turnoutB", "turnoutC", "candidateSelect", "postSelect", "classSelect", "searchCandidateInput"].forEach(id => document.getElementById(id).value = "");
+            populateCandidateDropdown(presetCandidates);
+            fetchData();
+        }
+    }
+
+    async function changeStatus(resultId, nextStatus) {
+        await _supabase.from('results').update({ status: nextStatus }).eq('id', resultId);
         fetchData();
     }
 
-    function fetchData() {
-        const db = getDB();
+    async function deleteRecord(resultId) {
+        if(!confirm("Remove entry record?")) return;
+        await _supabase.from('results').delete().eq('id', resultId);
+        fetchData();
+    }
+
+    // 3. CLOUD FETCH FUNCTION (Pulls down data from database for real-time tracking)
+    async function fetchData() {
+        const { data: results, error } = await _supabase.from('results').select('*');
+        if (error || !results) return;
         
-        // Compute Leaderboard totals
-        let totals = {};
-        db.results.forEach(r => {
-            const sumValid = r.votesA + r.votesB + r.votesC;
-            totals[r.candidateId] = {
-                name: r.name,
-                post: r.post,
-                valid: sumValid,
-                invalid: r.invalid,
-                grand: sumValid + r.invalid
-            };
-        });
-
-        // Populate Standings Interface Table
-        const standingsBody = document.getElementById("overallStandingsBody");
-        standingsBody.innerHTML = "";
-        Object.keys(totals).forEach(id => {
-            let row = `<tr>
-                <td>${totals[id].name}</td>
-                <td>${totals[id].post}</td>
-                <td><strong>${totals[id].valid}</strong></td>
-                <td>${totals[id].invalid}</td>
-                <td><strong>${totals[id].grand}</strong></td>
-            </tr>`;
-            standingsBody.innerHTML += row;
-        });
-
-        // Populate Audit Feed Table
+        let totalValid = 0; let totalInvalid = 0; let totalTurnout = 0;
         const auditBody = document.getElementById("resultsTableBody");
         auditBody.innerHTML = "";
-        db.results.forEach(r => {
-            let row = `<tr>
-                <td>${r.name}</td>
-                <td>${r.post}</td>
-                <td>A, B, C</td>
-                <td>${r.votesA + r.votesB + r.votesC}</td>
-                <td>${r.invalid}</td>
-                <td><span class="badge" style="background:#10b981; color:white;">Committed</span></td>
-                ${isAdmin ? `<td><button class="btn-edit" onclick="alert('Ready to edit!')">Edit</button></td>` : ''}
-            </tr>`;
-            auditBody.innerHTML += row;
+        
+        results.forEach(r => {
+            const rowTotalValid = r.votesA + r.votesB + r.votesC;
+            if (r.status === "APPROVED") {
+                totalValid += rowTotalValid;
+                totalInvalid += r.invalid;
+                totalTurnout += (r.turnoutA + r.turnoutB + r.turnoutC);
+            }
+
+            let tr = document.createElement("tr");
+            tr.className = r.status.toLowerCase();
+            let actionButtons = `<td><button class="btn-approve" onclick="changeStatus('${r.id}', 'APPROVED')">✓ Approve</button><button class="btn-edit" style="background-color:#ef4444;" onclick="deleteRecord('${r.id}')">✕ Delete</button></td>`;
+
+            tr.innerHTML = `<td><b>${r.candidateName}</b></td><td>${r.post}</td><td>${r.votesA}</td><td>${r.votesB}</td><td>${r.votesC}</td><td>${r.invalid}</td><td><span class="badge" style="background:${r.status==='APPROVED'?'#d1fae5':'#fef3c7'}; color:${r.status==='APPROVED'?'#065f46':'#92400e'}">${r.status}</span></td>${isAdmin ? actionButtons : ""}`;
+            auditBody.appendChild(tr);
         });
 
-        // Set top dashboard metric boxes
-        let totalValidAll = db.results.reduce((acc, curr) => acc + curr.votesA + curr.votesB + curr.votesC, 0);
-        let totalInvalidAll = db.results.reduce((acc, curr) => acc + curr.invalid, 0);
+        // Compute Live Board aggregates across all sessions
+        const leadersBody = document.getElementById("overallStandingsBody");
+        leadersBody.innerHTML = "";
 
-        document.getElementById("statValid").innerText = totalValidAll;
-        document.getElementById("statInvalid").innerText = totalInvalidAll;
-        document.getElementById("statTurnout").innerText = totalValidAll + totalInvalidAll;
-        document.getElementById("statEntries").innerText = db.results.length;
+        let aggregates = {};
+        presetCandidates.forEach(c => { aggregates[c.id] = { name: c.name, post: c.post, valid: 0, invalid: 0, grand: 0 }; });
+
+        results.forEach(r => {
+            if(aggregates[r.candidateId]) {
+                const combinedValid = r.votesA + r.votesB + r.votesC;
+                aggregates[r.candidateId].valid += combinedValid;
+                aggregates[r.candidateId].invalid += r.invalid;
+                aggregates[r.candidateId].grand += (combinedValid + r.invalid);
+            }
+        });
+
+        let postHighScores = {};
+        Object.keys(aggregates).forEach(cid => {
+            const item = aggregates[cid];
+            if(!postHighScores[item.post] || postHighScores[item.post] < item.valid) { if(item.valid > 0) postHighScores[item.post] = item.valid; }
+        });
+
+        Object.keys(aggregates).forEach(cid => {
+            const item = aggregates[cid];
+            let tr = document.createElement("tr");
+            if(item.valid > 0 && postHighScores[item.post] === item.valid) tr.className = "winner-row";
+
+            tr.innerHTML = `<td>${item.name} ${item.valid > 0 && postHighScores[item.post] === item.valid ? "👑" : ""}</td><td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${item.post}</span></td><td><b>${item.valid}</b></td><td>${item.invalid}</td><td><b>${item.grand}</b></td>`;
+            leadersBody.appendChild(tr);
+        });
+
+        document.getElementById("statValid").innerText = totalValid;
+        document.getElementById("statInvalid").innerText = totalInvalid;
+        document.getElementById("statEntries").innerText = results.length;
+        document.getElementById("statTurnout").innerText = totalTurnout;
     }
 </script>
 </body>
