@@ -1,14 +1,3 @@
-Here is a completely stripped-down, ultra-simple version designed for speed and foolproof data entry.
-
-### What makes this version simpler for tonight:
-
-* **One-Click Entry:** You select a candidate, type the votes for Centers A, B, and C, type the invalid votes, and hit save.
-* **Automatic Calculations:** It completely removes the confusing "Signature Turnout Tracker" boxes. It automatically calculates the **Calculated Total** ($Votes A + Votes B + Votes C + Invalid$) on the fly.
-* **Instant Memory:** Because everything syncs dynamically with the database query, the moment you log back in with an access key (e.g., `oscar123` or `alvink123`), the statistics board and tables reload instantly from the cloud.
-
-Replace your entire file with this simplified code:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -173,8 +162,18 @@ Replace your entire file with this simplified code:
 
 <script>
     const SUPABASE_URL = "https://wexbtyfwwfctolunwkyu.supabase.co";
-const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
+    
+    let _supabase = null;
+    try {
+        if (typeof supabase !== 'undefined') {
+            _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } else {
+            console.error("Supabase script CDN failed to load.");
+        }
+    } catch(e) {
+        console.error("Initialization error:", e);
+    }
 
     const systemUsers = { 
         "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY",
@@ -236,14 +235,16 @@ const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
 
             populateDropdown(presetCandidates);
             fetchData();
-            syncIntervalId = setInterval(fetchData, 4000);
+            if (_supabase) {
+                syncIntervalId = setInterval(fetchData, 4000);
+            }
         } else {
             alert("Invalid Access Code Key.");
         }
     }
 
     function logout() {
-        clearInterval(syncIntervalId);
+        if(syncIntervalId) clearInterval(syncIntervalId);
         currentUser = "";
         document.getElementById("authSection").style.display = "block";
         document.getElementById("appDashboard").style.display = "none";
@@ -279,19 +280,23 @@ const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
         const vC = parseInt(document.getElementById("votesC").value) || 0;
         const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;
 
+        if (!_supabase) {
+            alert("Database offline. Displaying local preview only.");
+            return;
+        }
+
         const payload = {
             candidateId: candidate.id, candidateName: candidate.name, post: candidate.post,
             votesA: vA, votesB: vB, votesC: vC, invalid: inv,
-            turnoutA: vA, turnoutB: vB, turnoutC: vC, // Autopopulates turnout fields to prevent DB constraints
+            turnoutA: vA, turnoutB: vB, turnoutC: vC,
             status: "APPROVED", enteredBy: currentUser
         };
 
-        // Keeps your database clean by updating old values smoothly
         await _supabase.from('results').delete().eq('candidateId', candidate.id);
         const { error } = await _supabase.from('results').insert([payload]);
 
         if (error) {
-            alert("Sync Failed: Ensure your database table rules are active.");
+            alert("Sync Failed: Check your database table permissions.");
         } else {
             alert("Saved successfully!");
             ["votesA", "votesB", "votesC", "invalidvoteCount", "candidateSelect", "searchCandidateInput"].forEach(id => document.getElementById(id).value = "");
@@ -301,15 +306,18 @@ const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
     }
 
     async function deleteRecord(rid) {
-        if(confirm("Delete this row record entirely?")) {
+        if(confirm("Delete this row record entirely?") && _supabase) {
             await _supabase.from('results').delete().eq('id', rid);
             fetchData();
         }
     }
 
     async function fetchData() {
-        const { data: records, error } = await _supabase.from('results').select('*');
-        if (error || !records) return;
+        let records = [];
+        if (_supabase) {
+            const { data, error } = await _supabase.from('results').select('*');
+            if (!error && data) records = data;
+        }
 
         let grandValid = 0; let grandInvalid = 0;
         let aggregates = {};
@@ -362,8 +370,12 @@ const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
         document.getElementById("statInvalid").innerText = grandInvalid;
         document.getElementById("statTotalVoters").innerText = grandValid + grandInvalid;
     }
+
+    // Force basic initial layout rendering safely
+    window.onload = function() {
+        populateDropdown(presetCandidates);
+        fetchData();
+    };
 </script>
 </body>
 </html>
-
-```
