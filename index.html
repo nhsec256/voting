@@ -122,13 +122,20 @@
 
 <div class="container">
     <header class="master-header">
-        <img src="SCHOOL BADGE.jpg" alt="NHS Badge" class="school-logo" onerror="this.style.display='none';">
-        <h1>Namungoona High School</h1>
-        <div class="sub-title">Electoral Committee Panel</div>
+        <div class="letterhead-container">
+            <img src="SCHOOL BADGE.jpg" alt="NHS Badge" class="school-logo" onerror="this.style.display='none';">
+            <div class="letterhead-text">
+                <h1>Namungoona High School</h1>
+                <h2>Electoral Committee</h2>
+                <p class="postal-info">P.O Box 26935 Kampala</p>
+                <p class="contact-info">Tel: +256 700 627 960 / +256 788 772 660</p>
+            </div>
+        </div>
         <div><span id="userTag" class="user-tag" style="display: none;"></span></div>
         
         <div class="header-actions">
             <button id="settingsBtn" class="btn-settings" onclick="openSettings()">⚙️ Admin Controls</button>
+            <button id="printBtn" class="btn-logout" style="background-color: var(--accent); display:none;" onclick="window.print()">🖨️ Print Results</button>
             <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout</button>
         </div>
     </header>
