@@ -456,9 +456,16 @@
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndleGJ0eWZ3d2ZjdG9sdW53a3l1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA5ODcwMzMsImV4cCI6MjA1NjU2MzAzM30.b4b4mQ-XgXG9A99qg7o_Y_uN_36W7-eZq9M4W3w6M4g";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // Hardcoded System Fallbacks
     const officialSystemUsers = { "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY" };
-    const adminSystemUsers = { "oscar123": "KAMYA OSCAR (Admin)", "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)" };
-
+    
+    const adminSystemUsers = { 
+        "oscar123": "KAMYA OSCAR (Admin)", 
+        "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", 
+        "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)",
+        "richard123": "MR. SEMIGGA RICHARD (Admin)",
+        "admin123": "MDM. MUYINDA SARAH (Admin)"
+    };
     const presetCandidates = [
         { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT", class: "UNSA Body" },
         { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT", class: "UNSA Body" },
