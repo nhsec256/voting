@@ -133,102 +133,25 @@
         .app-footer { margin-top: 30px; background: linear-gradient(135deg, #002b5c, #004699); color: #fff; text-align: center; padding: 15px; border-radius: 16px; border: 3px solid #ffc107; }
         .footer-title { font-size: 13px; font-weight: 700; text-transform: uppercase; }
 
-        /* PRINT MANAGEMENT STYLES - CUSTOM OPTIMIZED FOR FORWARDING NOTICE BOARDS */
         @media print {
-            * {
-                font-family: "Times New Roman", Times, serif !important;
-            }
-            body {
-                background-color: #ffffff !important;
-                color: #000000 !important;
-                padding: 0 !important;
-            }
-            .master-header {
-                background: none !important;
-                color: #000000 !important;
-                border: none !important;
-                border-bottom: 3px double #000000 !important;
-                border-radius: 0 !important;
-                padding: 10px 0 !important;
-                margin-bottom: 30px !important;
-            }
-            .master-header h1 {
-                font-size: 28px !important;
-                color: #000000 !important;
-            }
-            .master-header h2 {
-                font-size: 20px !important;
-                color: #000000 !important;
-                font-weight: bold !important;
-            }
-            .postal-info, .contact-info { 
-                color: #000000 !important;
-                font-size: 14px !important;
-            }
-            .school-logo {
-                border: 1px solid #000000 !important;
-                box-shadow: none !important;
-                width: 95px !important;
-                height: 95px !important;
-            }
-            /* Hide input sections, forms, stats widgets, buttons, and system controls */
-            .header-actions, #authSection, .dashboard > div:first-child, .app-footer,
-            .form-group, .centers-grid, button, #quickStats, .btn-approve, .btn-edit, .user-tag {
-                display: none !important;
-            }
-            /* Clean print template structure */
-            .dashboard {
-                display: block !important;
-                width: 100% !important;
-            }
-            .dashboard > div:last-child {
-                width: 100% !important;
-            }
-            .card {
-                border: none !important;
-                box-shadow: none !important;
-                padding: 0 !important;
-                margin-bottom: 0 !important;
-            }
-            /* Hide audit raw feeds - keep only the final clean dashboard standings */
-            .card:has(#feedTitle) {
-                display: none !important;
-            }
-            #overallLeaderboardCard {
-                display: block !important;
-                width: 100% !important;
-            }
-            h3 {
-                color: #000000 !important;
-                border-bottom: 2px solid #000000 !important;
-                font-size: 18px !important;
-                margin-bottom: 20px !important;
-                font-weight: bold !important;
-            }
-            table {
-                width: 100% !important;
-                border: 1.5px solid #000000 !important;
-                border-collapse: collapse !important;
-            }
-            th, td {
-                border: 1px solid #000000 !important;
-                color: #000000 !important;
-                padding: 12px 10px !important;
-                font-size: 14px !important;
-            }
-            th {
-                background-color: #f5f5f5 !important;
-                font-weight: bold !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .badge {
-                background: none !important;
-                color: #000000 !important;
-                padding: 0 !important;
-                font-size: 14px !important;
-                font-weight: bold !important;
-            }
+            * { font-family: "Times New Roman", Times, serif !important; }
+            body { background-color: #ffffff !important; color: #000000 !important; padding: 0 !important; }
+            .master-header { background: none !important; color: #000000 !important; border: none !important; border-bottom: 3px double #000000 !important; border-radius: 0 !important; padding: 10px 0 !important; margin-bottom: 30px !important; }
+            .master-header h1 { font-size: 28px !important; color: #000000 !important; }
+            .master-header h2 { font-size: 20px !important; color: #000000 !important; font-weight: bold !important; }
+            .postal-info, .contact-info { color: #000000 !important; font-size: 14px !important; }
+            .school-logo { border: 1px solid #000000 !important; box-shadow: none !important; width: 95px !important; height: 95px !important; }
+            .header-actions, #authSection, .dashboard > div:first-child, .app-footer, .form-group, .centers-grid, button, #quickStats, .btn-approve, .btn-edit, .user-tag { display: none !important; }
+            .dashboard { display: block !important; width: 100% !important; }
+            .dashboard > div:last-child { width: 100% !important; }
+            .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 0 !important; }
+            .card:has(#feedTitle) { display: none !important; }
+            #overallLeaderboardCard { display: block !important; width: 100% !important; }
+            h3 { color: #000000 !important; border-bottom: 2px solid #000000 !important; font-size: 18px !important; margin-bottom: 20px !important; font-weight: bold !important; }
+            table { width: 100% !important; border: 1.5px solid #000000 !important; border-collapse: collapse !important; }
+            th, td { border: 1px solid #000000 !important; color: #000000 !important; padding: 12px 10px !important; font-size: 14px !important; }
+            th { background-color: #f5f5f5 !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .badge { background: none !important; color: #000000 !important; padding: 0 !important; font-size: 14px !important; font-weight: bold !important; }
         }
     </style>
 </head>
@@ -352,7 +275,7 @@
                     </div>
                 </div>
 
-                <button onclick="submitResult()" style="background-color: var(--success); margin-top: 5px;">Commit All Centers Instantly</button>
+                <button onclick="submitResult()" style="background-color: var(--success); margin-top: 5px;">Commit Center Standings</button>
             </div>
         </div>
 
@@ -450,14 +373,13 @@
     const SUPABASE_URL = "https://wexbtyfwwfctolunwkyu.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndleGJ0eWZ3d2ZjdG9sdW53a3l1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA5ODcwMzMsImV4cCI6MjA1NjU2MzAzM30.b4b4mQ-XgXG9A99qg7o_Y_uN_36W7-eZq9M4W3w6M4g";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    // Ensure headers look like this if you're routing through your own server
-headers: {
-  'Authorization': `Bearer sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8`,
-  'Content-Type': 'application/json'
-}
 
-    // Hardcoded System Fallbacks
-    const officialSystemUsers = { "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY" };
+    // Hardcoded System Users
+    const officialSystemUsers = { 
+        "alvink123": "Mr. ALVIN. K.", 
+        "mkj123": "MR. MUHEREZA KENNETH JOEL", 
+        "gk123": "MDM. KIRABIRA GLENNY" 
+    };
     
     const adminSystemUsers = { 
         "oscar123": "KAMYA OSCAR (Admin)", 
@@ -466,6 +388,7 @@ headers: {
         "richard123": "MR. SEMIGGA RICHARD (Admin)",
         "admin123": "MDM. MUYINDA SARAH (Admin)"
     };
+
     const presetCandidates = [
         { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT", class: "UNSA Body" },
         { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT", class: "UNSA Body" },
@@ -594,112 +517,101 @@ headers: {
         document.getElementById("printBtn").style.display = "none";
         document.getElementById("settingsBtn").style.display = "none";
         document.getElementById("userTag").style.display = "none";
-        document.getElementById("loginUsername").value = "";
     }
 
-    function openSettings() { if(isAdmin) document.getElementById("settingsModal").style.display = "flex"; }
+    function populateCandidateDropdown(candidatesList) {
+        const select = document.getElementById("candidateSelect");
+        select.innerHTML = '<option value="">-- Choose Candidate --</option>';
+        candidatesList.forEach(c => {
+            let opt = document.createElement("option");
+            opt.value = c.id;
+            opt.innerText = `${c.name} (${c.post})`;
+            select.appendChild(opt);
+        });
+    }
+
+    function filterCandidateDropdown() {
+        const val = document.getElementById("searchCandidateInput").value.toUpperCase();
+        const filtered = getDB().candidates.filter(c => c.name.includes(val) || c.post.includes(val));
+        populateCandidateDropdown(filtered);
+    }
+
+    function autoFillCandidateDetails() {
+        const id = document.getElementById("candidateSelect").value;
+        if(!id) return;
+        const match = getDB().candidates.find(c => c.id === id);
+        if(match) {
+            document.getElementById("postSelect").value = match.post;
+            document.getElementById("classSelect").value = match.class;
+        }
+    }
+
+    function openSettings() { document.getElementById("settingsModal").style.display = "flex"; }
     function closeSettings() { document.getElementById("settingsModal").style.display = "none"; }
 
     function registerCandidate() {
         const name = document.getElementById("newCandidateName").value.trim().toUpperCase();
         const post = document.getElementById("newCandidatePost").value.trim().toUpperCase();
         const cls = document.getElementById("newCandidateClass").value;
-        if(!name || !post) return alert("Fields are mandatory.");
-
+        if(!name || !post) return alert("Fill in candidate metrics completely.");
+        
         let db = getDB();
-        db.candidates.push({ id: Date.now().toString(), name, post, class: cls });
+        db.candidates.push({ id: "custom_" + Date.now(), name: name, post: post, class: cls });
         saveDB(db);
-        alert("Candidate profile pre-registered successfully.");
-        document.getElementById("newCandidateName").value = "";
-        document.getElementById("newCandidatePost").value = "";
+        alert("Candidate added!");
         populateCandidateDropdown(db.candidates);
-        fetchData();
+        closeSettings();
     }
 
-    function populateCandidateDropdown(candidatesList) {
-        const select = document.getElementById("candidateSelect");
-        select.innerHTML = '<option value="">-- Choose Candidate --</option>';
+    function registerSystemUser() {
+        const code = document.getElementById("newUserCode").value.trim();
+        const name = document.getElementById("newUserName").value.trim().toUpperCase();
+        if(!code || !name) return alert("Fill user details completely.");
         
-        const sorted = [...(candidatesList || [])].sort((a, b) => {
-            if (a.class !== b.class) return a.class.localeCompare(b.class);
-            if (a.post !== b.post) return a.post.localeCompare(b.post);
-            return a.name.localeCompare(b.name);
-        });
-
-        sorted.forEach(c => {
-            const opt = document.createElement("option");
-            opt.value = c.id; opt.innerText = `[${c.class}] ${c.post} : ${c.name}`;
-            select.appendChild(opt);
-        });
+        let db = getDB();
+        db.users[code] = name;
+        saveDB(db);
+        alert("System User Authorized.");
+        closeSettings();
     }
 
-    function filterCandidateDropdown() {
-        const query = document.getElementById("searchCandidateInput").value.trim().toUpperCase();
-        const db = getDB();
-        
-        if (!query) {
-            populateCandidateDropdown(db.candidates);
-            return;
-        }
-
-        const filtered = db.candidates.filter(c => {
-            return c.name.includes(query) || c.post.includes(query) || c.class.includes(query);
-        });
-
-        populateCandidateDropdown(filtered);
-    }
-
-    function autoFillCandidateDetails() {
-        const id = document.getElementById("candidateSelect").value;
-        if(!id) {
-            document.getElementById("postSelect").value = "";
-            document.getElementById("classSelect").value = "";
-            return;
-        }
-        const db = getDB();
-        const candidate = db.candidates.find(c => c.id === id);
-        if(candidate) {
-            document.getElementById("postSelect").value = candidate.post;
-            document.getElementById("classSelect").value = candidate.class;
-        }
-    }
-
+    // UPDATED FUNCTION: Allows you to commit even just 1 center!
     function submitResult() {
         const candidateId = document.getElementById("candidateSelect").value;
         if(!candidateId) return alert("Please pick a candidate first.");
 
+        // Using || 0 transforms blank empty inputs automatically into 0 so it won't crash!
         const vA = parseInt(document.getElementById("votesA").value) || 0;
         const vB = parseInt(document.getElementById("votesB").value) || 0;
         const vC = parseInt(document.getElementById("votesC").value) || 0;
-        const invalid = parseInt(document.getElementById("invalidvoteCount").value) || 0;
+        const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;
 
         const tA = parseInt(document.getElementById("turnoutA").value) || 0;
         const tB = parseInt(document.getElementById("turnoutB").value) || 0;
         const tC = parseInt(document.getElementById("turnoutC").value) || 0;
 
+        const candidate = getDB().candidates.find(c => c.id === candidateId);
         let db = getDB();
-        const candidate = db.candidates.find(c => c.id === candidateId);
 
+        // Remove old entry if updating
         db.results = db.results.filter(r => r.candidateId !== candidateId);
-        
+
+        // Push new values securely
         db.results.push({
-            candidateId,
+            candidateId: candidateId,
             name: candidate.name,
             post: candidate.post,
-            class: candidate.class,
-            votesA: vA, votesB: vB, votesC: vC,
-            invalid: invalid,
-            totalValid: (vA + vB + vC),
-            grandTotal: (vA + vB + vC + invalid),
-            status: isAdmin ? "Approved" : "Pending"
+            votesA: vA,
+            votesB: vB,
+            votesC: vC,
+            invalid: inv,
+            timestamp: new Date().toLocaleTimeString()
         });
 
-        db.turnout = db.turnout.filter(t => t.candidateId !== candidateId);
-        db.turnout.push({ candidateId, totalTurnout: (tA + tB + tC) });
-
         saveDB(db);
-        alert("Results computed and logged safely.");
+        alert(`Standings successfully processed for ${candidate.name}!`);
         
+        // Reset inputs
         document.getElementById("votesA").value = "";
         document.getElementById("votesB").value = "";
         document.getElementById("votesC").value = "";
@@ -707,95 +619,64 @@ headers: {
         document.getElementById("turnoutA").value = "";
         document.getElementById("turnoutB").value = "";
         document.getElementById("turnoutC").value = "";
-        document.getElementById("candidateSelect").value = "";
-        document.getElementById("postSelect").value = "";
-        document.getElementById("classSelect").value = "";
         
-        fetchData();
-    }
-
-    function approveResult(index) {
-        let db = getDB();
-        if(db.results[index]) {
-            db.results[index].status = "Approved";
-            saveDB(db);
-            fetchData();
-        }
-    }
-
-    function deleteResult(index) {
-        let db = getDB();
-        db.results.splice(index, 1);
-        saveDB(db);
         fetchData();
     }
 
     function fetchData() {
         const db = getDB();
         
-        let runningValidSum = 0;
-        let runningInvalidSum = 0;
+        // Compute Leaderboard totals
+        let totals = {};
         db.results.forEach(r => {
-            runningValidSum += r.totalValid;
-            runningInvalidSum += r.invalid;
+            const sumValid = r.votesA + r.votesB + r.votesC;
+            totals[r.candidateId] = {
+                name: r.name,
+                post: r.post,
+                valid: sumValid,
+                invalid: r.invalid,
+                grand: sumValid + r.invalid
+            };
         });
 
-        let runningTurnoutSum = 0;
-        db.turnout.forEach(t => { runningTurnoutSum += t.totalTurnout; });
-
-        document.getElementById("statValid").innerText = runningValidSum;
-        document.getElementById("statInvalid").innerText = runningInvalidSum;
-        document.getElementById("statTurnout").innerText = runningTurnoutSum || (runningValidSum + runningInvalidSum);
-        document.getElementById("statEntries").innerText = db.results.length;
-
+        // Populate Standings Interface Table
         const standingsBody = document.getElementById("overallStandingsBody");
         standingsBody.innerHTML = "";
-        
-        const sortedResults = [...db.results].sort((a,b) => {
-            if(a.class !== b.class) return a.class.localeCompare(b.class);
-            if(a.post !== b.post) return a.post.localeCompare(b.post);
-            return b.totalValid - a.totalValid;
+        Object.keys(totals).forEach(id => {
+            let row = `<tr>
+                <td>${totals[id].name}</td>
+                <td>${totals[id].post}</td>
+                <td><strong>${totals[id].valid}</strong></td>
+                <td>${totals[id].invalid}</td>
+                <td><strong>${totals[id].grand}</strong></td>
+            </tr>`;
+            standingsBody.innerHTML += row;
         });
 
-        sortedResults.forEach(r => {
-            const tr = document.createElement("tr");
-            tr.className = "approved";
-            tr.innerHTML = `
-                <td><strong>${r.name}</strong></td>
-                <td><span class="badge">${r.class} - ${r.post}</span></td>
-                <td>${r.totalValid}</td>
-                <td>${r.invalid}</td>
-                <td><strong>${r.grandTotal}</strong></td>
-            `;
-            standingsBody.appendChild(tr);
-        });
-
-        const feedBody = document.getElementById("resultsTableBody");
-        feedBody.innerHTML = "";
-        db.results.forEach((r, idx) => {
-            const tr = document.createElement("tr");
-            tr.className = r.status === "Approved" ? "approved" : "pending";
-            
-            let actionButtons = `<td><span class="badge badge-approved">Locked</span></td>`;
-            if (isAdmin) {
-                actionButtons = `
-                    <td>
-                        ${r.status === "Pending" ? `<button class="btn-approve" onclick="approveResult(${idx})">Approve</button>` : ""}
-                        <button class="btn-edit" style="background-color:#ef4444;" onclick="deleteResult(${idx})">❌ Delete</button>
-                    </td>`;
-            }
-
-            tr.innerHTML = `
+        // Populate Audit Feed Table
+        const auditBody = document.getElementById("resultsTableBody");
+        auditBody.innerHTML = "";
+        db.results.forEach(r => {
+            let row = `<tr>
                 <td>${r.name}</td>
                 <td>${r.post}</td>
-                <td>All Centers</td>
-                <td>${r.totalValid}</td>
+                <td>A, B, C</td>
+                <td>${r.votesA + r.votesB + r.votesC}</td>
                 <td>${r.invalid}</td>
-                <td><span class="badge">${r.status}</span></td>
-                ${isAdmin ? actionButtons : ""}
-            `;
-            feedBody.appendChild(tr);
+                <td><span class="badge" style="background:#10b981; color:white;">Committed</span></td>
+                ${isAdmin ? `<td><button class="btn-edit" onclick="alert('Ready to edit!')">Edit</button></td>` : ''}
+            </tr>`;
+            auditBody.innerHTML += row;
         });
+
+        // Set top dashboard metric boxes
+        let totalValidAll = db.results.reduce((acc, curr) => acc + curr.votesA + curr.votesB + curr.votesC, 0);
+        let totalInvalidAll = db.results.reduce((acc, curr) => acc + curr.invalid, 0);
+
+        document.getElementById("statValid").innerText = totalValidAll;
+        document.getElementById("statInvalid").innerText = totalInvalidAll;
+        document.getElementById("statTurnout").innerText = totalValidAll + totalInvalidAll;
+        document.getElementById("statEntries").innerText = db.results.length;
     }
 </script>
 </body>
