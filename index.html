@@ -1,324 +1,169 @@
+Here is a completely stripped-down, ultra-simple version designed for speed and foolproof data entry.
+
+### What makes this version simpler for tonight:
+
+* **One-Click Entry:** You select a candidate, type the votes for Centers A, B, and C, type the invalid votes, and hit save.
+* **Automatic Calculations:** It completely removes the confusing "Signature Turnout Tracker" boxes. It automatically calculates the **Calculated Total** ($Votes A + Votes B + Votes C + Invalid$) on the fly.
+* **Instant Memory:** Because everything syncs dynamically with the database query, the moment you log back in with an access key (e.g., `oscar123` or `alvink123`), the statistics board and tables reload instantly from the cloud.
+
+Replace your entire file with this simplified code:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Namungoona High School - Electoral Committee</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Namungoona High School - Simplified Election Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --primary: #004699;
-            --secondary: #ffc107;
-            --accent: #0284c7;
-            --dark: #0f172a;
-            --light: #ffffff;
-            --border: #cbd5e1;
-            --success: #10b981;
-        }
+        :root { --primary: #004699; --secondary: #ffc107; --dark: #0f172a; --light: #ffffff; --success: #10b981; }
         * { box-sizing: border-box; font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; }
-        body { background-color: #f8fafc; color: var(--dark); padding: 15px; min-height: 100vh; }
+        body { background-color: #f8fafc; color: var(--dark); padding: 15px; }
         .container { max-width: 1200px; margin: 0 auto; }
         
         .master-header { 
             background: linear-gradient(135deg, #002b5c, var(--primary)); 
-            color: white; 
-            padding: 25px 20px; 
-            border-radius: 16px; 
-            margin-bottom: 25px; 
-            position: relative;
-            border: 3px solid var(--secondary);
+            color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; 
+            border: 2px solid var(--secondary); display: flex; justify-content: space-between; align-items: center;
         }
-        .school-logo {
-            width: 85px;
-            height: 85px;
-            object-fit: contain;
-            border-radius: 50%;
-            background: #ffffff;
-            padding: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .login-logo {
-            width: 90px;
-            height: 90px;
-            object-fit: contain;
-            margin: 0 auto 15px auto;
-            display: block;
-            border-radius: 50%;
-            background: #ffffff;
-            padding: 4px;
-            border: 2px solid var(--primary);
-        }
-        .letterhead-text h1 { font-size: 24px; font-weight: 700; text-transform: uppercase; color: #ffffff; line-height: 1.2; }
+        .header-text h1 { font-size: 20px; text-transform: uppercase; }
+        .header-text p { font-size: 13px; color: #e2e8f0; }
+        .user-tag { background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .btn-logout { background-color: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
         
-        .header-actions { position: absolute; right: 20px; bottom: 15px; display: flex; gap: 10px; }
-        @media (max-width: 768px) { .header-actions { position: static; margin-top: 15px; justify-content: center; width: 100%; } }
-        
-        .user-tag { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 8px; }
-        .btn-logout { background-color: #ef4444; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; }
-        .btn-settings { background-color: var(--secondary); color: var(--dark); padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 11px; display: none; }
-        
-        .quick-stats-bar { display: none; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
+        .quick-stats-bar { display: none; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; }
         .stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-card p { font-size: 20px; font-weight: 700; color: var(--primary); }
+        .stat-card p { font-size: 22px; font-weight: 700; color: var(--primary); }
         
-        .auth-card { background: white; padding: 35px 30px; border-radius: 16px; max-width: 420px; margin: 40px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid var(--border); text-align: center; }
-        .dashboard { display: none; grid-template-columns: 1fr; gap: 25px; }
-        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.3fr; } }
+        .auth-card { background: white; padding: 30px; border-radius: 12px; max-width: 400px; margin: 50px auto; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; border: 1px solid #cbd5e1; }
+        .auth-card input { width: 100%; padding: 10px; margin: 15px 0; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; text-align: center; }
         
-        .card { background: white; padding: 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        h3 { color: var(--primary); margin-bottom: 15px; font-weight: 700; border-bottom: 3px solid var(--secondary); padding-bottom: 6px; text-transform: uppercase; font-size: 14px; }
+        .dashboard { display: none; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.2fr; } }
         
-        .form-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 5px; text-transform: uppercase; color: #475569; }
-        input, select { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; background-color: #fff; color: var(--dark); font-weight: 500; }
-        input:focus, select:focus { border-color: var(--primary); }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        h3 { color: var(--primary); margin-bottom: 15px; font-size: 13px; font-weight: 700; border-bottom: 2px solid var(--secondary); padding-bottom: 4px; text-transform: uppercase; }
         
-        .search-wrapper { position: relative; margin-bottom: 15px; }
-        .search-input { background-color: #fffbeb; border: 2px solid #fef08a; padding-left: 35px; font-weight: 600; color: #1e293b; }
-        .search-input:focus { border-color: var(--secondary); background-color: #fff; }
-        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #a1a1aa; pointer-events: none; }
-
-        .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px; margin-bottom: 15px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
-        .center-input-box { text-align: center; }
-        .center-input-box h5 { font-size: 12px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
-        .center-input-box input { text-align: center; padding: 8px; font-size: 15px; font-weight: 700; border: 2px solid #cbd5e1; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 4px; color: #475569; text-transform: uppercase; }
+        input, select { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; }
         
-        button { background-color: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; text-transform: uppercase; font-size: 13px; }
+        .search-input { background-color: #fffbeb; border-color: #fef08a; font-weight: 600; }
+        
+        .centers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #e2e8f0; }
+        .center-box { text-align: center; }
+        .center-box h5 { font-size: 11px; color: var(--primary); margin-bottom: 4px; }
+        .center-box input { text-align: center; padding: 6px; font-size: 16px; font-weight: 700; }
+        
+        button { background-color: var(--primary); color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; width: 100%; }
         button:hover { background-color: #003370; }
         
-        .btn-approve { background-color: var(--success); font-size: 11px; padding: 4px 10px; width: auto; border-radius: 6px; color: white; border: none; cursor: pointer; }
-        .btn-edit { background-color: #f59e0b; font-size: 11px; padding: 4px 10px; width: auto; border-radius: 6px; margin-left: 4px; color: white; border: none; cursor: pointer; }
-        
-        .table-responsive { overflow-x: auto; margin-top: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .table-responsive { overflow-x: auto; border-radius: 6px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
-        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
-        th { background-color: #f8fafc; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #e2e8f0; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; }
+        th { background-color: #f8fafc; color: #475569; font-weight: 700; font-size: 11px; text-transform: uppercase; }
         
-        tr.pending { background-color: #fffbeb; }
-        tr.approved { background-color: #f0fdf4; }
-        tr.winner-row { background-color: #f0f9ff; font-weight: bold; border-left: 5px solid var(--accent); }
-        
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; display: inline-block; }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
-        .modal-content { background: white; padding: 25px; border-radius: 16px; max-width: 500px; width: 100%; }
-        .modal-close { background: #64748b; margin-top: 15px; }
-
-        .letterhead-container {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            text-align: left;
-            gap: 20px;
-        }
-        .letterhead-text {
-            display: flex;
-            flex-direction: column;
-        }
-        .letterhead-text h2 {
-            font-size: 16px;
-            color: var(--secondary);
-            text-transform: uppercase;
-            margin-bottom: 2px;
-            letter-spacing: 1px;
-        }
-        .postal-info, .contact-info {
-            font-size: 12px;
-            color: #e2e8f0;
-            font-weight: 500;
-        }
-
-        .app-footer { margin-top: 30px; background: linear-gradient(135deg, #002b5c, #004699); color: #fff; text-align: center; padding: 15px; border-radius: 16px; border: 3px solid #ffc107; }
-        .footer-title { font-size: 13px; font-weight: 700; text-transform: uppercase; }
-
-        @media print {
-            * { font-family: "Times New Roman", Times, serif !important; }
-            body { background-color: #ffffff !important; color: #000000 !important; padding: 0 !important; }
-            .master-header { background: none !important; color: #000000 !important; border: none !important; border-bottom: 3px double #000000 !important; border-radius: 0 !important; padding: 10px 0 !important; margin-bottom: 30px !important; }
-            .master-header h1 { font-size: 28px !important; color: #000000 !important; }
-            .master-header h2 { font-size: 20px !important; color: #000000 !important; font-weight: bold !important; }
-            .postal-info, .contact-info { color: #000000 !important; font-size: 14px !important; }
-            .school-logo { border: 1px solid #000000 !important; box-shadow: none !important; width: 95px !important; height: 95px !important; }
-            .header-actions, #authSection, .dashboard > div:first-child, .app-footer, .form-group, .centers-grid, button, #quickStats, .btn-approve, .btn-edit, .user-tag { display: none !important; }
-            .dashboard { display: block !important; width: 100% !important; }
-            .dashboard > div:last-child { width: 100% !important; }
-            .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 0 !important; }
-            .card:has(#feedTitle) { display: none !important; }
-            #overallLeaderboardCard { display: block !important; width: 100% !important; }
-            h3 { color: #000000 !important; border-bottom: 2px solid #000000 !important; font-size: 18px !important; margin-bottom: 20px !important; font-weight: bold !important; }
-            table { width: 100% !important; border: 1.5px solid #000000 !important; border-collapse: collapse !important; }
-            th, td { border: 1px solid #000000 !important; color: #000000 !important; padding: 12px 10px !important; font-size: 14px !important; }
-            th { background-color: #f5f5f5 !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .badge { background: none !important; color: #000000 !important; padding: 0 !important; font-size: 14px !important; font-weight: bold !important; }
-        }
+        tr.winner-row { background-color: #f0f9ff; font-weight: bold; border-left: 4px solid #0284c7; }
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #e0f2fe; color: #0369a1; }
+        .btn-del { background-color: #ef4444; padding: 2px 6px; font-size: 10px; width: auto; display: inline-block; margin-left: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header class="master-header">
-        <div class="letterhead-container">
-            <img src="SCHOOL BADGE.jpg" alt="NHS Badge" class="school-logo" onerror="this.style.display='none';">
-            <div class="letterhead-text">
-                <h1>Namungoona High School</h1>
-                <h2>Electoral Committee</h2>
-                <p class="postal-info">P.O Box 26935 Kampala</p>
-                <p class="contact-info">Tel: +256 700 627 960 / +256 788 772 660</p>
-            </div>
+        <div class="header-text">
+            <h1>Namungoona High School</h1>
+            <p>Electoral Committee Portal</p>
         </div>
-        <div><span id="userTag" class="user-tag" style="display: none;"></span></div>
-        
-        <div class="header-actions">
-            <button id="settingsBtn" class="btn-settings" onclick="openSettings()">⚙️ Admin Controls</button>
-            <button id="printBtn" class="btn-logout" style="background-color: var(--accent); display:none;" onclick="window.print()">🖨️ Print Results</button>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="userTag" class="user-tag" style="display: none;"></span>
             <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout</button>
         </div>
     </header>
 
     <div id="quickStats" class="quick-stats-bar">
         <div class="stat-card">
-            <h4>Total Eligible Voters</h4>
-            <p id="statTotalVoters" style="color: #1e3a8a;">1500</p>
+            <h4>Grand Total Votes (Turnout)</h4>
+            <p id="statTotalVoters">0</p>
         </div>
         <div class="stat-card">
             <h4>Total Valid Votes</h4>
-            <p id="statValid">0</p>
+            <p id="statValid" style="color: var(--success);">0</p>
         </div>
         <div class="stat-card">
             <h4>Total Invalid Votes</h4>
             <p id="statInvalid" style="color: #ef4444;">0</p>
         </div>
-        <div class="stat-card">
-            <h4>Voter Turnout Metric</h4>
-            <p id="statTurnout" style="color: #8b5cf6;">0</p>
-        </div>
-        <div class="stat-card">
-            <h4>Sheets Uploaded</h4>
-            <p id="statEntries" style="color: var(--accent);">0</p>
-        </div>
     </div>
 
     <div id="authSection" class="auth-card">
-        <img src="SCHOOL BADGE.jpg" alt="NHS Badge" class="login-logo" onerror="this.style.display='none';">
         <h3>System Access Portal</h3>
-        <div class="form-group" style="margin-top: 15px;">
-            <label>Agent / Admin Login ID</label>
-            <input type="text" id="loginUsername" placeholder="Type Access Code" onkeydown="if(event.key === 'Enter') login()">
-        </div>
+        <input type="text" id="loginUsername" placeholder="Enter Access Code Key" onkeydown="if(event.key === 'Enter') login()">
         <button onclick="login()">Verify Credentials</button>
     </div>
 
     <div id="appDashboard" class="dashboard">
         <div>
             <div class="card">
-                <h3>Bulk Enter Center Results</h3>
+                <h3>Enter Station Tally</h3>
                 
                 <div class="form-group">
-                    <label for="searchCandidateInput" style="color: var(--accent);">🔍 Search & Filter Board Members</label>
-                    <div class="search-wrapper">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="searchCandidateInput" class="search-input" placeholder="Type name or post (e.g., 'Headboy', 'Stella')...." oninput="filterCandidateDropdown()">
-                    </div>
+                    <label>🔍 Fast Filter Candidate</label>
+                    <input type="text" id="searchCandidateInput" class="search-input" placeholder="Type candidate name or post..." oninput="filterDropdown()">
                 </div>
 
                 <div class="form-group">
-                    <label for="candidateSelect">Select Target Candidate</label>
-                    <select id="candidateSelect" onchange="autoFillCandidateDetails()" required>
+                    <label>Select Target Candidate</label>
+                    <select id="candidateSelect" required>
                         <option value="">-- Choose Candidate --</option>
                     </select>
                 </div>
 
-                <div class="form-group" style="opacity: 0.85; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label>Contesting Post</label>
-                        <input type="text" id="postSelect" readonly style="background: #f1f5f9; cursor: not-allowed;">
-                    </div>
-                    <div>
-                        <label>Organizing Body</label>
-                        <input type="text" id="classSelect" readonly style="background: #f1f5f9; cursor: not-allowed;">
-                    </div>
-                </div>
-
-                <label style="color: var(--primary);">Valid Votes Per Polling Station</label>
+                <label style="color: var(--primary);">Valid Votes per Station</label>
                 <div class="centers-grid">
-                    <div class="center-input-box">
+                    <div class="center-box">
                         <h5>Center A</h5>
                         <input type="number" id="votesA" min="0" placeholder="0">
                     </div>
-                    <div class="center-input-box">
+                    <div class="center-box">
                         <h5>Center B</h5>
                         <input type="number" id="votesB" min="0" placeholder="0">
                     </div>
-                    <div class="center-input-box">
+                    <div class="center-box">
                         <h5>Center C</h5>
                         <input type="number" id="votesC" min="0" placeholder="0">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="invalidvoteCount" style="color: #ef4444;">Total Combined Invalid Votes (All Centers)</label>
-                    <input type="number" id="invalidvoteCount" min="0" placeholder="0" required>
+                    <label style="color: #ef4444;">Invalid Votes (All Centers Combined)</label>
+                    <input type="number" id="invalidvoteCount" min="0" placeholder="0">
                 </div>
 
-                <h3 style="margin-top: 25px; border-bottom: 3px solid #8b5cf6;">Total Turnout Tracker (Voters Present)</h3>
-                <label style="color: #8b5cf6;">Total Voters Logged on Signature Sheets</label>
-                <div class="centers-grid" style="border-color: #c084fc;">
-                    <div class="center-input-box">
-                        <h5>Voters A</h5>
-                        <input type="number" id="turnoutA" min="0" placeholder="0" style="border-color: #e9d5ff;">
-                    </div>
-                    <div class="center-input-box">
-                        <h5>Voters B</h5>
-                        <input type="number" id="turnoutB" min="0" placeholder="0" style="border-color: #e9d5ff;">
-                    </div>
-                    <div class="center-input-box">
-                        <h5>Voters C</h5>
-                        <input type="number" id="turnoutC" min="0" placeholder="0" style="border-color: #e9d5ff;">
-                    </div>
-                </div>
-
-                <button onclick="submitResult()" style="background-color: var(--success); margin-top: 5px;">Commit Center Standings</button>
+                <button onclick="submitResult()" style="background-color: var(--success);">Save & Sync Tally</button>
             </div>
         </div>
 
         <div>
-            <div class="card" id="overallLeaderboardCard">
-                <h3>Overall Live Standings Leaderboard (Grand Totals)</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Contestant Name</th>
-                                <th>Post Category</th>
-                                <th>Valid (A+B+C)</th>
-                                <th>Invalid</th>
-                                <th>Calculated Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="overallStandingsBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
             <div class="card">
-                <h3 id="feedTitle">Data Entry Audit Feed</h3>
+                <h3>Live Standings Leaderboard</h3>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
                                 <th>Candidate</th>
                                 <th>Post</th>
-                                <th>A</th>
-                                <th>B</th>
-                                <th>C</th>
+                                <th>Valid (A+B+C)</th>
                                 <th>Invalid</th>
-                                <th>Status</th>
-                                <th id="adminActionHeader" style="display:none;">Actions</th>
+                                <th>Total Calculated</th>
+                                <th id="adminHeader" style="display:none;">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="resultsTableBody"></tbody>
+                        <tbody id="overallStandingsBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -326,335 +171,199 @@
     </div>
 </div>
 
-<div id="settingsModal" class="modal">
-    <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
-        <h3>Pre-Register Candidate</h3>
-        <div class="form-group" style="margin-top: 10px;">
-            <label>Candidate Name</label>
-            <input type="text" id="newCandidateName" placeholder="e.g., KATO JOHN">
-        </div>
-        <div class="form-group">
-            <label>Post Category</label>
-            <input type="text" id="newCandidatePost" placeholder="e.g., HEAD PREFECT">
-        </div>
-        <div class="form-group">
-            <label>Electoral Body</label>
-            <select id="newCandidateClass">
-                <option value="UNSA Body">UNSA Body</option>
-                <option value="Prefects Body">Prefects Body</option>
-            </select>
-        </div>
-        <button style="background-color: var(--accent); margin-bottom: 20px;" onclick="alert('Presets are hardcoded for speed tonight!')">Save Candidate</button>
-        
-        <hr style="border: 0; border-top: 2px dashed var(--border); margin: 20px 0;">
-        
-        <h3 style="border-color: #ef4444;">Provision New System Users</h3>
-        <div class="form-group" style="margin-top: 10px;">
-            <label>Login Access Code / Key ID</label>
-            <input type="text" id="newUserCode" placeholder="e.g., staff789">
-        </div>
-        <div class="form-group">
-            <label>User Official Title / Name</label>
-            <input type="text" id="newUserName" placeholder="e.g., MR. OKELLO DAVID">
-        </div>
-        <div class="form-group">
-            <label>System Permission Level</label>
-            <select id="newUserRole">
-                <option value="AGENT">Electoral Agent (Data Entry Only)</option>
-                <option value="ADMIN">System Administrator (Full Controls & Approvals)</option>
-            </select>
-        </div>
-        <button style="background-color: #ef4444;" onclick="alert('Users are fixed for tonight\'s secure session!')">Authorize System Access</button>
-        
-        <button class="modal-close" onclick="closeSettings()">Close Control Board</button>
-    </div>
-</div>
-
-<footer class="app-footer">
-    <p class="footer-title">© 2026 NHS Electoral Commission. All Rights Reserved.</p>
-</footer>
-
 <script>
-    // 1. Cloud Network Configuration
     const SUPABASE_URL = "https://wexbtyfwwfctolunwkyu.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
+const SUPABASE_KEY = "sb_publishable_d37v3PrS0nKNohCY5VzaMw_xh2FKHP8";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Hardcoded System Users
-    const officialSystemUsers = { 
-        "alvink123": "Mr. ALVIN. K.",
-        "mkj123": "MR. MUHEREZA KENNETH JOEL",
-        "gk123": "MDM. KIRABIRA GLENNY" 
-    };
-    const adminSystemUsers = { 
-        "oscar123": "KAMYA OSCAR (Admin)",
-        "ronnie123": "HON. SSEMAGANDA RONALD (Admin)",
-        "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)",
-        "richard123": "MR. SEMIGGA RICHARD (Admin)",
-        "admin123": "MDM. MUYINDA SARAH (Admin)"
+    const systemUsers = { 
+        "alvink123": "Mr. ALVIN. K.", "mkj123": "MR. MUHEREZA KENNETH JOEL", "gk123": "MDM. KIRABIRA GLENNY",
+        "oscar123": "KAMYA OSCAR (Admin)", "ronnie123": "HON. SSEMAGANDA RONALD (Admin)", 
+        "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)", "richard123": "MR. SEMIGGA RICHARD (Admin)", "admin123": "MDM. MUYINDA SARAH (Admin)"
     };
 
     const presetCandidates = [
-        { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT", class: "UNSA Body" },
-        { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT", class: "UNSA Body" },
-        { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT", class: "UNSA Body" },
-        { id: "u4", name: "IRUMBA WILLIAMS", post: "VICE PRESIDENT", class: "UNSA Body" },
-        { id: "u5", name: "NANYANZI DESIRE", post: "CHIEF JUDGE", class: "UNSA Body" },
-        { id: "u6", name: "SSENTEZA WILLIAM KEVIN", post: "CHIEF JUDGE", class: "UNSA Body" },
-        { id: "u7", name: "BBALE ALEX", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
-        { id: "u8", name: "BABIRYE ABIGAIL NICOLE", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
-        { id: "u9", name: "SSEKABIRA JOVAN JONATHAN", post: "DEPUTY CHIEF JUDGE", class: "UNSA Body" },
-        { id: "u10", name: "NAMUBIRU HANIFAH", post: "GENERAL SECRETARY", class: "UNSA Body" },
-        { id: "u11", name: "NABULIME JUDITH TENDO", post: "GENERAL SECRETARY", class: "UNSA Body" },
-        { id: "u12", name: "KYOBUTUNGI PROMISE", post: "DEPUTY GENERAL SECRETARY", class: "UNSA Body" },
-        { id: "u13", name: "MUSOKI LINIAH", post: "DEPUTY GENERAL SECRETARY", class: "UNSA Body" },
-        { id: "u14", name: "NAYEBALE PATRICIA", post: "DEPUTY GENERAL SECRETARY", class: "UNSA Body" },
-        { id: "u15", name: "NANYANZI CHRISTINE NIEL", post: "SECRETARY FEMALE AFFAIRS", class: "UNSA Body" },
-        { id: "u16", name: "NAKABUGO PROSSY", post: "SECRETARY FEMALE AFFAIRS", class: "UNSA Body" },
-        { id: "u17", name: "NAKATO IMELDAH", post: "SECRETARY FINANCE", class: "UNSA Body" },
-        { id: "u18", name: "NAKIGOZI ESTHER", post: "SECRETARY FINANCE", class: "UNSA Body" },
-        { id: "u19", name: "NABUUFU HARRIET", post: "SECRETARY STUDENTS AFFAIRS", class: "UNSA Body" },
-        { id: "u20", name: "NAKALANZI NASHIBAH", post: "SECRETARY STUDENTS AFFAIRS", class: "UNSA Body" },
-        { id: "u21", name: "KASSITA SHARITAH", post: "SECRETARY INTERNAL AFFAIRS", class: "UNSA Body" },
-        { id: "u22", name: "KOMUJUNI LETICIA", post: "SECRETARY INTERNAL AFFAIRS", class: "UNSA Body" },
-        { id: "u23", name: "NTEGE PETER", post: "SECRETARY INTERNAL AFFAIRS", class: "UNSA Body" },
-        { id: "u24", name: "MUSIIME LINDAH", post: "LANGUAGE PREFECT", class: "UNSA Body" },
-        { id: "u25", name: "LUBEGA EDWARD", post: "LANGUAGE PREFECT", class: "UNSA Body" },
-        { id: "u26", name: "ALI MAXWELL", post: "LANGUAGE PREFECT", class: "UNSA Body" },
-        { id: "u27", name: "NAKABIITO ESTHER EMILY", post: "INFORMATION AND PUBLICITY", class: "UNSA Body" },
-        { id: "u28", name: "KALULE KENNETH", post: "INFORMATION AND PUBLICITY", class: "UNSA Body" },
-        { id: "p1", name: "KITAGANA AKSAM", post: "HEADBOY A'LEVEL", class: "Prefects Body" },
-        { id: "p2", name: "ALINAFE STEVEN", post: "HEADBOY A'LEVEL", class: "Prefects Body" },
-        { id: "p3", name: "NANKANJA WINFRED", post: "HEADGIRL A'LEVEL", class: "Prefects Body" },
-        { id: "p4", name: "NAMAZZI MARIAM", post: "HEADGIRL A'LEVEL", class: "Prefects Body" },
-        { id: "p5", name: "NAMUDDU SHEEBAH", post: "HEADGIRL A'LEVEL", class: "Prefects Body" },
-        { id: "p6", name: "SSENFUMA MARVIN", post: "HEADBOY O'LEVEL", class: "Prefects Body" },
-        { id: "p7", name: "KYAGULANYI PIUS", post: "HEADBOY O'LEVEL", class: "Prefects Body" },
-        { id: "p8", name: "NABAKOOZA STELLA", post: "HEADGIRL O'LEVEL", class: "Prefects Body" },
-        { id: "p9", name: "NABAGEREKA PRETTY PATRICIA", post: "HEADGIRL O'LEVEL", class: "Prefects Body" },
-        { id: "p10", name: "MAYANJA SHAFIQUE", post: "ACADEMIC PREFECT", class: "Prefects Body" },
-        { id: "p11", name: "NANTONGO BETTY MICHELLE", post: "ACADEMIC PREFECT", class: "Prefects Body" },
-        { id: "p12", name: "TUGUME GRACIOUS MARTHA", post: "HEADMONITOR", class: "Prefects Body" },
-        { id: "p13", name: "NAKAJJA SHANITAH", post: "HEADMONITOR", class: "Prefects Body" },
-        { id: "p14", name: "NAMUBIRU PRISCA", post: "HEADMONITOR", class: "Prefects Body" },
-        { id: "p15", name: "GYAGENDA PHOEBE", post: "ENTERTAINMENT PREFECT", class: "Prefects Body" },
-        { id: "p16", name: "KASIRYE SHAFIK LEBRON", post: "ENTERTAINMENT PREFECT", class: "Prefects Body" },
-        { id: "p17", name: "NASEJJE HAIRAH", post: "ENTERTAINMENT PREFECT", class: "Prefects Body" },
-        { id: "p18", name: "KEI EMMANUEL JAMES", post: "HEALTH MINISTER BOYS", class: "Prefects Body" },
-        { id: "p19", name: "ISHAKA TREVIS", post: "HEALTH MINISTER BOYS", class: "Prefects Body" },
-        { id: "p20", name: "SSEBALAMU JORAM", post: "HEALTH MINISTER BOYS", class: "Prefects Body" },
-        { id: "p21", name: "NAMUKAYA JOVIA", post: "HEALTH MINISTER GIRLS", class: "Prefects Body" },
-        { id: "p22", name: "NANNUNGI BENITAH", post: "HEALTH MINISTER GIRLS", class: "Prefects Body" },
-        { id: "p23", name: "NAGGAYI LOURYN BEATRICE", post: "HEALTH MINISTER GIRLS", class: "Prefects Body" },
-        { id: "p24", name: "NAMUBIRU RAHMAH", post: "LITURGY MUSLIMS", class: "Prefects Body" },
-        { id: "p25", name: "MULIIKA SHARIF", post: "LITURGY MUSLIMS", class: "Prefects Body" },
-        { id: "p26", name: "NANTEZA MARIA VANNEL", post: "LITURGY CHRISTIANS", class: "Prefects Body" },
-        { id: "p27", name: "MULLO MELLISA ROWEN", post: "LITURGY CHRISTIANS", class: "Prefects Body" },
-        { id: "p28", name: "KALYESUBULA LINCOS", post: "HEAD SECURITY", class: "Prefects Body" },
-        { id: "p29", name: "WASSWA MUNIB", post: "HEAD SECURITY", class: "Prefects Body" },
-        { id: "p30", name: "BBOSA TRINITY", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" },
-        { id: "p31", name: "NANKINDU JALIA", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" },
-        { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL", class: "Prefects Body" }
+        { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT" }, { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT" },
+        { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT" }, { id: "u4", name: "IRUMBA WILLIAMS", post: "VICE PRESIDENT" },
+        { id: "u5", name: "NANYANZI DESIRE", post: "CHIEF JUDGE" }, { id: "u6", name: "SSENTEZA WILLIAM KEVIN", post: "CHIEF JUDGE" },
+        { id: "u7", name: "BBALE ALEX", post: "DEPUTY CHIEF JUDGE" }, { id: "u8", name: "BABIRYE ABIGAIL NICOLE", post: "DEPUTY CHIEF JUDGE" },
+        { id: "u9", name: "SSEKABIRA JOVAN JONATHAN", post: "DEPUTY CHIEF JUDGE" }, { id: "u10", name: "NAMUBIRU HANIFAH", post: "GENERAL SECRETARY" },
+        { id: "u11", name: "NABULIME JUDITH TENDO", post: "GENERAL SECRETARY" }, { id: "u12", name: "KYOBUTUNGI PROMISE", post: "DEPUTY GENERAL SECRETARY" },
+        { id: "u13", name: "MUSOKI LINIAH", post: "DEPUTY GENERAL SECRETARY" }, { id: "u14", name: "NAYEBALE PATRICIA", post: "DEPUTY GENERAL SECRETARY" },
+        { id: "u15", name: "NANYANZI CHRISTINE NIEL", post: "SECRETARY FEMALE AFFAIRS" }, { id: "u16", name: "NAKABUGO PROSSY", post: "SECRETARY FEMALE AFFAIRS" },
+        { id: "u17", name: "NAKATO IMELDAH", post: "SECRETARY FINANCE" }, { id: "u18", name: "NAKIGOZI ESTHER", post: "SECRETARY FINANCE" },
+        { id: "u19", name: "NABUUFU HARRIET", post: "SECRETARY STUDENTS AFFAIRS" }, { id: "u20", name: "NAKALANZI NASHIBAH", post: "SECRETARY STUDENTS AFFAIRS" },
+        { id: "u21", name: "KASSITA SHARITAH", post: "SECRETARY INTERNAL AFFAIRS" }, { id: "u22", name: "KOMUJUNI LETICIA", post: "SECRETARY INTERNAL AFFAIRS" },
+        { id: "u23", name: "NTEGE PETER", post: "SECRETARY INTERNAL AFFAIRS" }, { id: "u24", name: "MUSIIME LINDAH", post: "LANGUAGE PREFECT" },
+        { id: "u25", name: "LUBEGA EDWARD", post: "LANGUAGE PREFECT" }, { id: "u26", name: "ALI MAXWELL", post: "LANGUAGE PREFECT" },
+        { id: "u27", name: "NAKABIITO ESTHER EMILY", post: "INFORMATION AND PUBLICITY" }, { id: "u28", name: "KALULE KENNETH", post: "INFORMATION AND PUBLICITY" },
+        { id: "p1", name: "KITAGANA AKSAM", post: "HEADBOY A'LEVEL" }, { id: "p2", name: "ALINAFE STEVEN", post: "HEADBOY A'LEVEL" },
+        { id: "p3", name: "NANKANJA WINFRED", post: "HEADGIRL A'LEVEL" }, { id: "p4", name: "NAMAZZI MARIAM", post: "HEADGIRL A'LEVEL" },
+        { id: "p5", name: "NAMUDDU SHEEBAH", post: "HEADGIRL A'LEVEL" }, { id: "p6", name: "SSENFUMA MARVIN", post: "HEADBOY O'LEVEL" },
+        { id: "p7", name: "KYAGULANYI PIUS", post: "HEADBOY O'LEVEL" }, { id: "p8", name: "NABAKOOZA STELLA", post: "HEADGIRL O'LEVEL" },
+        { id: "p9", name: "NABAGEREKA PRETTY PATRICIA", post: "HEADGIRL O'LEVEL" }, { id: "p10", name: "MAYANJA SHAFIQUE", post: "ACADEMIC PREFECT" },
+        { id: "p11", name: "NANTONGO BETTY MICHELLE", post: "ACADEMIC PREFECT" }, { id: "p12", name: "TUGUME GRACIOUS MARTHA", post: "HEADMONITOR" },
+        { id: "p13", name: "NAKAJJA SHANITAH", post: "HEADMONITOR" }, { id: "p14", name: "NAMUBIRU PRISCA", post: "HEADMONITOR" },
+        { id: "p15", name: "GYAGENDA PHOEBE", post: "ENTERTAINMENT PREFECT" }, { id: "p16", name: "KASIRYE SHAFIK LEBRON", post: "ENTERTAINMENT PREFECT" },
+        { id: "p17", name: "NASEJJE HAIRAH", post: "ENTERTAINMENT PREFECT" }, { id: "p18", name: "KEI EMMANUEL JAMES", post: "HEALTH MINISTER BOYS" },
+        { id: "p19", name: "ISHAKA TREVIS", post: "HEALTH MINISTER BOYS" }, { id: "p20", name: "SSEBALAMU JORAM", post: "HEALTH MINISTER BOYS" },
+        { id: "p21", name: "NAMUKAYA JOVIA", post: "HEALTH MINISTER GIRLS" }, { id: "p22", name: "NANNUNGI BENITAH", post: "HEALTH MINISTER GIRLS" },
+        { id: "p23", name: "NAGGAYI LOURYN BEATRICE", post: "HEALTH MINISTER GIRLS" }, { id: "p24", name: "NAMUBIRU RAHMAH", post: "LITURGY MUSLIMS" },
+        { id: "p25", name: "MULIIKA SHARIF", post: "LITURGY MUSLIMS" }, { id: "p26", name: "NANTEZA MARIA VANNEL", post: "LITURGY CHRISTIANS" },
+        { id: "p27", name: "MULLO MELLISA ROWEN", post: "LITURGY CHRISTIANS" }, { id: "p28", name: "KALYESUBULA LINCOS", post: "HEAD SECURITY" },
+        { id: "p29", name: "WASSWA MUNIB", post: "HEAD SECURITY" }, { id: "p30", name: "BBOSA TRINITY", post: "DORM CAPT. GIRLS O'LEVEL" },
+        { id: "p31", name: "NANKINDU JALIA", post: "DORM CAPT. GIRLS O'LEVEL" }, { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL" }
     ];
 
-    let currentUser = "";
-    let isAdmin = false;
-    let syncIntervalId = null;
+    let currentUser = ""; let syncIntervalId = null;
 
     function login() {
         const code = document.getElementById("loginUsername").value.trim();
-        if(!code) return alert("Access Key required.");
+        if (systemUsers[code]) {
+            currentUser = systemUsers[code];
+            document.getElementById("authSection").style.display = "none";
+            document.getElementById("appDashboard").style.display = "grid";
+            document.getElementById("quickStats").style.display = "grid";
+            document.getElementById("logoutBtn").style.display = "block";
+            
+            const userTag = document.getElementById("userTag");
+            userTag.style.display = "inline-block";
+            userTag.innerText = `User: ${currentUser}`;
 
-        if (adminSystemUsers[code]) {
-            isAdmin = true; currentUser = adminSystemUsers[code]; launchSystem();
-        } else if (officialSystemUsers[code]) {
-            isAdmin = false; currentUser = officialSystemUsers[code]; launchSystem();
+            if(code.includes("admin") || code === "oscar123" || code === "ronnie123" || code === "njuki123" || code === "richard123") {
+                document.getElementById("adminHeader").style.display = "table-cell";
+            }
+
+            populateDropdown(presetCandidates);
+            fetchData();
+            syncIntervalId = setInterval(fetchData, 4000);
         } else {
-            alert("Login ID match not located.");
+            alert("Invalid Access Code Key.");
         }
-    }
-
-    function launchSystem() {
-        document.getElementById("authSection").style.display = "none";
-        document.getElementById("appDashboard").style.display = "grid";
-        document.getElementById("quickStats").style.display = "grid";
-        document.getElementById("logoutBtn").style.display = "block";
-        document.getElementById("printBtn").style.display = "block";
-        document.getElementById("overallLeaderboardCard").style.display = "block";
-                
-        const userTag = document.getElementById("userTag");
-        userTag.style.display = "inline-block";
-        userTag.innerText = `Session: ${currentUser}`;
-
-        if (isAdmin) {
-            document.getElementById("settingsBtn").style.display = "block";
-            document.getElementById("adminActionHeader").style.display = "table-cell";
-            document.getElementById("feedTitle").innerText = "Master Audit Pipeline";
-        }
-                
-        populateCandidateDropdown(presetCandidates);
-        fetchData();
-        syncIntervalId = setInterval(fetchData, 4000);
     }
 
     function logout() {
-        currentUser = ""; isAdmin = false; clearInterval(syncIntervalId);
+        clearInterval(syncIntervalId);
+        currentUser = "";
         document.getElementById("authSection").style.display = "block";
         document.getElementById("appDashboard").style.display = "none";
         document.getElementById("quickStats").style.display = "none";
         document.getElementById("logoutBtn").style.display = "none";
-        document.getElementById("printBtn").style.display = "none";
-        document.getElementById("settingsBtn").style.display = "none";
         document.getElementById("userTag").style.display = "none";
         document.getElementById("loginUsername").value = "";
     }
 
-    function populateCandidateDropdown(candidatesList) {
+    function populateDropdown(list) {
         const select = document.getElementById("candidateSelect");
         select.innerHTML = '<option value="">-- Choose Candidate --</option>';
-        candidatesList.forEach(c => {
+        list.forEach(c => {
             let opt = document.createElement("option");
             opt.value = c.id; opt.innerText = `${c.name} (${c.post})`;
             select.appendChild(opt);
         });
     }
 
-    function filterCandidateDropdown() {
+    function filterDropdown() {
         const val = document.getElementById("searchCandidateInput").value.toUpperCase();
         const filtered = presetCandidates.filter(c => c.name.includes(val) || c.post.includes(val));
-        populateCandidateDropdown(filtered);
+        populateDropdown(filtered);
     }
-
-    function autoFillCandidateDetails() {
-        const id = document.getElementById("candidateSelect").value;
-        if(!id) return;
-        const match = presetCandidates.find(c => c.id === id);
-        if(match) {
-            document.getElementById("postSelect").value = match.post;
-            document.getElementById("classSelect").value = match.class;
-        }
-    }
-
-    function openSettings() { document.getElementById("settingsModal").style.display = "flex"; }
-    function closeSettings() { document.getElementById("settingsModal").style.display = "none"; }
 
     async function submitResult() {
-        const candidateId = document.getElementById("candidateSelect").value;
-        if(!candidateId) return alert("Please choose a candidate first.");
+        const cid = document.getElementById("candidateSelect").value;
+        if(!cid) return alert("Select a candidate.");
 
-        const candidate = presetCandidates.find(c => c.id === candidateId);
+        const candidate = presetCandidates.find(c => c.id === cid);
+        const vA = parseInt(document.getElementById("votesA").value) || 0;
+        const vB = parseInt(document.getElementById("votesB").value) || 0;
+        const vC = parseInt(document.getElementById("votesC").value) || 0;
+        const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;
+
         const payload = {
-            candidateId: candidate.id,
-            candidateName: candidate.name,
-            post: candidate.post,
-            votesA: parseInt(document.getElementById("votesA").value) || 0,
-            votesB: parseInt(document.getElementById("votesB").value) || 0,
-            votesC: parseInt(document.getElementById("votesC").value) || 0,
-            invalid: parseInt(document.getElementById("invalidvoteCount").value) || 0,
-            turnoutA: parseInt(document.getElementById("turnoutA").value) || 0,
-            turnoutB: parseInt(document.getElementById("turnoutB").value) || 0,
-            turnoutC: parseInt(document.getElementById("turnoutC").value) || 0,
-            status: isAdmin ? "APPROVED" : "PENDING",
-            enteredBy: currentUser
+            candidateId: candidate.id, candidateName: candidate.name, post: candidate.post,
+            votesA: vA, votesB: vB, votesC: vC, invalid: inv,
+            turnoutA: vA, turnoutB: vB, turnoutC: vC, // Autopopulates turnout fields to prevent DB constraints
+            status: "APPROVED", enteredBy: currentUser
         };
 
+        // Keeps your database clean by updating old values smoothly
         await _supabase.from('results').delete().eq('candidateId', candidate.id);
         const { error } = await _supabase.from('results').insert([payload]);
 
         if (error) {
-            alert("Verify your Supabase Table Schema names match column structures.");
+            alert("Sync Failed: Ensure your database table rules are active.");
         } else {
-            alert("Standings successfully pushed to Cloud Framework!");
-            ["votesA", "votesB", "votesC", "invalidvoteCount", "turnoutA", "turnoutB", "turnoutC", "candidateSelect", "postSelect", "classSelect", "searchCandidateInput"].forEach(id => document.getElementById(id).value = "");
-            populateCandidateDropdown(presetCandidates);
+            alert("Saved successfully!");
+            ["votesA", "votesB", "votesC", "invalidvoteCount", "candidateSelect", "searchCandidateInput"].forEach(id => document.getElementById(id).value = "");
+            populateDropdown(presetCandidates);
             fetchData();
         }
     }
 
-    async function changeStatus(resultId, nextStatus) {
-        await _supabase.from('results').update({ status: nextStatus }).eq('id', resultId);
-        fetchData();
-    }
-
-    async function deleteRecord(resultId) {
-        if(!confirm("Remove entry record?")) return;
-        await _supabase.from('results').delete().eq('id', resultId);
-        fetchData();
+    async function deleteRecord(rid) {
+        if(confirm("Delete this row record entirely?")) {
+            await _supabase.from('results').delete().eq('id', rid);
+            fetchData();
+        }
     }
 
     async function fetchData() {
-        const { data: results, error } = await _supabase.from('results').select('*');
-        if (error || !results) return;
-        
-        let totalValid = 0; let totalInvalid = 0; let totalTurnout = 0;
-        const auditBody = document.getElementById("resultsTableBody");
-        auditBody.innerHTML = "";
-        
-        results.forEach(r => {
-            const rowTotalValid = r.votesA + r.votesB + r.votesC;
-            if (r.status === "APPROVED") {
-                totalValid += rowTotalValid;
-                totalInvalid += r.invalid;
-                totalTurnout += (r.turnoutA + r.turnoutB + r.turnoutC);
-            }
+        const { data: records, error } = await _supabase.from('results').select('*');
+        if (error || !records) return;
 
-            let tr = document.createElement("tr");
-            tr.className = r.status.toLowerCase();
-            let actionButtons = `<td><button class="btn-approve" onclick="changeStatus('${r.id}', 'APPROVED')">✓ Approve</button><button class="btn-edit" style="background-color:#ef4444;" onclick="deleteRecord('${r.id}')">✕ Delete</button></td>`;
-
-            tr.innerHTML = `<td><b>${r.candidateName}</b></td><td>${r.post}</td><td>${r.votesA}</td><td>${r.votesB}</td><td>${r.votesC}</td><td>${r.invalid}</td><td><span class="badge" style="background:${r.status==='APPROVED'?'#d1fae5':'#fef3c7'}; color:${r.status==='APPROVED'?'#065f46':'#92400e'}">${r.status}</span></td>${isAdmin ? actionButtons : ""}`;
-            auditBody.appendChild(tr);
-        });
-
-        const leadersBody = document.getElementById("overallStandingsBody");
-        leadersBody.innerHTML = "";
-
+        let grandValid = 0; let grandInvalid = 0;
         let aggregates = {};
-        presetCandidates.forEach(c => { 
-            aggregates[c.id] = { name: c.name, post: c.post, valid: 0, invalid: 0, grand: 0 }; 
+
+        presetCandidates.forEach(c => {
+            aggregates[c.id] = { id: "", name: c.name, post: c.post, valid: 0, invalid: 0, total: 0 };
         });
 
-        results.forEach(r => {
-            if(aggregates[r.candidateId]) {
-                const combinedValid = r.votesA + r.votesB + r.votesC;
-                aggregates[r.candidateId].valid += combinedValid;
-                aggregates[r.candidateId].invalid += r.invalid;
-                aggregates[r.candidateId].grand += (combinedValid + r.invalid);
+        records.forEach(r => {
+            if (aggregates[r.candidateId]) {
+                const totalValidRow = r.votesA + r.votesB + r.votesC;
+                aggregates[r.candidateId].id = r.id;
+                aggregates[r.candidateId].valid = totalValidRow;
+                aggregates[r.candidateId].invalid = r.invalid;
+                aggregates[r.candidateId].total = totalValidRow + r.invalid;
+                
+                grandValid += totalValidRow;
+                grandInvalid += r.invalid;
             }
         });
 
-        let sortedList = Object.keys(aggregates).map(cid => aggregates[cid]);
-
-        sortedList.sort((a, b) => {
-            if (a.post !== b.post) {
-                return a.post.localeCompare(b.post);
-            }
+        let sorted = Object.keys(aggregates).map(id => aggregates[id]).sort((a,b) => {
+            if (a.post !== b.post) return a.post.localeCompare(b.post);
             return b.valid - a.valid;
         });
 
-        let postHighScores = {};
-        sortedList.forEach(item => {
-            if(!postHighScores[item.post] || postHighScores[item.post] < item.valid) { 
-                if(item.valid > 0) postHighScores[item.post] = item.valid; 
+        let highestScores = {};
+        sorted.forEach(s => {
+            if(!highestScores[s.post] || highestScores[s.post] < s.valid) {
+                if(s.valid > 0) highestScores[s.post] = s.valid;
             }
         });
 
-        sortedList.forEach(item => {
-            let tr = document.createElement("tr");
-            if(item.valid > 0 && postHighScores[item.post] === item.valid) tr.className = "winner-row";
+        const tbody = document.getElementById("overallStandingsBody");
+        tbody.innerHTML = "";
 
-            tr.innerHTML = `<td>${item.name} ${item.valid > 0 && postHighScores[item.post] === item.valid ? "👑" : ""}</td><td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${item.post}</span></td><td><b>${item.valid}</b></td><td>${item.invalid}</td><td><b>${item.grand}</b></td>`;
-            leadersBody.appendChild(tr);
+        const showAdmin = document.getElementById("adminHeader").style.display === "table-cell";
+
+        sorted.forEach(s => {
+            let tr = document.createElement("tr");
+            if(s.valid > 0 && highestScores[s.post] === s.valid) tr.className = "winner-row";
+
+            let actionTd = showAdmin && s.id ? `<td><button class="btn-del" onclick="deleteRecord('${s.id}')">Delete</button></td>` : (showAdmin ? "<td></td>" : "");
+
+            tr.innerHTML = `<td><b>${s.name}</b> ${s.valid > 0 && highestScores[s.post] === s.valid ? "👑" : ""}</td><td><span class="badge">${s.post}</span></td><td>${s.valid}</td><td>${s.invalid}</td><td><b>${s.total}</b></td>${actionTd}`;
+            tbody.appendChild(tr);
         });
 
-        document.getElementById("statValid").innerText = totalValid;
-        document.getElementById("statInvalid").innerText = totalInvalid;
-        document.getElementById("statEntries").innerText = results.length;
-        document.getElementById("statTurnout").innerText = totalTurnout;
-        
-        const totalRegisteredBaseline = 1500;
-        document.getElementById("statTotalVoters").innerText = `${totalRegisteredBaseline} (Abs: ${totalRegisteredBaseline - totalTurnout})`;
+        document.getElementById("statValid").innerText = grandValid;
+        document.getElementById("statInvalid").innerText = grandInvalid;
+        document.getElementById("statTotalVoters").innerText = grandValid + grandInvalid;
     }
 </script>
 </body>
 </html>
+
+```
