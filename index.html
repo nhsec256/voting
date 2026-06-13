@@ -1,277 +1,296 @@
-<!DOCTYPE html><html lang="en"><head>    
-    <meta charset="UTF-8">    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <title>Namungoona High School - Simplified Election Portal</title>    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">    
-    <style>        
-        :root { --primary: #004699; --secondary: #ffc107; --dark: #0f172a; --light: #ffffff; --success: #10b981; }        
-        * { box-sizing: border-box; font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; }        
-        body { background-color: #f8fafc; color: var(--dark); padding: 10px; }        
-        .container { max-width: 1200px; margin: 0 auto; }                
+<!DOCTYPE html><html lang="en"><head>        
+    <meta charset="UTF-8">        
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+    <title>Namungoona High School - Official Election Portal</title>        
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">        
+    <style>                
+        :root { --primary: #004699; --secondary: #ffc107; --dark: #0f172a; --light: #ffffff; --success: #10b981; }                
+        * { box-sizing: border-box; font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; }                
+        body { background-color: #f8fafc; color: var(--dark); padding: 10px; }                
+        .container { max-width: 1200px; margin: 0 auto; }                                
         
-        .master-header {             
-            background: linear-gradient(135deg, #002b5c, var(--primary));             
-            color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px;             
-            border: 2px solid var(--secondary); display: flex; flex-direction: column; gap: 15px; align-items: center; text-align: center;
+        .master-header {                         
+            background: linear-gradient(135deg, #002b5c, var(--primary));                         
+            color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px;                         
+            border: 2px solid var(--secondary); display: flex; flex-direction: column; gap: 15px; align-items: center; text-align: center;        
+        }                
+        @media (min-width: 768px) {            
+            .master-header { flex-direction: row; justify-content: space-between; text-align: left; padding: 20px; }        
         }        
-        @media (min-width: 768px) {
-            .master-header { flex-direction: row; justify-content: space-between; text-align: left; padding: 20px; }
-        }
-        .header-left { display: flex; flex-direction: column; align-items: center; gap: 15px; }        
-        @media (min-width: 576px) { .header-left { flex-direction: row; } }
-        .school-logo { width: 65px; height: 65px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--secondary); overflow: hidden; flex-shrink: 0; }        
-        .school-logo img { width: 100%; height: 100%; object-fit: cover; }        
-        .header-text h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }        
-        .header-text p { font-size: 13px; color: #e2e8f0; }        
-        .header-contact { font-size: 11px; color: #cbd5e1; margin-top: 4px; }
+        .header-left { display: flex; flex-direction: column; align-items: center; gap: 15px; }                
+        @media (min-width: 576px) { .header-left { flex-direction: row; } }        
+        .school-logo { width: 65px; height: 65px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--secondary); overflow: hidden; flex-shrink: 0; }                
+        .school-logo img { width: 100%; height: 100%; object-fit: cover; }                
+        .header-text h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }                
+        .header-text p { font-size: 13px; color: #e2e8f0; }                
+        .header-contact { font-size: 11px; color: #cbd5e1; margin-top: 4px; }                
+        .header-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; width: 100%; }        
+        @media (min-width: 768px) { .header-actions { width: auto; justify-content: flex-end; } }        
         
-        .header-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; width: 100%; }
-        @media (min-width: 768px) { .header-actions { width: auto; justify-content: flex-end; } }
-        .user-tag { background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: white; text-align: center; }        
-        .btn-logout { background-color: #ef4444; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }        
-        .btn-print { background-color: #0284c7; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }        
+        .user-tag { background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: white; text-align: center; }                
+        .btn-logout { background-color: #ef4444; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }                
+        .btn-print { background-color: #0284c7; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }                        
         
-        .quick-stats-bar { display: none; grid-template-columns: 1fr; gap: 10px; margin-bottom: 20px; }        
-        @media (min-width: 576px) { .quick-stats-bar { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
-        .stat-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }        
-        .stat-card h4 { font-size: 10px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px; }        
-        .stat-card p { font-size: 20px; font-weight: 700; color: var(--primary); }        
+        .quick-stats-bar { display: none; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }                
+        @media (min-width: 768px) { .quick-stats-bar { grid-template-columns: repeat(4, 1fr); gap: 15px; } }        
+        .stat-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }                
+        .stat-card h4 { font-size: 10px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px; }                
+        .stat-card p { font-size: 18px; font-weight: 700; color: var(--primary); }                        
         
-        .auth-card { background: white; padding: 30px 20px; border-radius: 12px; max-width: 450px; margin: 40px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid #cbd5e1; }        
-        .auth-card .login-logo { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); overflow: hidden; }        
-        .auth-card select { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 15px; font-weight: 600; text-align: center; }        
+        .auth-card { background: white; padding: 30px 20px; border-radius: 12px; max-width: 450px; margin: 40px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid #cbd5e1; }                
+        .auth-card .login-logo { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); overflow: hidden; }                
+        .auth-card select { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 15px; font-weight: 600; text-align: center; }                        
         
-        .dashboard { display: none; grid-template-columns: 1fr; gap: 20px; }        
-        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.4fr; } }        
-        .card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }        
-        @media (min-width: 576px) { .card { padding: 20px; } }
-        h3 { color: var(--primary); margin-bottom: 15px; font-size: 13px; font-weight: 700; border-bottom: 2px solid var(--secondary); padding-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }        
+        .backup-zone { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #cbd5e1; font-size: 12px; }
+        .btn-small { padding: 6px 10px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; background: #64748b; color: white; margin: 5px; }
+
+        .dashboard { display: none; grid-template-columns: 1fr; gap: 20px; }                
+        @media (min-width: 992px) { .dashboard { grid-template-columns: 1fr 1.5fr; } }                
+        .card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }                
+        @media (min-width: 576px) { .card { padding: 20px; } }        
+        h3 { color: var(--primary); margin-bottom: 15px; font-size: 13px; font-weight: 700; border-bottom: 2px solid var(--secondary); padding-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }                        
         
-        .form-group { margin-bottom: 15px; }        
-        label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 6px; color: #475569; text-transform: uppercase; }        
-        select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; background: white; -webkit-appearance: auto; }        
-        input[type="number"] { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: 700; text-align: center; outline: none; }
+        .form-group { margin-bottom: 15px; }                
+        label { display: block; font-weight: 700; font-size: 11px; margin-bottom: 6px; color: #475569; text-transform: uppercase; }                
+        select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 14px; outline: none; background: white; }                
+        input[type="number"] { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: 700; text-align: center; outline: none; }        
         input[type="number"]:focus { border-color: var(--primary); }
+        
+        .centers-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0; }                
+        @media (min-width: 480px) { .centers-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }        
+        .center-box { text-align: center; }                
+        .center-box h5 { font-size: 11px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }                        
+        
+        button.btn-action { background-color: var(--primary); color: white; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; width: 100%; }                
+        button.btn-action:hover { background-color: #003370; }                        
+        
+        .table-responsive { overflow-x: auto; border-radius: 6px; border: 1px solid #e2e8f0; }                
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }                
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; }                
+        th { background-color: #f8fafc; color: #475569; font-weight: 700; font-size: 11px; text-transform: uppercase; white-space: nowrap; }                
+        td { white-space: nowrap; }        
+        td.candidate-name-cell { white-space: normal; min-width: 140px; font-weight: 600; }                
+        tr.winner-row { background-color: #f0f9ff; font-weight: bold; border-left: 4px solid #0284c7; }                
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #e0f2fe; color: #0369a1; display: inline-block; }                
+        .btn-del { background-color: #ef4444; color: white; border: none; padding: 4px 8px; font-size: 10px; width: auto; display: inline-block; border-radius: 4px; cursor: pointer; font-weight: bold; }                        
+        .print-footer { display: none; text-align: center; font-weight: bold; margin-top: 40px; font-size: 13px; border-top: 1px solid #000; padding-top: 15px; }
 
-        .centers-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0; }        
-        @media (min-width: 480px) { .centers-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
-        .center-box { text-align: center; }        
-        .center-box h5 { font-size: 11px; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }        
-        
-        button.btn-action { background-color: var(--primary); color: white; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; width: 100%; }        
-        button.btn-action:hover { background-color: #003370; }        
-        
-        .table-responsive { overflow-x: auto; border-radius: 6px; border: 1px solid #e2e8f0; -webkit-overflow-scrolling: touch; }        
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }        
-        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; }        
-        th { background-color: #f8fafc; color: #475569; font-weight: 700; font-size: 11px; text-transform: uppercase; white-space: nowrap; }        
-        td { white-space: nowrap; }
-        td.candidate-name-cell { white-space: normal; min-width: 140px; font-weight: 600; }
-        
-        tr.winner-row { background-color: #f0f9ff; font-weight: bold; border-left: 4px solid #0284c7; }        
-        .badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #e0f2fe; color: #0369a1; display: inline-block; }        
-        .btn-del { background-color: #ef4444; color: white; border: none; padding: 4px 8px; font-size: 10px; width: auto; display: inline-block; border-radius: 4px; cursor: pointer; font-weight: bold; }        
-        
-        .print-footer { display: none; text-align: center; font-weight: bold; margin-top: 30px; font-size: 14px; border-top: 1px solid #000; padding-top: 10px; }
+        /* PRINT CLEANUP CONFIGURATION */                
+        @media print {                        
+            * { font-family: "Times New Roman", Times, serif !important; color: #000000 !important; }                        
+            body { background-color: #ffffff !important; padding: 0 !important; }                                    
+            .master-header {                                 
+                background: none !important; border: none !important; border-bottom: 3px double #000000 !important; border-radius: 0 !important;                                 
+                padding: 10px 0 15px 0 !important; margin-bottom: 20px !important; flex-direction: row !important; text-align: left !important; justify-content: flex-start !important; gap: 25px !important;                        
+            }                        
+            .school-logo { width: 85px !important; height: 85px !important; border: 1px solid #000000 !important; display: block !important; }                        
+            .header-text h1 { font-size: 24px !important; font-weight: bold !important; }                        
+            .header-text p { font-size: 14px !important; font-weight: bold !important; }                                    
+            .header-text::after {                                
+                content: "P.O Box 26935 Kampala\A Tel: +256 700 627 960 / +256 788 772 660";                                
+                white-space: pre-wrap; display: block; font-size: 11px !important; font-weight: 500 !important; margin-top: 4px;                        
+            }                        
+            #authSection, .dashboard > div:first-child, .header-actions, #quickStats { display: none !important; }                                    
+            .dashboard { display: block !important; width: 100% !important; }                        
+            .dashboard > div:last-child { width: 100% !important; }                        
+            .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }                                    
+            h3 { font-size: 16px !important; border-bottom: 2px solid #000000 !important; margin-bottom: 15px !important; padding-bottom: 5px !important; text-align: center; }                        
+            table { width: 100% !important; border: 1.5px solid #000000 !important; border-collapse: collapse !important; }                        
+            th, td { border: 1px solid #000000 !important; padding: 6px 5px !important; font-size: 11px !important; background: none !important; }                        
+            th { background-color: #f0f0f0 !important; text-transform: uppercase; font-weight: bold; }                        
+            tr.winner-row { background-color: transparent !important; border-left: none !important; }                        
+            .badge { background: none !important; padding: 0 !important; font-size: 11px !important; color: black !important; }                        
+            .btn-del { display: none !important; }                    
+            .print-footer { display: block !important; }        
+        }        
+    </style>
+</head>
+<body>
 
-        /* PRINT CONFIGURATION */        
-        @media print {            
-            * { font-family: "Times New Roman", Times, serif !important; color: #000000 !important; }            
-            body { background-color: #ffffff !important; padding: 0 !important; }                        
-            .master-header {                 
-                background: none !important; border: none !important; border-bottom: 3px double #000000 !important; border-radius: 0 !important;                 
-                padding: 10px 0 20px 0 !important; margin-bottom: 25px !important; flex-direction: row !important; text-align: left !important; justify-content: flex-start !important; gap: 25px !important;            
-            }            
-            .school-logo { width: 90px !important; height: 90px !important; border: 1px solid #000000 !important; display: block !important; }            
-            .header-text h1 { font-size: 24px !important; font-weight: bold !important; }            
-            .header-text p { font-size: 14px !important; font-weight: bold !important; }                        
-            .header-text::after {                
-                content: "P.O Box 26935 Kampala\A Tel: +256 700 627 960 / +256 788 772 660";                
-                white-space: pre-wrap; display: block; font-size: 12px !important; font-weight: 500 !important; margin-top: 4px;            
-            }            
-            #authSection, .dashboard > div:first-child, .header-actions, #quickStats { display: none !important; }                        
-            .dashboard { display: block !important; width: 100% !important; }            
-            .dashboard > div:last-child { width: 100% !important; }            
-            .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }                        
-            h3 { font-size: 15px !important; border-bottom: 2px solid #000000 !important; margin-bottom: 15px !important; padding-bottom: 5px !important; }            
-            table { width: 100% !important; border: 1.5px solid #000000 !important; border-collapse: collapse !important; }            
-            th, td { border: 1px solid #000000 !important; padding: 8px 6px !important; font-size: 12px !important; background: none !important; }            
-            th { background-color: #e6e6e6 !important; }            
-            tr.winner-row { background-color: transparent !important; border-left: none !important; }            
-            .badge { background: none !important; padding: 0 !important; font-size: 12px !important; }            
-            .btn-del { display: none !important; }        
-            .print-footer { display: block !important; }
-        }    
-    </style></head><body>
-
-<div class="container">   
-    <header class="master-header">        
-        <div class="header-left">            
-            <div class="school-logo">                
-                <img src="SCHOOL BADGE.jpg" alt="NHS Badge" id="headerLogoImg" onerror="this.parentNode.innerText='NHS LOGO';">            
-            </div>            
-            <div class="header-text">                
-                <h1>Namungoona High School</h1>                
-                <p>Electoral Committee</p>                
-                <div class="header-contact">                    
-                    P.O Box 26935 Kampala | Tel: +256 700 627 960 / +256 788 772 660                
-                </div>            
-            </div>        
+<div class="container">       
+    <header class="master-header">                
+        <div class="header-left">                        
+            <div class="school-logo">                                
+                <img src="SCHOOL BADGE.jpg" alt="NHS Badge" id="headerLogoImg" onerror="this.parentNode.innerText='NHS LOGO';">                        
+            </div>                        
+            <div class="header-text">                                
+                <h1>Namungoona High School</h1>                                
+                <p>Electoral Committee Portal</p>                                
+                <div class="header-contact">                                        
+                    P.O Box 26935 Kampala | Tel: +256 700 627 960 / +256 788 772 660                                
+                </div>                        
+            </div>                
+        </div>                
+        <div class="header-actions">                        
+            <span id="userTag" class="user-tag" style="display: none;"></span>                        
+            <button id="printBtn" class="btn-print" onclick="window.print()" style="display:none;">🖨️ Export Standings</button>                        
+            <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout</button>                
         </div>        
-        <div class="header-actions">            
-            <span id="userTag" class="user-tag" style="display: none;"></span>            
-            <button id="printBtn" class="btn-print" onclick="window.print()" style="display:none;">🖨️ Export Standings</button>            
-            <button id="logoutBtn" class="btn-logout" onclick="logout()" style="display:none;">Logout</button>        
-        </div>    
     </header>    
 
-    <div id="quickStats" class="quick-stats-bar">        
-        <div class="stat-card">            
-            <h4>Grand Turnout</h4>            
-            <p id="statTotalVoters">0</p>        
+    <div id="quickStats" class="quick-stats-bar">                
+        <div class="stat-card">                        
+            <h4>Expected Turnout</h4>                        
+            <p>680</p>                
+        </div>                
+        <div class="stat-card">                        
+            <h4>Current Turnout</h4>                        
+            <p id="statTotalVoters">0</p>                
+        </div>                
+        <div class="stat-card">                        
+            <h4>Valid Votes</h4>                        
+            <p id="statValid" style="color: var(--success);">0</p>                
+        </div>                
+        <div class="stat-card">                        
+            <h4>Invalid Votes</h4>                        
+            <p id="statInvalid" style="color: #ef4444;">0</p>                
         </div>        
-        <div class="stat-card">            
-            <h4>Valid Votes</h4>            
-            <p id="statValid" style="color: var(--success);">0</p>        
-        </div>        
-        <div class="stat-card">            
-            <h4>Invalid Votes</h4>            
-            <p id="statInvalid" style="color: #ef4444;">0</p>        
-        </div>    
     </div>    
 
-    <div id="authSection" class="auth-card">        
-        <div class="login-logo">            
-            <img src="SCHOOL BADGE.jpg" alt="NHS Badge" id="loginLogoImg" onerror="this.parentNode.innerText='🏫';">        
-        </div>        
-        <h3>System Access Portal</h3>        
-        <select id="loginUsername" onchange="login()">
-            <option value="">-- Click to Select Your Name --</option>
-            <option value="alvink123">Mr. ALVIN. K.</option>
-            <option value="mkj123">MR. MUHEREZA KENNETH JOEL</option>
-            <option value="gk123">MDM. KIRABIRA GLENNY</option>
-            <option value="oscar123">KAMYA OSCAR (Admin)</option>
-            <option value="ronnie123">HON. SSEMAGANDA RONALD (Admin)</option>
-            <option value="njuki123">MR. NJUKI JOSEPH MUSAAZI (Admin)</option>
-            <option value="richard123">MR. SEMIGGA RICHARD (Admin)</option>
-            <option value="admin123">MDM. MUYINDA SARAH (Admin)</option>
+    <div id="authSection" class="auth-card">                
+        <div class="login-logo">                        
+            <img src="SCHOOL BADGE.jpg" alt="NHS Badge" id="loginLogoImg" onerror="this.parentNode.innerText='🏫';">                
+        </div>                
+        <h3>System Access Portal</h3>                
+        <select id="loginUsername" onchange="login()">            
+            <option value="">-- Click to Select Your Name --</option>            
+            <option value="alvink123">Mr. ALVIN. K.</option>            
+            <option value="mkj123">MR. MUHEREZA KENNETH JOEL</option>            
+            <option value="gk123">MDM. KIRABIRA GLENNY</option>            
+            <option value="oscar123">KAMYA OSCAR (Admin)</option>            
+            <option value="ronnie123">HON. SSEMAGANDA RONALD (Admin)</option>            
+            <option value="njuki123">MR. NJUKI JOSEPH MUSAAZI (Admin)</option>            
+            <option value="richard123">MR. SEMIGGA RICHARD (Admin)</option>            
+            <option value="admin123">MDM. MUYINDA SARAH (Admin)</option>        
         </select>
+
+        <div class="backup-zone">
+            <p style="font-weight: bold; margin-bottom: 5px; color: #475569;">Data Safety & recovery tools</p>
+            <button class="btn-small" onclick="exportDataString()">Copy Emergency Backup Text</button>
+            <button class="btn-small" onclick="importDataString()" style="background-color: var(--primary);">Restore via Backup Text</button>
+        </div>
     </div>    
 
-    <div id="appDashboard" class="dashboard">        
-        <div>            
-            <div class="card">                
-                <h3>Enter Station Tally</h3>                                
-                
-                <div class="form-group">                    
-                    <label>Select Target Candidate</label>                    
-                    <select id="candidateSelect" required>                        
-                        <option value="">-- Click to Select Candidate --</option>                    
-                    </select>                
-                </div>                
-                
-                <label style="color: var(--primary);">Valid Votes per Station</label>                
-                <div class="centers-grid">                    
-                    <div class="center-box">                        
-                        <h5>Center A</h5>                        
-                        <input type="number" id="votesA" min="0" placeholder="0">
-                    </div>                    
-                    <div class="center-box">                        
-                        <h5>Center B</h5>                        
-                        <input type="number" id="votesB" min="0" placeholder="0">
-                    </div>                    
-                    <div class="center-box">                        
-                        <h5>Center C</h5>                        
-                        <input type="number" id="votesC" min="0" placeholder="0">
-                    </div>                
-                </div>                
-                
-                <div class="form-group">                    
-                    <label style="color: #ef4444;">Invalid Votes (Combined)</label>                    
-                    <input type="number" id="invalidvoteCount" min="0" placeholder="0">
-                </div>                
-                
-                <button class="btn-action" onclick="submitResult()" style="background-color: var(--success);">Save Tally</button>            
-            </div>        
+    <div id="appDashboard" class="dashboard">                
+        <div>                        
+            <div class="card">                                
+                <h3>Enter Station Tally</h3>                                                                
+                <div class="form-group">                                        
+                    <label>Select Target Candidate</label>                                        
+                    <select id="candidateSelect" required>                                                
+                        <option value="">-- Click to Select Candidate --</option>                                        
+                    </select>                                </div>                                                
+                <label style="color: var(--primary);">Valid Votes per Station</label>                                
+                <div class="centers-grid">                                        
+                    <div class="center-box">                                                
+                        <h5>Center A</h5>                                                
+                        <input type="number" id="votesA" min="0" placeholder="0">                    
+                    </div>                                        
+                    <div class="center-box">                                                
+                        <h5>Center B</h5>                                                
+                        <input type="number" id="votesB" min="0" placeholder="0">                    
+                    </div>                                        
+                    <div class="center-box">                                                
+                        <h5>Center C</h5>                                                
+                        <input type="number" id="votesC" min="0" placeholder="0">                    
+                    </div>                                
+                </div>                                                
+                <div class="form-group">                                        
+                    <label style="color: #ef4444;">Invalid Votes (Combined)</label>                                        
+                    <input type="number" id="invalidvoteCount" min="0" placeholder="0">                
+                </div>                                                
+                <button class="btn-action" onclick="submitResult()" style="background-color: var(--success);">Save Tally</button>                        
+            </div>                
+        </div>                        
+        <div>                        
+            <div class="card">                                
+                <h3>Live Standings Leaderboard</h3>                                
+                <div class="table-responsive">                                        
+                    <table>                                                
+                        <thead>                                                        
+                            <tr>                                                                
+                                <th style="width: 40px;">No.</th>
+                                <th>Candidate Name</th>                                                                
+                                <th>Post / Office Portfolio</th>                                                                
+                                <th>Valid</th>                                                                
+                                <th>Invalid</th>                                                                
+                                <th>Total Tally</th>                                                                
+                                <th id="adminHeader" style="display:none;">Action</th>                                                        
+                            </tr>                                                
+                        </thead>                                                
+                        <tbody id="overallStandingsBody"></tbody>                                        
+                    </table>                                
+                </div>                        
+            </div>                
         </div>        
-        
-        <div>            
-            <div class="card">                
-                <h3>Live Standings Leaderboard</h3>                
-                <div class="table-responsive">                    
-                    <table>                        
-                        <thead>                            
-                            <tr>                                
-                                <th>Candidate</th>                                
-                                <th>Post</th>                                
-                                <th>Valid</th>                                
-                                <th>Invalid</th>                                
-                                <th>Total</th>                                
-                                <th id="adminHeader" style="display:none;">Action</th>                            
-                            </tr>                        
-                        </thead>                        
-                        <tbody id="overallStandingsBody"></tbody>                    
-                    </table>                
-                </div>            
-            </div>        
-        </div>    
-    </div>
-    
-    <div class="print-footer">
-        CREATED BY KAMYA OSCAR
+    </div>        
+    <div class="print-footer">        
+        FINAL STANDINGS LEADERBOARD REPORT — TOTAL EXPECTED REGISTERED VOTERS ACROSS THE 3 INVOLVED CENTERS: 680<br>
+        <span style="font-size: 11px; font-weight: normal; margin-top: 5px; display:block;">Report Compiled and Generated Authentically via NHS System Portal. Created by Kamya Oscar.</span>
     </div>
 </div>
 
-<script>    
+<script>        
     const LOCAL_STORAGE_KEY = "nhs_election_results";
 
-    const systemUsers = {         
-        "alvink123": "Mr. ALVIN. K.",         
-        "mkj123": "MR. MUHEREZA KENNETH JOEL",         
-        "gk123": "MDM. KIRABIRA GLENNY",        
-        "oscar123": "KAMYA OSCAR (Admin)",         
-        "ronnie123": "HON. SSEMAGANDA RONALD (Admin)",         
-        "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)",         
-        "richard123": "MR. SEMIGGA RICHARD (Admin)",         
-        "admin123": "MDM. MUYINDA SARAH (Admin)"    
+    const systemUsers = {                 
+        "alvink123": "Mr. ALVIN. K.",                 
+        "mkj123": "MR. MUHEREZA KENNETH JOEL",                 
+        "gk123": "MDM. KIRABIRA GLENNY",                
+        "oscar123": "KAMYA OSCAR (Admin)",                 
+        "ronnie123": "HON. SSEMAGANDA RONALD (Admin)",                 
+        "njuki123": "MR. NJUKI JOSEPH MUSAAZI (Admin)",                 
+        "richard123": "MR. SEMIGGA RICHARD (Admin)",                 
+        "admin123": "MDM. MUYINDA SARAH (Admin)"        
     };    
 
-    const presetCandidates = [        
-        { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT" }, { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT" },        
-        { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT" }, { id: "u4", name: "IRUMBA WILLIAMS", post: "VICE PRESIDENT" },        
-        { id: "u5", name: "NANYANZI DESIRE", post: "CHIEF JUDGE" }, { id: "u6", name: "SSENTEZA WILLIAM KEVIN", post: "CHIEF JUDGE" },        
-        { id: "u7", name: "BBALE ALEX", post: "DEPUTY CHIEF JUDGE" }, { id: "u8", name: "BABIRYE ABIGAIL NICOLE", post: "DEPUTY CHIEF JUDGE" },        
-        { id: "u9", name: "SSEKABIRA JOVAN JONATHAN", post: "DEPUTY CHIEF JUDGE" }, { id: "u10", name: "NAMUBIRU HANIFAH", post: "GENERAL SECRETARY" },        
-        { id: "u11", name: "NABULIME JUDITH TENDO", post: "GENERAL SECRETARY" }, { id: "u12", name: "KYOBUTUNGI PROMISE", post: "DEPUTY GENERAL SECRETARY" },        
-        { id: "u13", name: "MUSOKI LINIAH", post: "DEPUTY GENERAL SECRETARY" }, { id: "u14", name: "NAYEBALE PATRICIA", post: "DEPUTY GENERAL SECRETARY" },        
-        { id: "u15", name: "NANYANZI CHRISTINE NIEL", post: "SECRETARY FEMALE AFFAIRS" }, { id: "u16", name: "NAKABUGO PROSSY", post: "SECRETARY FEMALE AFFAIRS" },        
-        { id: "u17", name: "NAKATO IMELDAH", post: "SECRETARY FINANCE" }, { id: "u18", name: "NAKIGOZI ESTHER", post: "SECRETARY FINANCE" },        
-        { id: "u19", name: "NABUUFU HARRIET", post: "SECRETARY STUDENTS AFFAIRS" }, { id: "u20", name: "NAKALANZI NASHIBAH", post: "SECRETARY STUDENTS AFFAIRS" },        
-        { id: "u21", name: "KASSITA SHARITAH", post: "SECRETARY INTERNAL AFFAIRS" }, { id: "u22", name: "KOMUJUNI LETICIA", post: "SECRETARY INTERNAL AFFAIRS" },        
-        { id: "u23", name: "NTEGE PETER", post: "SECRETARY INTERNAL AFFAIRS" }, { id: "u24", name: "MUSIIME LINDAH", post: "LANGUAGE PREFECT" },        
-        { id: "u25", name: "LUBEGA EDWARD", post: "LANGUAGE PREFECT" }, { id: "u26", name: "ALI MAXWELL", post: "LANGUAGE PREFECT" },        
-        { id: "u27", name: "NAKABIITO ESTHER EMILY", post: "INFORMATION AND PUBLICITY" }, { id: "u28", name: "KALULE KENNETH", post: "INFORMATION AND PUBLICITY" },        
-        { id: "p1", name: "KITAGANA AKSAM", post: "HEADBOY A'LEVEL" }, { id: "p2", name: "ALINAFE STEVEN", post: "HEADBOY A'LEVEL" },        
-        { id: "p3", name: "NANKANJA WINFRED", post: "HEADGIRL A'LEVEL" }, { id: "p4", name: "NAMAZZI MARIAM", post: "HEADGIRL A'LEVEL" },        
-        { id: "p5", name: "NAMUDDU SHEEBAH", post: "HEADGIRL A'LEVEL" }, { id: "p6", name: "SSENFUMA MARVIN", post: "HEADBOY O'LEVEL" },        
-        { id: "p7", name: "KYAGULANYI PIUS", post: "HEADBOY O'LEVEL" }, { id: "p8", name: "NABAKOOZA STELLA", post: "HEADGIRL O'LEVEL" },        
-        { id: "p9", name: "NABAGEREKA PRETTY PATRICIA", post: "HEADGIRL O'LEVEL" }, { id: "p10", name: "MAYANJA SHAFIQUE", post: "ACADEMIC PREFECT" },        
-        { id: "p11", name: "NANTONGO BETTY MICHELLE", post: "ACADEMIC PREFECT" }, { id: "p12", name: "TUGUME GRACIOUS MARTHA", post: "HEADMONITOR" },        
-        { id: "p13", name: "NAKAJJA SHANITAH", post: "HEADMONITOR" }, { id: "p14", name: "NAMUBIRU PRISCA", post: "HEADMONITOR" },        
-        { id: "p15", name: "GYAGENDA PHOEBE", post: "ENTERTAINMENT PREFECT" }, { id: "p16", name: "KASIRYE SHAFIK LEBRON", post: "ENTERTAINMENT PREFECT" },        
-        { id: "p17", name: "NASEJJE HAIRAH", post: "ENTERTAINMENT PREFECT" }, { id: "p18", name: "KEI EMMANUEL JAMES", post: "HEALTH MINISTER BOYS" },        
-        { id: "p19", name: "ISHAKA TREVIS", post: "HEALTH MINISTER BOYS" }, { id: "p20", name: "SSEBALAMU JORAM", post: "HEALTH MINISTER BOYS" },        
-        { id: "p21", name: "NAMUKAYA JOVIA", post: "HEALTH MINISTER GIRLS" }, { id: "p22", name: "NANNUNGI BENITAH", post: "HEALTH MINISTER GIRLS" },        
-        { id: "p23", name: "NAGGAYI LOURYN BEATRICE", post: "HEALTH MINISTER GIRLS" }, { id: "p24", name: "NAMUBIRU RAHMAH", post: "LITURGY MUSLIMS" },        
-        { id: "p25", name: "MULIIKA SHARIF", post: "LITURGY MUSLIMS" }, { id: "p26", name: "NANTEZA MARIA VANNEL", post: "LITURGY CHRISTIANS" },        
-        { id: "p27", name: "MULLO MELLISA ROWEN", post: "LITURGY CHRISTIANS" }, { id: "p28", name: "KALYESUBULA LINCOS", post: "HEAD SECURITY" },        
-        { id: "p29", name: "WASSWA MUNIB", post: "HEAD SECURITY" }, { id: "p30", name: "BBOSA TRINITY", post: "DORM CAPT. GIRLS O'LEVEL" },        
-        { id: "p31", name: "NANKINDU JALIA", post: "DORM CAPT. GIRLS O'LEVEL" }, { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL" }    
+    // Defined strict hierarchy matching standard school structural protocols
+    const postHierarchy = [
+        "PRESIDENT", "VICE PRESIDENT", "CHIEF JUDGE", "DEPUTY CHIEF JUDGE",
+        "GENERAL SECRETARY", "DEPUTY GENERAL SECRETARY", "HEADBOY A'LEVEL", 
+        "HEADGIRL A'LEVEL", "HEADBOY O'LEVEL", "HEADGIRL O'LEVEL", 
+        "SECRETARY FINANCE", "SECRETARY INTERNAL AFFAIRS", "SECRETARY STUDENTS AFFAIRS", 
+        "SECRETARY FEMALE AFFAIRS", "ACADEMIC PREFECT", "INFORMATION AND PUBLICITY",
+        "LANGUAGE PREFECT", "ENTERTAINMENT PREFECT", "HEALTH MINISTER BOYS", 
+        "HEALTH MINISTER GIRLS", "LITURGY CHRISTIANS", "LITURGY MUSLIMS", 
+        "HEAD SECURITY", "DORM CAPT. GIRLS O'LEVEL"
+    ];
+
+    const presetCandidates = [                
+        { id: "u1", name: "NAKALEMBE CAROLINE", post: "PRESIDENT" }, { id: "u2", name: "RAYAN YUSUF", post: "PRESIDENT" },                
+        { id: "u3", name: "LUKYAMUZI ASHIRAF", post: "VICE PRESIDENT" }, { id: "u4", name: "IRUMBA WILLIAMS", post: "VICE PRESIDENT" },                
+        { id: "u5", name: "NANYANZI DESIRE", post: "CHIEF JUDGE" }, { id: "u6", name: "SSENTEZA WILLIAM KEVIN", post: "CHIEF JUDGE" },                
+        { id: "u7", name: "BBALE ALEX", post: "DEPUTY CHIEF JUDGE" }, { id: "u8", name: "BABIRYE ABIGAIL NICOLE", post: "DEPUTY CHIEF JUDGE" },                
+        { id: "u9", name: "SSEKABIRA JOVAN JONATHAN", post: "DEPUTY CHIEF JUDGE" }, { id: "u10", name: "NAMUBIRU HANIFAH", post: "GENERAL SECRETARY" },                
+        { id: "u11", name: "NABULIME JUDITH TENDO", post: "GENERAL SECRETARY" }, { id: "u12", name: "KYOBUTUNGI PROMISE", post: "DEPUTY GENERAL SECRETARY" },                
+        { id: "u13", name: "MUSOKI LINIAH", post: "DEPUTY GENERAL SECRETARY" }, { id: "u14", name: "NAYEBALE PATRICIA", post: "DEPUTY GENERAL SECRETARY" },                
+        { id: "u15", name: "NANYANZI CHRISTINE NIEL", post: "SECRETARY FEMALE AFFAIRS" }, { id: "u16", name: "NAKABUGO PROSSY", post: "SECRETARY FEMALE AFFAIRS" },                
+        { id: "u17", name: "NAKATO IMELDAH", post: "SECRETARY FINANCE" }, { id: "u18", name: "NAKIGOZI ESTHER", post: "SECRETARY FINANCE" },                
+        { id: "u19", name: "NABUUFU HARRIET", post: "SECRETARY STUDENTS AFFAIRS" }, { id: "u20", name: "NAKALANZI NASHIBAH", post: "SECRETARY STUDENTS AFFAIRS" },                
+        { id: "u21", name: "KASSITA SHARITAH", post: "SECRETARY INTERNAL AFFAIRS" }, { id: "u22", name: "KOMUJUNI LETICIA", post: "SECRETARY INTERNAL AFFAIRS" },                
+        { id: "u23", name: "NTEGE PETER", post: "SECRETARY INTERNAL AFFAIRS" }, { id: "u24", name: "MUSIIME LINDAH", post: "LANGUAGE PREFECT" },                
+        { id: "u25", name: "LUBEGA EDWARD", post: "LANGUAGE PREFECT" }, { id: "u26", name: "ALI MAXWELL", post: "LANGUAGE PREFECT" },                
+        { id: "u27", name: "NAKABIITO ESTHER EMILY", post: "INFORMATION AND PUBLICITY" }, { id: "u28", name: "KALULE KENNETH", post: "INFORMATION AND PUBLICITY" },                
+        { id: "p1", name: "KITAGANA AKSAM", post: "HEADBOY A'LEVEL" }, { id: "p2", name: "ALINAFE STEVEN", post: "HEADBOY A'LEVEL" },                
+        { id: "p3", name: "NANKANJA WINFRED", post: "HEADGIRL A'LEVEL" }, { id: "p4", name: "NAMAZZI MARIAM", post: "HEADGIRL A'LEVEL" },                
+        { id: "p5", name: "NAMUDDU SHEEBAH", post: "HEADGIRL A'LEVEL" }, { id: "p6", name: "SSENFUMA MARVIN", post: "HEADBOY O'LEVEL" },                
+        { id: "p7", name: "KYAGULANYI PIUS", post: "HEADBOY O'LEVEL" }, { id: "p8", name: "NABAKOOZA STELLA", post: "HEADGIRL O'LEVEL" },                
+        { id: "p9", name: "NABAGEREKA PRETTY PATRICIA", post: "HEADGIRL O'LEVEL" }, { id: "p10", name: "MAYANJA SHAFIQUE", post: "ACADEMIC PREFECT" },                
+        { id: "p11", name: "NANTONGO BETTY MICHELLE", post: "ACADEMIC PREFECT" }, { id: "p12", name: "TUGUME GRACIOUS MARTHA", post: "HEADMONITOR" },                
+        { id: "p13", name: "NAKAJJA SHANITAH", post: "HEADMONITOR" }, { id: "p14", name: "NAMUBIRU PRISCA", post: "HEADMONITOR" },                
+        { id: "p15", name: "GYAGENDA PHOEBE", post: "ENTERTAINMENT PREFECT" }, { id: "p16", name: "KASIRYE SHAFIK LEBRON", post: "ENTERTAINMENT PREFECT" },                
+        { id: "p17", name: "NASEJJE HAIRAH", post: "ENTERTAINMENT PREFECT" }, { id: "p18", name: "KEI EMMANUEL JAMES", post: "HEALTH MINISTER BOYS" },                
+        { id: "p19", name: "ISHAKA TREVIS", post: "HEALTH MINISTER BOYS" }, { id: "p20", name: "SSEBALAMU JORAM", post: "HEALTH MINISTER BOYS" },                
+        { id: "p21", name: "NAMUKAYA JOVIA", post: "HEALTH MINISTER GIRLS" }, { id: "p22", name: "NANNUNGI BENITAH", post: "HEALTH MINISTER GIRLS" },                
+        { id: "p23", name: "NAGGAYI LOURYN BEATRICE", post: "HEALTH MINISTER GIRLS" }, { id: "p24", name: "NAMUBIRU RAHMAH", post: "LITURGY MUSLIMS" },                
+        { id: "p25", name: "MULIIKA SHARIF", post: "LITURGY MUSLIMS" }, { id: "p26", name: "NANTEZA MARIA VANNEL", post: "LITURGY CHRISTIANS" },                
+        { id: "p27", name: "MULLO MELLISA ROWEN", post: "LITURGY CHRISTIANS" }, { id: "p28", name: "KALYESUBULA LINCOS", post: "HEAD SECURITY" },                
+        { id: "p29", name: "WASSWA MUNIB", post: "HEAD SECURITY" }, { id: "p30", name: "BBOSA TRINITY", post: "DORM CAPT. GIRLS O'LEVEL" },                
+        { id: "p31", name: "NANKINDU JALIA", post: "DORM CAPT. GIRLS O'LEVEL" }, { id: "p32", name: "NAKAYONDO SHARIMAH TWAHA", post: "DORM CAPT. GIRLS O'LEVEL" }        
     ];    
 
     let currentUser = ""; 
 
-    // Helper functions to manage localStorage data array
     function getStoredRecords() {
         const rawData = localStorage.getItem(LOCAL_STORAGE_KEY);
         return rawData ? JSON.parse(rawData) : [];
@@ -281,159 +300,186 @@
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(recordsArray));
     }
 
-    function login() {        
-        const code = document.getElementById("loginUsername").value;        
-        if (!code) return;
-        
-        if (systemUsers[code]) {            
-            currentUser = systemUsers[code];            
-            document.getElementById("authSection").style.display = "none";            
-            document.getElementById("appDashboard").style.display = "grid";            
-            document.getElementById("quickStats").style.display = "grid";            
-            document.getElementById("logoutBtn").style.display = "block";            
-            document.getElementById("printBtn").style.display = "block";                        
+    function exportDataString() {
+        const rawData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if(!rawData || rawData === "[]") {
+            return alert("No results saved yet to backup.");
+        }
+        navigator.clipboard.writeText(rawData);
+        alert("Emergency Backup Text Copied! Paste this text into an email, WhatsApp message, or notepad to keep it 100% safe outside your browser.");
+    }
+
+    function importDataString() {
+        const dataStr = prompt("Paste your copied emergency backup text string here:");
+        if(!dataStr) return;
+        try {
+            const parsed = JSON.parse(dataStr);
+            if(Array.isArray(parsed)) {
+                localStorage.setItem(LOCAL_STORAGE_KEY, dataStr);
+                alert("Data string restored into browser cache successfully!");
+                fetchData();
+            } else { alert("Invalid data layout format."); }
+        } catch(e) { alert("Error parsing input text."); }
+    }
+
+    function login() {                
+        const code = document.getElementById("loginUsername").value;                
+        if (!code) return;                
+        if (systemUsers[code]) {                        
+            currentUser = systemUsers[code];                        
+            document.getElementById("authSection").style.display = "none";                        
+            document.getElementById("appDashboard").style.display = "grid";                        
+            document.getElementById("quickStats").style.display = "grid";                        
+            document.getElementById("logoutBtn").style.display = "block";                        
+            document.getElementById("printBtn").style.display = "block";                                                
             
-            const userTag = document.getElementById("userTag");            
-            userTag.style.display = "inline-block";            
-            userTag.innerText = `${currentUser}`;            
+            const userTag = document.getElementById("userTag");                        
+            userTag.style.display = "inline-block";                        
+            userTag.innerText = `${currentUser}`;                                    
             
-            if(code.includes("admin") || code === "oscar123" || code === "ronnie123" || code === "njuki123" || code === "richard123") {                
-                document.getElementById("adminHeader").style.display = "table-cell";            
-            } else {                
-                document.getElementById("adminHeader").style.display = "none";            
-            }            
-            populateDropdown(presetCandidates);            
-            fetchData();            
-        }    
+            if(code.includes("admin") || code === "oscar123" || code === "ronnie123" || code === "njuki123" || code === "richard123") {                                
+                document.getElementById("adminHeader").style.display = "table-cell";                        
+            } else {                                
+                document.getElementById("adminHeader").style.display = "none";                        
+            }                        
+            populateDropdown(presetCandidates);                        
+            fetchData();                    
+        }        
     }    
 
-    function logout() {        
-        currentUser = "";        
-        document.getElementById("authSection").style.display = "block";        
-        document.getElementById("appDashboard").style.display = "none";        
-        document.getElementById("quickStats").style.display = "none";        
-        document.getElementById("logoutBtn").style.display = "none";        
-        document.getElementById("printBtn").style.display = "none";        
-        document.getElementById("userTag").style.display = "none";        
-        document.getElementById("loginUsername").value = "";    
+    function logout() {                
+        currentUser = "";                
+        document.getElementById("authSection").style.display = "block";                
+        document.getElementById("appDashboard").style.display = "none";                
+        document.getElementById("quickStats").style.display = "none";                
+        document.getElementById("logoutBtn").style.display = "none";                
+        document.getElementById("printBtn").style.display = "none";                
+        document.getElementById("userTag").style.display = "none";                
+        document.getElementById("loginUsername").value = "";        
     }    
 
-    function populateDropdown(list) {        
-        const select = document.getElementById("candidateSelect");        
-        select.innerHTML = '<option value="">-- Click to Choose Candidate --</option>';        
+    function populateDropdown(list) {                
+        const select = document.getElementById("candidateSelect");                
+        select.innerHTML = '<option value="">-- Click to Choose Candidate --</option>';                        
         
-        let posts = [...new Set(list.map(item => item.post))];
-        posts.forEach(post => {
-            let group = document.createElement("optgroup");
-            group.label = post;
-            list.filter(c => c.post === post).forEach(c => {
-                let opt = document.createElement("option");            
-                opt.value = c.id; opt.innerText = c.name;            
-                group.appendChild(opt);
-            });
-            select.appendChild(group);
+        // Sort selection groupings according to formal hierarchy array
+        let sortedPosts = [...new Set(list.map(item => item.post))].sort((a, b) => {
+            return postHierarchy.indexOf(a) - postHierarchy.indexOf(b);
         });
+
+        sortedPosts.forEach(post => {            
+            let group = document.createElement("optgroup");            
+            group.label = post;            
+            list.filter(c => c.post === post).forEach(c => {                
+                let opt = document.createElement("option");                            
+                opt.value = c.id; opt.innerText = c.name;                            
+                group.appendChild(opt);            
+            });            
+            select.appendChild(group);        
+        });    
     }    
 
-    function submitResult() {        
-        const cid = document.getElementById("candidateSelect").value;        
-        if(!cid) return alert("Please click and select a candidate first.");        
+    function submitResult() {                
+        const cid = document.getElementById("candidateSelect").value;                
+        if(!cid) return alert("Please click and select a candidate first.");                        
         
-        const candidate = presetCandidates.find(c => c.id === cid);        
-        const vA = parseInt(document.getElementById("votesA").value) || 0;        
-        const vB = parseInt(document.getElementById("votesB").value) || 0;        
-        const vC = parseInt(document.getElementById("votesC").value) || 0;        
-        const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;        
+        const candidate = presetCandidates.find(c => c.id === cid);                
+        const vA = parseInt(document.getElementById("votesA").value) || 0;                
+        const vB = parseInt(document.getElementById("votesB").value) || 0;                
+        const vC = parseInt(document.getElementById("votesC").value) || 0;                
+        const inv = parseInt(document.getElementById("invalidvoteCount").value) || 0;                        
         
-        const payload = {            
-            id: new Date().getTime().toString(), // local identifier payload key
-            candidateId: candidate.id, candidateName: candidate.name, post: candidate.post,            
-            votesA: vA, votesB: vB, votesC: vC, invalid: inv,            
-            enteredBy: currentUser        
-        };        
+        const payload = {                        
+            id: new Date().getTime().toString(),            
+            candidateId: candidate.id, candidateName: candidate.name, post: candidate.post,                        
+            votesA: vA, votesB: vB, votesC: vC, invalid: inv,                        
+            enteredBy: currentUser                
+        };                        
         
-        // Remove existing local storage entry for this candidate before updating
-        let currentRecords = getStoredRecords();
-        currentRecords = currentRecords.filter(r => r.candidateId !== candidate.id);
+        let currentRecords = getStoredRecords();        
+        currentRecords = currentRecords.filter(r => r.candidateId !== candidate.id);                
+        currentRecords.push(payload);        
+        saveStoredRecords(currentRecords);                
         
-        // Push newly entered result
-        currentRecords.push(payload);
-        saveStoredRecords(currentRecords);
+        alert("Tally saved directly to browser memory storage!");                    
+        document.getElementById("votesA").value = "";        
+        document.getElementById("votesB").value = "";        
+        document.getElementById("votesC").value = "";        
+        document.getElementById("invalidvoteCount").value = "";        
+        document.getElementById("candidateSelect").value = "";                    
+        fetchData();            
+    }    
+
+    function deleteRecord(rid) {                
+        if(confirm("Permanently wipe this entry from local memory?")) {                        
+            let currentRecords = getStoredRecords();            
+            currentRecords = currentRecords.filter(r => r.id !== rid);            
+            saveStoredRecords(currentRecords);            
+            fetchData();                
+        }        
+    }    
+
+    function fetchData() {                
+        let records = getStoredRecords();                        
+        let grandValid = 0; let grandInvalid = 0;                
+        let aggregates = {};                        
         
-        alert("Tally saved directly to local storage successfully!");            
-        document.getElementById("votesA").value = "";
-        document.getElementById("votesB").value = "";
-        document.getElementById("votesC").value = "";
-        document.getElementById("invalidvoteCount").value = "";
-        document.getElementById("candidateSelect").value = "";            
+        presetCandidates.forEach(c => {                        
+            aggregates[c.id] = { id: "", name: c.name, post: c.post, valid: 0, invalid: 0, total: 0 };                
+        });                        
+        
+        records.forEach(r => {                        
+            if (aggregates[r.candidateId]) {                                
+                const totalValidRow = r.votesA + r.votesB + r.votesC;                                
+                aggregates[r.candidateId].id = r.id;                                
+                aggregates[r.candidateId].valid = totalValidRow;                                
+                aggregates[r.candidateId].invalid = r.invalid;                                
+                aggregates[r.candidateId].total = totalValidRow + r.invalid;                                                
+                grandValid += totalValidRow;                                
+                grandInvalid += r.invalid;                        
+            }                
+        });                        
+        
+        // Complex Sort: Sort primary categories by administrative hierarchy array, secondary items by votes count
+        let sorted = Object.keys(aggregates).map(id => aggregates[id]).sort((a,b) => {                        
+            if (a.post !== b.post) {
+                return postHierarchy.indexOf(a.post) - postHierarchy.indexOf(b.post);
+            }                        
+            return b.valid - a.valid;                
+        });                        
+        
+        let highestScores = {};                
+        sorted.forEach(s => {                        
+            if(!highestScores[s.post] || highestScores[s.post] < s.valid) {                                
+                if(s.valid > 0) highestScores[s.post] = s.valid;                        
+            }                
+        });                        
+        
+        const tbody = document.getElementById("overallStandingsBody");                
+        tbody.innerHTML = "";                        
+        const showAdmin = document.getElementById("adminHeader").style.display === "table-cell";                        
+        
+        let indexNo = 1;
+        sorted.forEach(s => {                        
+            let tr = document.createElement("tr");                        
+            if(s.valid > 0 && highestScores[s.post] === s.valid) tr.className = "winner-row";                                    
+            
+            let actionTd = showAdmin && s.id ? `<td><button class="btn-del" onclick="deleteRecord('${s.id}')">Delete</button></td>` : (showAdmin ? "<td></td>" : "");                                    
+            
+            tr.innerHTML = `<td>${indexNo}</td><td class="candidate-name-cell"><b>${s.name}</b> ${s.valid > 0 && highestScores[s.post] === s.valid ? "👑" : ""}</td><td><span class="badge">${s.post}</span></td><td>${s.valid}</td><td>${s.invalid}</td><td><b>${s.total}</b></td>${actionTd}`;                        
+            tbody.appendChild(tr);                
+            indexNo++;
+        });                        
+        
+        document.getElementById("statValid").innerText = grandValid;                
+        document.getElementById("statInvalid").innerText = grandInvalid;                
+        document.getElementById("statTotalVoters").innerText = grandValid + grandInvalid;        
+    }    
+
+    window.onload = function() {                
+        populateDropdown(presetCandidates);                
         fetchData();        
-    }    
-
-    function deleteRecord(rid) {        
-        if(confirm("Permanently wipe this entry from the local memory?")) {            
-            let currentRecords = getStoredRecords();
-            currentRecords = currentRecords.filter(r => r.id !== rid);
-            saveStoredRecords(currentRecords);
-            fetchData();        
-        }    
-    }    
-
-    function fetchData() {        
-        let records = getStoredRecords();        
-        
-        let grandValid = 0; let grandInvalid = 0;        
-        let aggregates = {};        
-        
-        presetCandidates.forEach(c => {            
-            aggregates[c.id] = { id: "", name: c.name, post: c.post, valid: 0, invalid: 0, total: 0 };        
-        });        
-        
-        records.forEach(r => {            
-            if (aggregates[r.candidateId]) {                
-                const totalValidRow = r.votesA + r.votesB + r.votesC;                
-                aggregates[r.candidateId].id = r.id;                
-                aggregates[r.candidateId].valid = totalValidRow;                
-                aggregates[r.candidateId].invalid = r.invalid;                
-                aggregates[r.candidateId].total = totalValidRow + r.invalid;                                
-                grandValid += totalValidRow;                
-                grandInvalid += r.invalid;            
-            }        
-        });        
-        
-        let sorted = Object.keys(aggregates).map(id => aggregates[id]).sort((a,b) => {            
-            if (a.post !== b.post) return a.post.localeCompare(b.post);            
-            return b.valid - a.valid;        
-        });        
-        
-        let highestScores = {};        
-        sorted.forEach(s => {            
-            if(!highestScores[s.post] || highestScores[s.post] < s.valid) {                
-                if(s.valid > 0) highestScores[s.post] = s.valid;            
-            }        
-        });        
-        
-        const tbody = document.getElementById("overallStandingsBody");        
-        tbody.innerHTML = "";        
-        
-        const showAdmin = document.getElementById("adminHeader").style.display === "table-cell";        
-        
-        sorted.forEach(s => {            
-            let tr = document.createElement("tr");            
-            if(s.valid > 0 && highestScores[s.post] === s.valid) tr.className = "winner-row";            
-            
-            let actionTd = showAdmin && s.id ? `<td><button class="btn-del" onclick="deleteRecord('${s.id}')">Delete</button></td>` : (showAdmin ? "<td></td>" : "");            
-            
-            tr.innerHTML = `<td class="candidate-name-cell"><b>${s.name}</b> ${s.valid > 0 && highestScores[s.post] === s.valid ? "👑" : ""}</td><td><span class="badge">${s.post}</span></td><td>${s.valid}</td><td>${s.invalid}</td><td><b>${s.total}</b></td>${actionTd}`;            
-            tbody.appendChild(tr);        
-        });        
-        
-        document.getElementById("statValid").innerText = grandValid;        
-        document.getElementById("statInvalid").innerText = grandInvalid;        
-        document.getElementById("statTotalVoters").innerText = grandValid + grandInvalid;    
-    }    
-
-    window.onload = function() {        
-        populateDropdown(presetCandidates);        
-        fetchData();    
     };
-</script></body></html>
+</script>
+</body>
+</html>
